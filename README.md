@@ -1,1 +1,1 @@
-# go_vue_boilerplate
+# Fullstack App (Go + Vue + PostgreSQL)
