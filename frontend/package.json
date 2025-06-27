@@ -5,11 +5,13 @@
 	"scripts": {
 	  "dev": "vite",
 	  "build": "vite build",
-	  "preview": "vite preview"
+	  "preview": "vite preview",
+	  "proto": "protoc --js_out=import_style=commonjs:src/proto --grpc-web_out=import_style=typescript,mode=grpcwebtext:src/proto ../proto/user.proto"
 	},
 	"dependencies": {
 	  "vue": "^3.3.4",
-	  "axios": "^1.4.0"
+	  "grpc-web": "^1.4.2",
+	  "google-protobuf": "^3.21.2"
 	},
 	"devDependencies": {
 	  "@vitejs/plugin-vue": "^4.2.3",

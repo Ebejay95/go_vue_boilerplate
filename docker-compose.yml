@@ -28,6 +28,7 @@ services:
     container_name: myapp_backend
     ports:
       - "8080:8080"
+      - "9090:9090"
     environment:
       DATABASE_URL: postgres://postgres:password@database:5432/myapp?sslmode=disable
     depends_on:
