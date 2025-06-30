@@ -1,13 +1,13 @@
 total 56
 drwxr-xr-x@ 11 jonathaneberle  staff   352 30 Jun 16:05 .
-drwxr-xr-x@ 15 jonathaneberle  staff   480 30 Jun 17:09 ..
+drwxr-xr-x@ 15 jonathaneberle  staff   480 30 Jun 21:38 ..
 -rw-r--r--@  1 jonathaneberle  staff  1020 30 Jun 11:29 Dockerfile
 -rw-r--r--@  1 jonathaneberle  staff  1109 30 Jun 12:35 Dockerfile.dev
--rw-r--r--@  1 jonathaneberle  staff  1127 30 Jun 11:31 package.json
--rw-r--r--@  1 jonathaneberle  staff    80 30 Jun 11:22 postcss.config.js
+-rw-r--r--@  1 jonathaneberle  staff  1159 30 Jun 21:32 package.json
+-rw-r--r--@  1 jonathaneberle  staff   145 30 Jun 21:28 postcss.config.js
 drwxr-xr-x@  3 jonathaneberle  staff    96 30 Jun 11:21 public
 -rw-r--r--@  1 jonathaneberle  staff  3277 30 Jun 11:19 server.js
-drwxr-xr-x@  7 jonathaneberle  staff   224 30 Jun 17:16 src
+drwxr-xr-x@  7 jonathaneberle  staff   224 30 Jun 21:31 src
 -rw-r--r--@  1 jonathaneberle  staff   268 30 Jun 11:21 tailwind.config.js
 -rw-r--r--@  1 jonathaneberle  staff  1993 30 Jun 12:34 vue.config.js
 
@@ -19,18 +19,18 @@ drwxr-xr-x@ 11 jonathaneberle  staff  352 30 Jun 16:05 ..
 
 ./src:
 total 32
-drwxr-xr-x@  7 jonathaneberle  staff   224 30 Jun 17:16 .
+drwxr-xr-x@  7 jonathaneberle  staff   224 30 Jun 21:31 .
 drwxr-xr-x@ 11 jonathaneberle  staff   352 30 Jun 16:05 ..
 -rw-r--r--@  1 jonathaneberle  staff  4733 30 Jun 16:20 App copy.vue
--rw-r--r--@  1 jonathaneberle  staff   478 30 Jun 16:48 App.vue
+-rw-r--r--@  1 jonathaneberle  staff   501 30 Jun 20:55 App.vue
 drwxr-xr-x@  3 jonathaneberle  staff    96 30 Jun 16:07 assets
 drwxr-xr-x@  3 jonathaneberle  staff    96 30 Jun 16:26 components
--rw-r--r--@  1 jonathaneberle  staff   254 30 Jun 16:57 main.js
+-rw-r--r--@  1 jonathaneberle  staff   247 30 Jun 17:30 main.js
 
 ./src/assets:
 total 0
 drwxr-xr-x@ 3 jonathaneberle  staff   96 30 Jun 16:07 .
-drwxr-xr-x@ 7 jonathaneberle  staff  224 30 Jun 17:16 ..
+drwxr-xr-x@ 7 jonathaneberle  staff  224 30 Jun 21:31 ..
 drwxr-xr-x@ 7 jonathaneberle  staff  224 30 Jun 17:12 styles
 
 ./src/assets/styles:
@@ -39,35 +39,35 @@ drwxr-xr-x@ 7 jonathaneberle  staff  224 30 Jun 17:12 .
 drwxr-xr-x@ 3 jonathaneberle  staff   96 30 Jun 16:07 ..
 drwxr-xr-x@ 5 jonathaneberle  staff  160 30 Jun 17:14 base
 drwxr-xr-x@ 7 jonathaneberle  staff  224 30 Jun 17:15 components
--rw-r--r--@ 1 jonathaneberle  staff  608 30 Jun 17:21 index.css
+-rw-r--r--@ 1 jonathaneberle  staff  516 30 Jun 21:35 index.css
 drwxr-xr-x@ 5 jonathaneberle  staff  160 30 Jun 17:13 utilities
 drwxr-xr-x@ 3 jonathaneberle  staff   96 30 Jun 17:15 vendor
 
 ./src/assets/styles/base:
-total 32
+total 24
 drwxr-xr-x@ 5 jonathaneberle  staff   160 30 Jun 17:14 .
 drwxr-xr-x@ 7 jonathaneberle  staff   224 30 Jun 17:12 ..
--rw-r--r--@ 1 jonathaneberle  staff   991 30 Jun 17:25 reset.css
--rw-r--r--@ 1 jonathaneberle  staff  2408 30 Jun 17:25 typography.css
--rw-r--r--@ 1 jonathaneberle  staff  4659 30 Jun 17:25 variables.css
+-rw-r--r--@ 1 jonathaneberle  staff   904 30 Jun 17:38 reset.css
+-rw-r--r--@ 1 jonathaneberle  staff  1270 30 Jun 21:29 typography.css
+-rw-r--r--@ 1 jonathaneberle  staff  3169 30 Jun 21:04 variables.css
 
 ./src/assets/styles/components:
 total 48
 drwxr-xr-x@ 7 jonathaneberle  staff   224 30 Jun 17:15 .
 drwxr-xr-x@ 7 jonathaneberle  staff   224 30 Jun 17:12 ..
--rw-r--r--@ 1 jonathaneberle  staff  2782 30 Jun 17:25 buttons.css
--rw-r--r--@ 1 jonathaneberle  staff  2040 30 Jun 17:25 cards.css
--rw-r--r--@ 1 jonathaneberle  staff  2034 30 Jun 17:25 forms.css
--rw-r--r--@ 1 jonathaneberle  staff  3068 30 Jun 17:25 layout.css
--rw-r--r--@ 1 jonathaneberle  staff  5053 30 Jun 17:25 navigation.css
+-rw-r--r--@ 1 jonathaneberle  staff  2756 30 Jun 17:39 buttons.css
+-rw-r--r--@ 1 jonathaneberle  staff  2013 30 Jun 17:39 cards.css
+-rw-r--r--@ 1 jonathaneberle  staff  2007 30 Jun 17:39 forms.css
+-rw-r--r--@ 1 jonathaneberle  staff  3041 30 Jun 17:39 layout.css
+-rw-r--r--@ 1 jonathaneberle  staff  5026 30 Jun 17:40 navigation.css
 
 ./src/assets/styles/utilities:
 total 24
 drwxr-xr-x@ 5 jonathaneberle  staff   160 30 Jun 17:13 .
 drwxr-xr-x@ 7 jonathaneberle  staff   224 30 Jun 17:12 ..
--rw-r--r--@ 1 jonathaneberle  staff  3598 30 Jun 17:25 animations.css
--rw-r--r--@ 1 jonathaneberle  staff  2999 30 Jun 17:25 helpers.css
--rw-r--r--@ 1 jonathaneberle  staff  1400 30 Jun 17:25 spacing.css
+-rw-r--r--@ 1 jonathaneberle  staff  3572 30 Jun 17:40 animations.css
+-rw-r--r--@ 1 jonathaneberle  staff  2973 30 Jun 17:40 helpers.css
+-rw-r--r--@ 1 jonathaneberle  staff  1375 30 Jun 17:40 spacing.css
 
 ./src/assets/styles/vendor:
 total 0
@@ -78,7 +78,7 @@ drwxr-xr-x@ 7 jonathaneberle  staff  224 30 Jun 17:12 ..
 ./src/components:
 total 8
 drwxr-xr-x@ 3 jonathaneberle  staff   96 30 Jun 16:26 .
-drwxr-xr-x@ 7 jonathaneberle  staff  224 30 Jun 17:16 ..
+drwxr-xr-x@ 7 jonathaneberle  staff  224 30 Jun 21:31 ..
 -rw-r--r--@ 1 jonathaneberle  staff  523 30 Jun 17:26 FriendContact.vue
 === FILE CONTENTS ===
 === ./tailwind.config.js ===
@@ -359,7 +359,8 @@ CMD ["npm", "run", "dev"]
 	  "tailwindcss": "^3.3.0",
 	  "autoprefixer": "^10.4.0",
 	  "postcss": "^8.4.0",
-	  "postcss-loader": "^7.3.0"
+	  "postcss-loader": "^7.3.0",
+	  "postcss-import": "^16.1.0"
 	},
 	"engines": {
 	  "node": ">=16.0.0",
@@ -465,14 +466,16 @@ module.exports = defineConfig({
 })
 === ./postcss.config.js ===
 module.exports = {
-	plugins: {
-	  tailwindcss: {},
-	  autoprefixer: {},
-	},
+	plugins: [
+	  require('postcss-import'),  // WICHTIG: Zuerst!
+	  require('tailwindcss'),
+	  require('autoprefixer'),
+	],
   }
 === ./src/App.vue ===
 <template>
 	<section>
+	  <h1>My friends</h1>
 	  <h2>My friends</h2>
 	  <friend-contact
 		v-for="friend in friends"
@@ -507,7 +510,7 @@ module.exports = {
 === ./src/main.js ===
 import { createApp } from 'vue'
 import App from './App.vue'
-import './../src/assets/styles/index.css'
+import './assets/styles/index.css'
 import FriendContact from './components/FriendContact.vue'
 
 const app = createApp(App)
@@ -768,31 +771,27 @@ app.mount('#app')
 === ./src/assets/styles/index.css ===
 /* ===== MAIN STYLES INDEX.CSS ===== */
 @tailwind base;
-@tailwind components;
-@tailwind utilities;
-
-/* Custom base styles */
+@import './base/typography.css';
 @import './base/variables.css';
 @import './base/reset.css';
-@import './base/typography.css';
 
-/* Component styles */
+
+@tailwind components;
 @import './components/layout.css';
 @import './components/buttons.css';
 @import './components/cards.css';
 @import './components/forms.css';
 @import './components/navigation.css';
 
-/* Utility styles */
+@tailwind utilities;
 @import './utilities/animations.css';
 @import './utilities/spacing.css';
 @import './utilities/helpers.css';
 
-/* Vendor overrides */
 @import './vendor/overrides.css';
 === ./src/assets/styles/utilities/spacing.css ===
 /* ===== UTILITIES/SPACING.CSS ===== */
-@tailwind utilities {
+
 	/* Custom spacing utilities */
 	.space-y-xs > * + * {
 	  margin-top: var(--spacing-xs);
@@ -877,10 +876,8 @@ app.mount('#app')
 	.section-padding-lg {
 	  padding: 6rem 0;
 	}
-  }
 === ./src/assets/styles/utilities/animations.css ===
 /* ===== UTILITIES/ANIMATIONS.CSS ===== */
-@tailwind utilities {
 	/* Fade animations */
 	.animate-fade-in {
 	  animation: fadeIn 0.3s ease-out;
@@ -983,7 +980,6 @@ app.mount('#app')
 	  white-space: nowrap;
 	  animation: typewriter 4s steps(40, end), blink-caret 0.75s step-end infinite;
 	}
-  }
 /* Keyframes */
 @keyframes fadeIn {
 	from { opacity: 0; }
@@ -1107,7 +1103,6 @@ app.mount('#app')
   }
 === ./src/assets/styles/utilities/helpers.css ===
 /* ===== UTILITIES/HELPERS.CSS ===== */
-@tailwind utilities {
 	/* Visibility helpers */
 	.sr-only {
 	  position: absolute;
@@ -1273,10 +1268,8 @@ app.mount('#app')
 	.debug * {
 	  outline: 1px solid blue;
 	}
-  }
 === ./src/assets/styles/components/forms.css ===
 /* ===== COMPONENTS/FORMS.CSS ===== */
-@tailwind components {
 	.form-group {
 	  margin-bottom: var(--spacing-lg);
 	}
@@ -1357,10 +1350,8 @@ app.mount('#app')
 	.form-switch:checked::before {
 	  transform: translateX(24px);
 	}
-  }
 === ./src/assets/styles/components/navigation.css ===
 /* ===== COMPONENTS/NAVIGATION.CSS ===== */
-@tailwind components {
 	/* Navigation bar */
 	.navbar {
 	  @apply flex items-center justify-between;
@@ -1587,10 +1578,8 @@ app.mount('#app')
 	.dropdown-item:last-child {
 	  border-radius: 0 0 var(--radius-md) var(--radius-md);
 	}
-  }
 === ./src/assets/styles/components/layout.css ===
 /* ===== COMPONENTS/LAYOUT.CSS ===== */
-@tailwind components {
 	/* Main layout components */
 	.layout {
 	  min-height: 100vh;
@@ -1764,10 +1753,9 @@ app.mount('#app')
 		padding: var(--spacing-2xl) 0;
 	  }
 	}
-  }
 === ./src/assets/styles/components/buttons.css ===
 /* ===== COMPONENTS/BUTTONS.CSS ===== */
-@tailwind components {
+
 	.btn {
 	  @apply inline-flex items-center justify-center gap-2 px-4 py-2 border border-transparent rounded-lg font-medium text-sm transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed;
 	  box-shadow: var(--shadow-sm);
@@ -1904,10 +1892,8 @@ app.mount('#app')
 	  content: "";
 	  @apply inline-block w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin mr-2;
 	}
-  }
 === ./src/assets/styles/components/cards.css ===
 /* ===== COMPONENTS/CARDS.CSS ===== */
-@tailwind components {
 	.card {
 	  background-color: var(--color-bg-primary);
 	  border: 1px solid var(--color-border);
@@ -2011,201 +1997,141 @@ app.mount('#app')
 	.card-image-lg {
 	  @apply h-64;
 	}
-  }
 === ./src/assets/styles/base/typography.css ===
 /* ===== BASE/TYPOGRAPHY.CSS ===== */
-@tailwind base {
-	h1, h2, h3, h4, h5, h6 {
-	  font-weight: var(--font-weight-bold);
-	  line-height: var(--line-height-tight);
-	  color: var(--color-text-primary);
-	  margin-bottom: var(--spacing-md);
-	}
-
+@layer base {
 	h1 {
-	  font-size: var(--font-size-4xl);
-	  margin-bottom: var(--spacing-xl);
+	  @apply font-bold leading-tight text-gray-900 mb-8 text-4xl;
 	}
 
 	h2 {
-	  font-size: var(--font-size-3xl);
-	  margin-bottom: var(--spacing-lg);
+	  @apply font-bold leading-tight text-gray-900 mb-6 text-3xl;
 	}
 
 	h3 {
-	  font-size: var(--font-size-2xl);
-	  margin-bottom: var(--spacing-md);
+	  @apply font-bold leading-tight text-gray-900 mb-4 text-2xl;
 	}
 
 	h4 {
-	  font-size: var(--font-size-xl);
-	  margin-bottom: var(--spacing-sm);
+	  @apply font-bold leading-tight text-gray-900 mb-3 text-xl;
 	}
 
 	h5 {
-	  font-size: var(--font-size-lg);
-	  margin-bottom: var(--spacing-sm);
+	  @apply font-bold leading-tight text-gray-900 mb-3 text-lg;
 	}
 
 	h6 {
-	  font-size: var(--font-size-base);
-	  margin-bottom: var(--spacing-xs);
+	  @apply font-bold leading-tight text-gray-900 mb-2 text-base;
 	}
 
 	p {
-	  margin-bottom: var(--spacing-md);
-	  line-height: var(--line-height-relaxed);
-	  color: var(--color-text-secondary);
+	  @apply mb-4 leading-relaxed text-gray-600;
 	}
 
 	a {
-	  color: var(--color-primary-600);
-	  transition: color var(--transition-fast) ease;
+	  @apply text-blue-600 transition-colors duration-200 ease-in-out;
 	}
 
 	a:hover {
-	  color: var(--color-primary-700);
+	  @apply text-blue-700;
 	}
 
 	strong, b {
-	  font-weight: var(--font-weight-semibold);
+	  @apply font-semibold;
 	}
 
 	em, i {
-	  font-style: italic;
+	  @apply italic;
 	}
 
 	small {
-	  font-size: var(--font-size-sm);
+	  @apply text-sm;
 	}
 
 	code {
-	  font-family: ui-monospace, SFMono-Regular, Consolas, "Liberation Mono", Menlo, monospace;
-	  font-size: var(--font-size-sm);
-	  background-color: var(--color-neutral-100);
-	  color: var(--color-neutral-800);
-	  padding: 0.125rem 0.25rem;
-	  border-radius: var(--radius-sm);
+	  @apply font-mono text-sm bg-gray-100 text-gray-800 px-1 py-0.5 rounded;
 	}
 
 	pre {
-	  font-family: ui-monospace, SFMono-Regular, Consolas, "Liberation Mono", Menlo, monospace;
-	  background-color: var(--color-neutral-100);
-	  color: var(--color-neutral-800);
-	  padding: var(--spacing-md);
-	  border-radius: var(--radius-md);
-	  overflow-x: auto;
-	  margin-bottom: var(--spacing-md);
+	  @apply font-mono bg-gray-100 text-gray-800 p-4 rounded-md overflow-x-auto mb-4;
 	}
 
 	pre code {
-	  background: none;
-	  padding: 0;
+	  @apply bg-transparent p-0;
 	}
 
 	blockquote {
-	  border-left: 4px solid var(--color-primary-500);
-	  padding-left: var(--spacing-md);
-	  margin: var(--spacing-lg) 0;
-	  color: var(--color-text-secondary);
-	  font-style: italic;
+	  @apply border-l-4 border-blue-500 pl-4 my-6 text-gray-600 italic;
 	}
 
 	hr {
-	  border: none;
-	  height: 1px;
-	  background-color: var(--color-border);
-	  margin: var(--spacing-xl) 0;
+	  @apply border-0 h-px bg-gray-200 my-8;
 	}
 
 	ul, ol {
-	  margin-bottom: var(--spacing-md);
-	  padding-left: var(--spacing-lg);
-	  list-style: initial;
+	  @apply mb-4 pl-6 list-disc;
 	}
 
 	ol {
-	  list-style: decimal;
+	  @apply list-decimal;
 	}
 
 	li {
-	  margin-bottom: var(--spacing-xs);
-	  line-height: var(--line-height-relaxed);
-	  color: var(--color-text-secondary);
+	  @apply mb-1 leading-relaxed text-gray-600;
 	}
   }
 === ./src/assets/styles/base/reset.css ===
 /* ===== BASE/RESET.CSS ===== */
-@tailwind base {
+
 	*,
 	*::before,
 	*::after {
-	  box-sizing: border-box;
+	  @apply box-border;
 	}
-
 	* {
-	  margin: 0;
-	  padding: 0;
+	  @apply m-0 p-0;
 	}
-
 	html {
-	  scroll-behavior: smooth;
+	  @apply scroll-smooth;
 	  -webkit-text-size-adjust: 100%;
 	  tab-size: 4;
 	}
-
 	body {
-	  font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-	  line-height: var(--line-height-normal);
+	  @apply leading-[var(--line-height-normal)] bg-[color:var(--color-bg-primary)] text-[color:var(--color-text-primary)];
+	  font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
+		"Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
 	  -webkit-font-smoothing: antialiased;
 	  -moz-osx-font-smoothing: grayscale;
-	  background-color: var(--color-bg-primary);
-	  color: var(--color-text-primary);
 	}
-
 	img,
 	picture,
 	video,
 	canvas,
 	svg {
-	  display: block;
-	  max-width: 100%;
-	  height: auto;
+	  @apply block max-w-full h-auto;
 	}
-
 	input,
 	button,
 	textarea,
 	select {
 	  font: inherit;
 	}
-
 	button {
-	  cursor: pointer;
+	  @apply cursor-pointer disabled:cursor-not-allowed;
 	}
-
-	button:disabled {
-	  cursor: not-allowed;
-	}
-
 	a {
-	  color: inherit;
+	  @apply text-inherit;
 	  text-decoration: inherit;
 	}
-
 	table {
-	  border-collapse: collapse;
-	  border-spacing: 0;
+	  @apply border-spacing-0 border-collapse;
 	}
-
 	ul,
 	ol {
 	  list-style: none;
 	}
-  }
 === ./src/assets/styles/base/variables.css ===
 /* ===== BASE/VARIABLES.CSS ===== */
-@tailwind base {
 	:root {
 	  /* === BRAND COLORS === */
 	  --color-primary-50: #eff6ff;
@@ -2289,58 +2215,6 @@ app.mount('#app')
 	  --color-neutral-800: #262626;
 	  --color-neutral-900: #171717;
 
-	  /* === DESIGN TOKENS === */
-	  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-	  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-	  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
-	  --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
-	  --shadow-2xl: 0 25px 50px -12px rgb(0 0 0 / 0.25);
-
-	  --radius-sm: 0.375rem;
-	  --radius-md: 0.5rem;
-	  --radius-lg: 0.75rem;
-	  --radius-xl: 1rem;
-	  --radius-2xl: 1.5rem;
-	  --radius-full: 9999px;
-
-	  --transition-fast: 150ms;
-	  --transition-normal: 200ms;
-	  --transition-slow: 300ms;
-	  --transition-slower: 500ms;
-
-	  --spacing-xs: 0.25rem;
-	  --spacing-sm: 0.5rem;
-	  --spacing-md: 1rem;
-	  --spacing-lg: 1.5rem;
-	  --spacing-xl: 2rem;
-	  --spacing-2xl: 3rem;
-	  --spacing-3xl: 4rem;
-
-	  /* === TYPOGRAPHY === */
-	  --font-size-xs: 0.75rem;
-	  --font-size-sm: 0.875rem;
-	  --font-size-base: 1rem;
-	  --font-size-lg: 1.125rem;
-	  --font-size-xl: 1.25rem;
-	  --font-size-2xl: 1.5rem;
-	  --font-size-3xl: 1.875rem;
-	  --font-size-4xl: 2.25rem;
-	  --font-size-5xl: 3rem;
-	  --font-size-6xl: 3.75rem;
-
-	  --line-height-tight: 1.25;
-	  --line-height-snug: 1.375;
-	  --line-height-normal: 1.5;
-	  --line-height-relaxed: 1.625;
-	  --line-height-loose: 2;
-
-	  --font-weight-light: 300;
-	  --font-weight-normal: 400;
-	  --font-weight-medium: 500;
-	  --font-weight-semibold: 600;
-	  --font-weight-bold: 700;
-	  --font-weight-extrabold: 800;
-	}
 
 	/* Dark mode variables */
 	@media (prefers-color-scheme: dark) {
