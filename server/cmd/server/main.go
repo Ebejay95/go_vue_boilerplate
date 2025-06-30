@@ -18,6 +18,7 @@ type User struct {
 	Name  string `json:"name"`
 	Email string `json:"email"`
 	Age   int32  `json:"age"`
+	Role  string `json:"role"`
 }
 
 type UserServer struct {
@@ -34,8 +35,8 @@ func NewUserServer() *UserServer {
 	}
 
 	// Add some sample data
-	server.users[1] = &User{ID: 1, Name: "Max Mustermann", Email: "max@example.com", Age: 30}
-	server.users[2] = &User{ID: 2, Name: "Anna Schmidt", Email: "anna@example.com", Age: 25}
+	server.users[1] = &User{ID: 1, Name: "Max Mustermann", Email: "max@example.com", Age: 30, Role: "admin"}
+	server.users[2] = &User{ID: 2, Name: "Anna Schmidt", Email: "anna@example.com", Age: 25, Role: "user"}
 	server.nextID = 3
 
 	return server
@@ -56,6 +57,7 @@ func (s *UserServer) GetUser(ctx context.Context, req *pb.GetUserRequest) (*pb.G
 			Name:  user.Name,
 			Email: user.Email,
 			Age:   user.Age,
+			Role:   user.Role,
 		},
 	}, nil
 }
@@ -69,6 +71,7 @@ func (s *UserServer) CreateUser(ctx context.Context, req *pb.CreateUserRequest) 
 		Name:  req.Name,
 		Email: req.Email,
 		Age:   req.Age,
+		Role:  req.Role,
 	}
 
 	s.users[s.nextID] = user
@@ -95,6 +98,7 @@ func (s *UserServer) ListUsers(ctx context.Context, req *pb.ListUsersRequest) (*
 			Name:  user.Name,
 			Email: user.Email,
 			Age:   user.Age,
+			Role:  user.Role,
 		})
 	}
 

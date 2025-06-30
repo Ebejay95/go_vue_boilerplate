@@ -4,7 +4,7 @@ const protoLoader = require('@grpc/proto-loader');
 const path = require('path');
 
 const app = express();
-const PORT = process.env.PORT || process.env.FRONTEND_PORT;
+const PORT = process.env.PORT || process.env.FRONTEND_PORT || 3000;
 const GRPC_SERVER_URL = process.env.GRPC_SERVER_URL || 'localhost:50051';
 
 console.log(`Frontend server starting on port ${PORT}`);
@@ -25,7 +25,24 @@ const userProto = grpc.loadPackageDefinition(packageDefinition);
 const client = new userProto.user.UserService(GRPC_SERVER_URL, grpc.credentials.createInsecure());
 
 app.use(express.json());
-app.use(express.static('public'));
+
+// CORS middleware for Vue development
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
+
+  if (req.method === 'OPTIONS') {
+    res.sendStatus(200);
+  } else {
+    next();
+  }
+});
+
+// Serve Vue.js build files in production
+if (process.env.NODE_ENV === 'production') {
+  app.use(express.static(path.join(__dirname, 'dist')));
+}
 
 // Test der gRPC-Verbindung beim Start
 client.ListUsers({}, (error, response) => {
@@ -74,7 +91,7 @@ app.post('/api/users', (req, res) => {
 });
 
 // Health check endpoint
-app.get('/health', (req, res) => {
+app.get('/api/health', (req, res) => {
   res.json({
     status: 'healthy',
     grpcServer: GRPC_SERVER_URL,
@@ -82,148 +99,16 @@ app.get('/health', (req, res) => {
   });
 });
 
-// Serve HTML
-app.get('/', (req, res) => {
-  res.send(`
-    <!DOCTYPE html>
-    <html lang="de">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>gRPC User Management</title>
-        <style>
-            body { font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; }
-            .container { margin: 20px 0; }
-            table { width: 100%; border-collapse: collapse; margin: 20px 0; }
-            th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
-            th { background-color: #f2f2f2; }
-            input, button { margin: 5px; padding: 8px; }
-            button { background-color: #4CAF50; color: white; border: none; cursor: pointer; }
-            button:hover { background-color: #45a049; }
-            .form-group { margin: 10px 0; }
-            label { display: inline-block; width: 100px; }
-            .status { padding: 10px; margin: 10px 0; border-radius: 4px; }
-            .success { background-color: #d4edda; border: 1px solid #c3e6cb; color: #155724; }
-            .error { background-color: #f8d7da; border: 1px solid #f5c6cb; color: #721c24; }
-        </style>
-    </head>
-    <body>
-        <h1>gRPC User Management</h1>
-
-        <div class="status success">
-            <strong>Status:</strong> Frontend läuft auf Port ${PORT}<br>
-            <strong>gRPC Server:</strong> ${GRPC_SERVER_URL}
-        </div>
-
-        <div class="container">
-            <h2>Neuen User erstellen</h2>
-            <form id="userForm">
-                <div class="form-group">
-                    <label for="name">Name:</label>
-                    <input type="text" id="name" required>
-                </div>
-                <div class="form-group">
-                    <label for="email">Email:</label>
-                    <input type="email" id="email" required>
-                </div>
-                <div class="form-group">
-                    <label for="age">Alter:</label>
-                    <input type="number" id="age" required>
-                </div>
-                <button type="submit">User erstellen</button>
-            </form>
-        </div>
-
-        <div class="container">
-            <h2>Alle Users</h2>
-            <button onclick="loadUsers()">Users laden</button>
-            <table id="usersTable">
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Name</th>
-                        <th>Email</th>
-                        <th>Alter</th>
-                    </tr>
-                </thead>
-                <tbody id="usersTableBody">
-                </tbody>
-            </table>
-        </div>
-
-        <script>
-            async function loadUsers() {
-                try {
-                    const response = await fetch('/api/users');
-                    if (!response.ok) {
-                        throw new Error(\`HTTP \${response.status}: \${response.statusText}\`);
-                    }
-                    const users = await response.json();
-
-                    const tbody = document.getElementById('usersTableBody');
-                    tbody.innerHTML = '';
-
-                    if (users.length === 0) {
-                        const row = tbody.insertRow();
-                        const cell = row.insertCell(0);
-                        cell.colSpan = 4;
-                        cell.textContent = 'Keine Users gefunden';
-                        cell.style.textAlign = 'center';
-                        cell.style.fontStyle = 'italic';
-                        return;
-                    }
-
-                    users.forEach(user => {
-                        const row = tbody.insertRow();
-                        row.insertCell(0).textContent = user.id;
-                        row.insertCell(1).textContent = user.name;
-                        row.insertCell(2).textContent = user.email;
-                        row.insertCell(3).textContent = user.age;
-                    });
-                } catch (error) {
-                    console.error('Error loading users:', error);
-                    alert('Fehler beim Laden der Users: ' + error.message);
-                }
-            }
-
-            document.getElementById('userForm').addEventListener('submit', async (e) => {
-                e.preventDefault();
-
-                const name = document.getElementById('name').value;
-                const email = document.getElementById('email').value;
-                const age = document.getElementById('age').value;
-
-                try {
-                    const response = await fetch('/api/users', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify({ name, email, age: parseInt(age) })
-                    });
-
-                    if (response.ok) {
-                        document.getElementById('userForm').reset();
-                        loadUsers();
-                        alert('User erfolgreich erstellt!');
-                    } else {
-                        const errorText = await response.text();
-                        alert('Fehler beim Erstellen des Users: ' + errorText);
-                    }
-                } catch (error) {
-                    console.error('Error creating user:', error);
-                    alert('Fehler beim Erstellen des Users: ' + error.message);
-                }
-            });
-
-            // Load users on page load
-            loadUsers();
-        </script>
-    </body>
-    </html>
-  `);
-});
+// Serve Vue app for all other routes in production
+if (process.env.NODE_ENV === 'production') {
+  app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, 'dist/index.html'));
+  });
+}
 
 app.listen(PORT, '0.0.0.0', () => {
   console.log(`✅ Frontend server listening on port ${PORT}`);
+  if (process.env.NODE_ENV !== 'production') {
+    console.log(`Vue development server should be running on port 8080`);
+  }
 });

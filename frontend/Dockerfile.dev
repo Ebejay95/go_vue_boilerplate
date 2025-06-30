@@ -1,0 +1,47 @@
+# Development Dockerfile für Vue.js mit GARANTIERTEM Hot Reload
+FROM node:18-alpine
+
+# Installiere curl für Health Checks
+RUN apk add --no-cache curl
+
+WORKDIR /app
+
+# Package.json und lock files zuerst kopieren
+COPY frontend/package*.json ./
+RUN npm install
+
+# Proto files kopieren
+COPY proto ../proto
+
+# Konfigurationsdateien kopieren
+COPY frontend/vue.config.js ./
+COPY frontend/tailwind.config.js ./
+COPY frontend/postcss.config.js ./
+COPY frontend/server.js ./
+
+# Source files kopieren
+COPY frontend/src ./src
+COPY frontend/public ./public
+
+# KRITISCHE Environment Variablen für File Watching
+ENV NODE_ENV=development
+ENV CHOKIDAR_USEPOLLING=true
+ENV CHOKIDAR_INTERVAL=500
+ENV WATCHPACK_POLLING=true
+ENV WDS_SOCKET_HOST=0.0.0.0
+ENV WDS_SOCKET_PORT=8080
+ENV FAST_REFRESH=true
+
+# Vue CLI spezifische Env Vars
+ENV VUE_CLI_BABEL_TRANSPILE_MODULES=true
+ENV VUE_CLI_BABEL_TARGET_NODE=true
+
+# Ports freigeben
+EXPOSE 8080 3000
+
+# Gesundheitscheck
+HEALTHCHECK --interval=30s --timeout=3s --start-period=10s --retries=3 \
+	CMD curl -f http://localhost:8080 || exit 1
+
+# Default command
+CMD ["npm", "run", "dev"]

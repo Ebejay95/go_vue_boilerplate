@@ -1,0 +1,60 @@
+# Development Dockerfile with Air live reload
+FROM golang:1.21-alpine AS dev
+
+# Install protoc, protoc-gen-go and Air for live reload
+RUN apk add --no-cache protobuf-dev git curl
+RUN go install google.golang.org/protobuf/cmd/protoc-gen-go@v1.31.0
+RUN go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@v1.3.0
+
+# Install Air using a more reliable method
+RUN curl -sSfL https://raw.githubusercontent.com/cosmtrek/air/master/install.sh | sh -s -- -b $(go env GOPATH)/bin
+
+WORKDIR /app
+
+# Copy and generate proto files first
+COPY proto ./proto
+RUN mkdir -p pb
+RUN protoc --go_out=pb --go_opt=paths=source_relative --go-grpc_out=pb --go-grpc_opt=paths=source_relative --proto_path=proto proto/*.proto
+
+# Copy server code
+COPY server/ ./server/
+WORKDIR /app/server
+
+# Initialize Go modules - let Air handle the building
+RUN go mod download
+RUN go mod tidy
+
+# Create Air configuration that matches your working production setup
+RUN echo '[build]' > .air.toml && \
+	echo '  cmd = "go build -o ./tmp/main ./cmd/server"' >> .air.toml && \
+	echo '  bin = "./tmp/main"' >> .air.toml && \
+	echo '  full_bin = "./tmp/main"' >> .air.toml && \
+	echo '  include_ext = ["go", "tpl", "tmpl", "html"]' >> .air.toml && \
+	echo '  exclude_dir = ["tmp", "vendor", "node_modules", "pb"]' >> .air.toml && \
+	echo '  include_dir = []' >> .air.toml && \
+	echo '  exclude_file = []' >> .air.toml && \
+	echo '  log = "build-errors.log"' >> .air.toml && \
+	echo '  delay = 1000' >> .air.toml && \
+	echo '  stop_on_error = false' >> .air.toml && \
+	echo '  send_interrupt = true' >> .air.toml && \
+	echo '  kill_delay = 500' >> .air.toml && \
+	echo '' >> .air.toml && \
+	echo '[log]' >> .air.toml && \
+	echo '  time = true' >> .air.toml && \
+	echo '' >> .air.toml && \
+	echo '[color]' >> .air.toml && \
+	echo '  main = "magenta"' >> .air.toml && \
+	echo '  watcher = "cyan"' >> .air.toml && \
+	echo '  build = "yellow"' >> .air.toml && \
+	echo '  runner = "green"' >> .air.toml && \
+	echo '' >> .air.toml && \
+	echo '[misc]' >> .air.toml && \
+	echo '  clean_on_exit = true' >> .air.toml
+
+# Create tmp directory for Air
+RUN mkdir -p tmp
+
+EXPOSE 50051
+
+# Default command - let Air handle building and running
+CMD ["air", "-c", ".air.toml"]

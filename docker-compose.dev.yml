@@ -1,0 +1,72 @@
+version: '3.8'
+
+services:
+  frontend:
+    build:
+      context: .
+      dockerfile: ./frontend/Dockerfile.dev
+    image: ${APP_NAME}-frontend-dev:${IMAGE_TAG:-latest}
+    ports:
+      - "8080:3001"  # Vue Dev Server (Container läuft auf 3001!)
+      - "${FRONTEND_PORT}:${FRONTEND_PORT}"  # Express Server
+    networks:
+      - app-network
+    environment:
+      - GRPC_SERVER_URL=${BACKEND_HOST}:${BACKEND_PORT}
+      - PORT=${FRONTEND_PORT}
+      - NODE_ENV=development
+
+      # ABSOLUTE KRITISCH für Docker Hot Reload
+      - CHOKIDAR_USEPOLLING=true
+      - CHOKIDAR_INTERVAL=500
+      - WATCHPACK_POLLING=true
+      - WDS_SOCKET_HOST=0.0.0.0
+      - WDS_SOCKET_PORT=8080
+      - FAST_REFRESH=true
+
+      # Vue CLI Environment
+      - VUE_CLI_BABEL_TRANSPILE_MODULES=true
+
+    volumes:
+      # KRITISCH: Alle Source Files als bind mounts
+      - ./frontend/src:/app/src:delegated
+      - ./frontend/public:/app/public:delegated
+      - ./frontend/vue.config.js:/app/vue.config.js:delegated
+      - ./frontend/tailwind.config.js:/app/tailwind.config.js:delegated
+      - ./frontend/postcss.config.js:/app/postcss.config.js:delegated
+      - ./frontend/package.json:/app/package.json:delegated
+      - ./frontend/server.js:/app/server.js:delegated
+
+      # Node modules im Container lassen
+      - frontend-node-modules:/app/node_modules
+
+    container_name: ${APP_NAME}-frontend-dev
+    command: ["npm", "run", "dev"]
+    stdin_open: true
+    tty: true
+
+    # Restart policy
+    restart: unless-stopped
+
+  backend-grpc-server:
+    build:
+      context: .
+      dockerfile: ./server/Dockerfile
+    image: ${APP_NAME}-backend-grpc-server-dev:${IMAGE_TAG:-latest}
+    ports:
+      - "${BACKEND_PORT}:${BACKEND_PORT}"
+    networks:
+      - app-network
+    environment:
+      - PORT=${BACKEND_PORT}
+    container_name: ${APP_NAME}-backend-grpc-server-dev
+    restart: unless-stopped
+
+volumes:
+  frontend-node-modules:
+    driver: local
+
+networks:
+  app-network:
+    driver: bridge
+    name: ${APP_NAME}-dev-network
