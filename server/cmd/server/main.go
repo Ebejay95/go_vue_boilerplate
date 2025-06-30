@@ -8,7 +8,7 @@ import (
 	"os"
 	"sync"
 
-	pb "grpc-server/pb"
+	pb "backend-grpc-server/pb"
 
 	"google.golang.org/grpc"
 )

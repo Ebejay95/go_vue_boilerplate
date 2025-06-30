@@ -4,8 +4,11 @@ const protoLoader = require('@grpc/proto-loader');
 const path = require('path');
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || process.env.FRONTEND_PORT;
 const GRPC_SERVER_URL = process.env.GRPC_SERVER_URL || 'localhost:50051';
+
+console.log(`Frontend server starting on port ${PORT}`);
+console.log(`Connecting to gRPC server at: ${GRPC_SERVER_URL}`);
 
 // Load protobuf
 const PROTO_PATH = path.join(__dirname, '../proto/user.proto');
@@ -17,11 +20,22 @@ const packageDefinition = protoLoader.loadSync(PROTO_PATH, {
   oneofs: true,
 });
 
-const userProto = grpc.loadPackageDefinition(packageDefinition).user;
-const client = new userProto.UserService(GRPC_SERVER_URL, grpc.credentials.createInsecure());
+// WICHTIG: user.UserService statt nur userProto.UserService
+const userProto = grpc.loadPackageDefinition(packageDefinition);
+const client = new userProto.user.UserService(GRPC_SERVER_URL, grpc.credentials.createInsecure());
 
 app.use(express.json());
 app.use(express.static('public'));
+
+// Test der gRPC-Verbindung beim Start
+client.ListUsers({}, (error, response) => {
+  if (error) {
+    console.error('❌ gRPC connection failed:', error.message);
+  } else {
+    console.log('✅ gRPC connection successful');
+    console.log(`Found ${response.users ? response.users.length : 0} users`);
+  }
+});
 
 // API Routes
 app.get('/api/users', (req, res) => {
@@ -59,6 +73,15 @@ app.post('/api/users', (req, res) => {
   });
 });
 
+// Health check endpoint
+app.get('/health', (req, res) => {
+  res.json({
+    status: 'healthy',
+    grpcServer: GRPC_SERVER_URL,
+    port: PORT
+  });
+});
+
 // Serve HTML
 app.get('/', (req, res) => {
   res.send(`
@@ -79,10 +102,18 @@ app.get('/', (req, res) => {
             button:hover { background-color: #45a049; }
             .form-group { margin: 10px 0; }
             label { display: inline-block; width: 100px; }
+            .status { padding: 10px; margin: 10px 0; border-radius: 4px; }
+            .success { background-color: #d4edda; border: 1px solid #c3e6cb; color: #155724; }
+            .error { background-color: #f8d7da; border: 1px solid #f5c6cb; color: #721c24; }
         </style>
     </head>
     <body>
         <h1>gRPC User Management</h1>
+
+        <div class="status success">
+            <strong>Status:</strong> Frontend läuft auf Port ${PORT}<br>
+            <strong>gRPC Server:</strong> ${GRPC_SERVER_URL}
+        </div>
 
         <div class="container">
             <h2>Neuen User erstellen</h2>
@@ -124,10 +155,23 @@ app.get('/', (req, res) => {
             async function loadUsers() {
                 try {
                     const response = await fetch('/api/users');
+                    if (!response.ok) {
+                        throw new Error(\`HTTP \${response.status}: \${response.statusText}\`);
+                    }
                     const users = await response.json();
 
                     const tbody = document.getElementById('usersTableBody');
                     tbody.innerHTML = '';
+
+                    if (users.length === 0) {
+                        const row = tbody.insertRow();
+                        const cell = row.insertCell(0);
+                        cell.colSpan = 4;
+                        cell.textContent = 'Keine Users gefunden';
+                        cell.style.textAlign = 'center';
+                        cell.style.fontStyle = 'italic';
+                        return;
+                    }
 
                     users.forEach(user => {
                         const row = tbody.insertRow();
@@ -138,7 +182,7 @@ app.get('/', (req, res) => {
                     });
                 } catch (error) {
                     console.error('Error loading users:', error);
-                    alert('Fehler beim Laden der Users');
+                    alert('Fehler beim Laden der Users: ' + error.message);
                 }
             }
 
@@ -163,11 +207,12 @@ app.get('/', (req, res) => {
                         loadUsers();
                         alert('User erfolgreich erstellt!');
                     } else {
-                        alert('Fehler beim Erstellen des Users');
+                        const errorText = await response.text();
+                        alert('Fehler beim Erstellen des Users: ' + errorText);
                     }
                 } catch (error) {
                     console.error('Error creating user:', error);
-                    alert('Fehler beim Erstellen des Users');
+                    alert('Fehler beim Erstellen des Users: ' + error.message);
                 }
             });
 
@@ -179,7 +224,6 @@ app.get('/', (req, res) => {
   `);
 });
 
-app.listen(PORT, () => {
-  console.log(`Frontend server running on port ${PORT}`);
-  console.log(`Connecting to gRPC server at ${GRPC_SERVER_URL}`);
+app.listen(PORT, '0.0.0.0', () => {
+  console.log(`✅ Frontend server listening on port ${PORT}`);
 });

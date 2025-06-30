@@ -1,4 +1,4 @@
-module grpc-server
+module backend-grpc-server
 
 go 1.21
 
