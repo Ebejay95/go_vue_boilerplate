@@ -1,0 +1,138 @@
+/* ===== COMPONENTS/BUTTONS.CSS ===== */
+
+	.btn {
+	  @apply inline-flex items-center justify-center gap-2 px-4 py-2 border border-transparent rounded-lg font-medium text-sm transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed;
+	  box-shadow: var(--shadow-sm);
+	}
+
+	/* Button sizes */
+	.btn-xs {
+	  @apply px-2 py-1 text-xs;
+	}
+
+	.btn-sm {
+	  @apply px-3 py-1.5 text-sm;
+	}
+
+	.btn-lg {
+	  @apply px-6 py-3 text-base;
+	}
+
+	.btn-xl {
+	  @apply px-8 py-4 text-lg;
+	}
+
+	/* Primary variants */
+	.btn-primary {
+	  background-color: var(--color-primary-600);
+	  color: white;
+	}
+
+	.btn-primary:hover {
+	  background-color: var(--color-primary-700);
+	  box-shadow: var(--shadow-md);
+	}
+
+	.btn-primary:focus {
+	  --tw-ring-color: var(--color-primary-500);
+	}
+
+	/* Secondary variants */
+	.btn-secondary {
+	  background-color: var(--color-secondary-600);
+	  color: white;
+	}
+
+	.btn-secondary:hover {
+	  background-color: var(--color-secondary-700);
+	  box-shadow: var(--shadow-md);
+	}
+
+	/* Accent variants */
+	.btn-accent {
+	  background-color: var(--color-accent-600);
+	  color: white;
+	}
+
+	.btn-accent:hover {
+	  background-color: var(--color-accent-700);
+	  box-shadow: var(--shadow-md);
+	}
+
+	/* Status variants */
+	.btn-success {
+	  background-color: var(--color-success-600);
+	  color: white;
+	}
+
+	.btn-success:hover {
+	  background-color: var(--color-success-700);
+	}
+
+	.btn-warning {
+	  background-color: var(--color-warning-600);
+	  color: white;
+	}
+
+	.btn-warning:hover {
+	  background-color: var(--color-warning-700);
+	}
+
+	.btn-error {
+	  background-color: var(--color-error-600);
+	  color: white;
+	}
+
+	.btn-error:hover {
+	  background-color: var(--color-error-700);
+	}
+
+	/* Outline variants */
+	.btn-outline {
+	  @apply bg-transparent border-2;
+	  color: var(--color-text-primary);
+	  border-color: var(--color-border);
+	}
+
+	.btn-outline:hover {
+	  background-color: var(--color-bg-secondary);
+	}
+
+	.btn-outline-primary {
+	  @apply btn-outline;
+	  border-color: var(--color-primary-600);
+	  color: var(--color-primary-600);
+	}
+
+	.btn-outline-primary:hover {
+	  background-color: var(--color-primary-600);
+	  color: white;
+	}
+
+	/* Ghost variants */
+	.btn-ghost {
+	  @apply bg-transparent border-transparent;
+	  color: var(--color-text-secondary);
+	}
+
+	.btn-ghost:hover {
+	  background-color: var(--color-bg-secondary);
+	  color: var(--color-text-primary);
+	}
+
+	/* Icon button */
+	.btn-icon {
+	  @apply p-2 rounded-full;
+	  min-width: auto;
+	}
+
+	/* Loading state */
+	.btn-loading {
+	  @apply cursor-not-allowed;
+	  opacity: 0.7;
+	}
+
+	.btn-loading::before {
+	  content: "";
+	  @apply inline-block w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin mr-2;
+	}

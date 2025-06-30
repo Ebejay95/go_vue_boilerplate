@@ -1,0 +1,120 @@
+/* ===== BASE/TYPOGRAPHY.CSS ===== */
+
+	h1, h2, h3, h4, h5, h6 {
+	  font-weight: var(--font-weight-bold);
+	  line-height: var(--line-height-tight);
+	  color: var(--color-text-primary);
+	  margin-bottom: var(--spacing-md);
+	}
+
+	h1 {
+	  font-size: var(--font-size-4xl);
+	  margin-bottom: var(--spacing-xl);
+	}
+
+	h2 {
+	  font-size: var(--font-size-3xl);
+	  margin-bottom: var(--spacing-lg);
+	}
+
+	h3 {
+	  font-size: var(--font-size-2xl);
+	  margin-bottom: var(--spacing-md);
+	}
+
+	h4 {
+	  font-size: var(--font-size-xl);
+	  margin-bottom: var(--spacing-sm);
+	}
+
+	h5 {
+	  font-size: var(--font-size-lg);
+	  margin-bottom: var(--spacing-sm);
+	}
+
+	h6 {
+	  font-size: var(--font-size-base);
+	  margin-bottom: var(--spacing-xs);
+	}
+
+	p {
+	  margin-bottom: var(--spacing-md);
+	  line-height: var(--line-height-relaxed);
+	  color: var(--color-text-secondary);
+	}
+
+	a {
+	  color: var(--color-primary-600);
+	  transition: color var(--transition-fast) ease;
+	}
+
+	a:hover {
+	  color: var(--color-primary-700);
+	}
+
+	strong, b {
+	  font-weight: var(--font-weight-semibold);
+	}
+
+	em, i {
+	  font-style: italic;
+	}
+
+	small {
+	  font-size: var(--font-size-sm);
+	}
+
+	code {
+	  font-family: ui-monospace, SFMono-Regular, Consolas, "Liberation Mono", Menlo, monospace;
+	  font-size: var(--font-size-sm);
+	  background-color: var(--color-neutral-100);
+	  color: var(--color-neutral-800);
+	  padding: 0.125rem 0.25rem;
+	  border-radius: var(--radius-sm);
+	}
+
+	pre {
+	  font-family: ui-monospace, SFMono-Regular, Consolas, "Liberation Mono", Menlo, monospace;
+	  background-color: var(--color-neutral-100);
+	  color: var(--color-neutral-800);
+	  padding: var(--spacing-md);
+	  border-radius: var(--radius-md);
+	  overflow-x: auto;
+	  margin-bottom: var(--spacing-md);
+	}
+
+	pre code {
+	  background: none;
+	  padding: 0;
+	}
+
+	blockquote {
+	  border-left: 4px solid var(--color-primary-500);
+	  padding-left: var(--spacing-md);
+	  margin: var(--spacing-lg) 0;
+	  color: var(--color-text-secondary);
+	  font-style: italic;
+	}
+
+	hr {
+	  border: none;
+	  height: 1px;
+	  background-color: var(--color-border);
+	  margin: var(--spacing-xl) 0;
+	}
+
+	ul, ol {
+	  margin-bottom: var(--spacing-md);
+	  padding-left: var(--spacing-lg);
+	  list-style: initial;
+	}
+
+	ol {
+	  list-style: decimal;
+	}
+
+	li {
+	  margin-bottom: var(--spacing-xs);
+	  line-height: var(--line-height-relaxed);
+	  color: var(--color-text-secondary);
+	}

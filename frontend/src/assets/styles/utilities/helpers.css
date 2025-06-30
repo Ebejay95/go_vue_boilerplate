@@ -1,0 +1,166 @@
+/* ===== UTILITIES/HELPERS.CSS ===== */
+	/* Visibility helpers */
+	.sr-only {
+	  position: absolute;
+	  width: 1px;
+	  height: 1px;
+	  padding: 0;
+	  margin: -1px;
+	  overflow: hidden;
+	  clip: rect(0, 0, 0, 0);
+	  white-space: nowrap;
+	  border: 0;
+	}
+
+	.not-sr-only {
+	  position: static;
+	  width: auto;
+	  height: auto;
+	  padding: 0;
+	  margin: 0;
+	  overflow: visible;
+	  clip: auto;
+	  white-space: normal;
+	}
+
+	/* Focus helpers */
+	.focus-visible {
+	  outline: 2px solid var(--color-primary-500);
+	  outline-offset: 2px;
+	}
+
+	/* Scrollbar styling */
+	.scrollbar-thin {
+	  scrollbar-width: thin;
+	  scrollbar-color: var(--color-neutral-400) var(--color-neutral-100);
+	}
+
+	.scrollbar-thin::-webkit-scrollbar {
+	  width: 6px;
+	  height: 6px;
+	}
+
+	.scrollbar-thin::-webkit-scrollbar-track {
+	  background: var(--color-neutral-100);
+	}
+
+	.scrollbar-thin::-webkit-scrollbar-thumb {
+	  background: var(--color-neutral-400);
+	  border-radius: var(--radius-full);
+	}
+
+	.scrollbar-thin::-webkit-scrollbar-thumb:hover {
+	  background: var(--color-neutral-500);
+	}
+
+	/* Text utilities */
+	.text-balance {
+	  text-wrap: balance;
+	}
+
+	.text-pretty {
+	  text-wrap: pretty;
+	}
+
+	/* Gradient text */
+	.text-gradient {
+	  background: linear-gradient(135deg, var(--color-primary-600), var(--color-accent-600));
+	  -webkit-background-clip: text;
+	  -webkit-text-fill-color: transparent;
+	  background-clip: text;
+	}
+
+	/* Glass effect */
+	.glass {
+	  background: rgba(255, 255, 255, 0.1);
+	  backdrop-filter: blur(10px);
+	  border: 1px solid rgba(255, 255, 255, 0.2);
+	}
+
+	.glass-dark {
+	  background: rgba(0, 0, 0, 0.1);
+	  backdrop-filter: blur(10px);
+	  border: 1px solid rgba(255, 255, 255, 0.1);
+	}
+
+	/* Aspect ratio utilities */
+	.aspect-square {
+	  aspect-ratio: 1 / 1;
+	}
+
+	.aspect-video {
+	  aspect-ratio: 16 / 9;
+	}
+
+	.aspect-photo {
+	  aspect-ratio: 4 / 3;
+	}
+
+	/* Image utilities */
+	.image-fit {
+	  object-fit: cover;
+	  object-position: center;
+	}
+
+	/* Grid helpers */
+	.grid-auto-fit {
+	  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+	}
+
+	.grid-auto-fill {
+	  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+	}
+
+	/* Flex helpers */
+	.flex-center {
+	  display: flex;
+	  align-items: center;
+	  justify-content: center;
+	}
+
+	.flex-between {
+	  display: flex;
+	  align-items: center;
+	  justify-content: space-between;
+	}
+
+	.flex-around {
+	  display: flex;
+	  align-items: center;
+	  justify-content: space-around;
+	}
+
+	.flex-evenly {
+	  display: flex;
+	  align-items: center;
+	  justify-content: space-evenly;
+	}
+
+	/* Position helpers */
+	.absolute-center {
+	  position: absolute;
+	  top: 50%;
+	  left: 50%;
+	  transform: translate(-50%, -50%);
+	}
+
+	.absolute-center-x {
+	  position: absolute;
+	  left: 50%;
+	  transform: translateX(-50%);
+	}
+
+	.absolute-center-y {
+	  position: absolute;
+	  top: 50%;
+	  transform: translateY(-50%);
+	}
+
+	/* Debug helpers */
+	.debug {
+	  outline: 1px solid red;
+	}
+
+	.debug * {
+	  outline: 1px solid blue;
+	}

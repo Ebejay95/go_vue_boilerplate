@@ -1,0 +1,49 @@
+/* ===== BASE/RESET.CSS ===== */
+
+	*,
+	*::before,
+	*::after {
+	  @apply box-border;
+	}
+	* {
+	  @apply m-0 p-0;
+	}
+	html {
+	  @apply scroll-smooth;
+	  -webkit-text-size-adjust: 100%;
+	  tab-size: 4;
+	}
+	body {
+	  @apply leading-[var(--line-height-normal)] bg-[color:var(--color-bg-primary)] text-[color:var(--color-text-primary)];
+	  font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
+		"Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+	  -webkit-font-smoothing: antialiased;
+	  -moz-osx-font-smoothing: grayscale;
+	}
+	img,
+	picture,
+	video,
+	canvas,
+	svg {
+	  @apply block max-w-full h-auto;
+	}
+	input,
+	button,
+	textarea,
+	select {
+	  font: inherit;
+	}
+	button {
+	  @apply cursor-pointer disabled:cursor-not-allowed;
+	}
+	a {
+	  @apply text-inherit;
+	  text-decoration: inherit;
+	}
+	table {
+	  @apply border-spacing-0 border-collapse;
+	}
+	ul,
+	ol {
+	  list-style: none;
+	}

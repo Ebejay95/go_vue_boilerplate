@@ -1,0 +1,24 @@
+
+/* Custom base styles */
+@import './base/reset.css';
+@import './base/variables.css';
+@import './base/typography.css';
+
+/* Component styles */
+@import './components/layout.css';
+@import './components/buttons.css';
+@import './components/cards.css';
+@import './components/forms.css';
+@import './components/navigation.css';
+
+/* Utility styles */
+@import './utilities/animations.css';
+@import './utilities/spacing.css';
+@import './utilities/helpers.css';
+
+/* Vendor overrides */
+@import './vendor/overrides.css';
+/* ===== MAIN STYLES INDEX.CSS ===== */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
