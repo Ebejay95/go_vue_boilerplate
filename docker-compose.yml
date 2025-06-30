@@ -1,57 +1,29 @@
 version: '3.8'
 
 services:
-  database:
-    image: postgres:15-alpine
-    container_name: myapp_db
-    environment:
-      POSTGRES_DB: myapp
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: password
-    ports:
-      - "5432:5432"
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-      - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql
-    networks:
-      - app-network
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres"]
-      interval: 5s
-      timeout: 5s
-      retries: 5
-
-  backend:
+  grpc-server:
     build:
-      context: ./backend
-      dockerfile: Dockerfile
-    container_name: myapp_backend
+      context: .
+      dockerfile: ./server/Dockerfile
     ports:
-      - "8080:8080"
-      - "9090:9090"
-    environment:
-      DATABASE_URL: postgres://postgres:password@database:5432/myapp?sslmode=disable
-    depends_on:
-      database:
-        condition: service_healthy
+      - "50051:50051"
     networks:
       - app-network
-    restart: unless-stopped
+    environment:
+      - PORT=50051
 
   frontend:
     build:
-      context: ./frontend
-      dockerfile: Dockerfile
-    container_name: myapp_frontend
+      context: .
+      dockerfile: ./frontend/Dockerfile
     ports:
-      - "3000:80"
-    depends_on:
-      - backend
+      - "3000:3000"
     networks:
       - app-network
-
-volumes:
-  postgres_data:
+    environment:
+      - GRPC_SERVER_URL=grpc-server:50051
+    depends_on:
+      - grpc-server
 
 networks:
   app-network:
