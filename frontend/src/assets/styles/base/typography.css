@@ -1,81 +1,84 @@
 /* ===== BASE/TYPOGRAPHY.CSS ===== */
+@layer base {
 
 	h1 {
-	  @apply font-bold leading-tight text-gray-900 mb-8 text-4xl;
-	}
+		@apply font-bold leading-tight text-gray-900 mb-8 text-4xl;
+	  }
 
-	h2 {
-	  @apply font-bold leading-tight text-gray-900 mb-6 text-3xl;
-	}
+	  h2 {
+		@apply font-bold leading-tight text-gray-900 mb-6 text-3xl;
+	  }
 
-	h3 {
-	  @apply font-bold leading-tight text-gray-900 mb-4 text-2xl;
-	}
+	  h3 {
+		@apply font-bold leading-tight text-gray-900 mb-4 text-2xl;
+	  }
 
-	h4 {
-	  @apply font-bold leading-tight text-gray-900 mb-3 text-xl;
-	}
+	  h4 {
+		@apply font-bold leading-tight text-gray-900 mb-3 text-xl;
+	  }
 
-	h5 {
-	  @apply font-bold leading-tight text-gray-900 mb-3 text-lg;
-	}
+	  h5 {
+		@apply font-bold leading-tight text-gray-900 mb-3 text-lg;
+	  }
 
-	h6 {
-	  @apply font-bold leading-tight text-gray-900 mb-2 text-base;
-	}
+	  h6 {
+		@apply font-bold leading-tight text-gray-900 mb-2 text-base;
+	  }
 
-	p {
-	  @apply mb-4 leading-relaxed text-gray-600;
-	}
+	  p {
+		@apply mb-4 leading-relaxed text-gray-600;
+	  }
 
-	a {
-	  @apply text-blue-600 transition-colors duration-200 ease-in-out;
-	}
+	  a {
+		@apply text-blue-600 transition-colors duration-200 ease-in-out;
+	  }
 
-	a:hover {
-	  @apply text-blue-700;
-	}
+	  a:hover {
+		@apply text-blue-700;
+	  }
 
-	strong, b {
-	  @apply font-semibold;
-	}
+	  strong, b {
+		@apply font-semibold;
+	  }
 
-	em, i {
-	  @apply italic;
-	}
+	  em, i {
+		@apply italic;
+	  }
 
-	small {
-	  @apply text-sm;
-	}
+	  small {
+		@apply text-sm;
+	  }
 
-	code {
-	  @apply font-mono text-sm bg-gray-100 text-gray-800 px-1 py-0.5 rounded;
-	}
+	  code {
+		@apply font-mono text-sm bg-gray-100 text-gray-800 px-1 py-0.5 rounded;
+	  }
 
-	pre {
-	  @apply font-mono bg-gray-100 text-gray-800 p-4 rounded-md overflow-x-auto mb-4;
-	}
+	  pre {
+		@apply font-mono bg-gray-100 text-gray-800 p-4 rounded-md overflow-x-auto mb-4;
+	  }
 
-	pre code {
-	  @apply bg-transparent p-0;
-	}
+	  pre code {
+		@apply bg-transparent p-0;
+	  }
 
-	blockquote {
-	  @apply border-l-4 border-blue-500 pl-4 my-6 text-gray-600 italic;
-	}
+	  blockquote {
+		@apply border-l-4 border-blue-500 pl-4 my-6 text-gray-600 italic;
+	  }
 
-	hr {
-	  @apply border-0 h-px bg-gray-200 my-8;
-	}
+	  hr {
+		@apply border-0 h-px bg-gray-200 my-8;
+	  }
 
-	ul, ol {
-	  @apply mb-4 pl-6 list-disc;
-	}
+	  ul, ol {
+		@apply mb-4 pl-6 list-disc;
+	  }
 
-	ol {
-	  @apply list-decimal;
-	}
+	  ol {
+		@apply list-decimal;
+	  }
 
-	li {
-	  @apply mb-1 leading-relaxed text-gray-600;
-	}
+	  li {
+		@apply mb-1 leading-relaxed text-gray-600;
+	  }
+
+}

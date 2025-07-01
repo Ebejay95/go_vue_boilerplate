@@ -1,91 +1,112 @@
-// frontend/vue.config.js - Garantiertes Hot Reload für Docker
 const { defineConfig } = require('@vue/cli-service')
+const { DefinePlugin } = require('webpack')
+const packageJson = require('./package.json')
+
+const baseUrl = process.env.VUE_APP_BASE_URL || process.env.BASE_URL || '/'
 
 module.exports = defineConfig({
-  transpileDependencies: true,
+	transpileDependencies: true,
 
-  devServer: {
-    port: 8080,
-    host: '0.0.0.0',
-    allowedHosts: 'all',
+	publicPath: baseUrl,
 
-    // KRITISCH: Diese müssen alle true sein
-    hot: 'only',  // Nur Hot Reload, kein vollständiges Neuladen
-    liveReload: false, // Deaktivieren um Konflikte zu vermeiden
+	chainWebpack: config => {
+		config
+			.plugin('html')
+			.tap(args => {
+				args[0].title = packageJson.name || 'MyApp'
+				args[0].templateParameters = {
+					...args[0].templateParameters,
+					APP_NAME: packageJson.name || 'MyApp',
+					BASE_URL: baseUrl
+				}
+				return args
+			})
+	},
 
-    // File Watching - AGGRESSIV
-    watchFiles: {
-      paths: [
-        'src/**/*',
-        'public/**/*',
-        '*.js',
-        '*.json',
-        '*.vue'
-      ],
-      options: {
-        usePolling: true,     // MUSS true sein für Docker
-        interval: 500,        // Schnell genug
-        ignored: ['**/node_modules/**', '**/.git/**']
-      }
-    },
+	configureWebpack: config => {
+		config.plugins.push(
+			new DefinePlugin({
+				__VUE_OPTIONS_API__: JSON.stringify(true),
+				__VUE_PROD_DEVTOOLS__: JSON.stringify(false),
+				__VUE_PROD_HYDRATION_MISMATCH_DETAILS__: JSON.stringify(false),
+				__FEATURE_SUSPENSE__: JSON.stringify(true),
+				__FEATURE_OPTIONS_API__: JSON.stringify(true),
+				__FEATURE_PROD_DEVTOOLS__: JSON.stringify(false)
+			})
+		)
 
-    // WebSocket Konfiguration
-    client: {
-      webSocketURL: {
-        hostname: '0.0.0.0',
-        pathname: '/ws',
-        port: 8080,
-        protocol: 'ws'
-      },
-      overlay: {
-        errors: true,
-        warnings: false,
-        runtimeErrors: false
-      },
-      progress: false,
-      reconnect: 3
-    },
+		if (process.env.NODE_ENV === 'development') {
+			config.watchOptions = {
+				poll: 500,
+				aggregateTimeout: 200,
+				ignored: /node_modules/
+			}
+			config.devtool = 'eval-cheap-module-source-map'
+		}
+	},
 
-    // Zusätzliche Headers
-    headers: {
-      'Access-Control-Allow-Origin': '*',
-      'Access-Control-Allow-Methods': '*',
-      'Access-Control-Allow-Headers': '*'
-    },
+	devServer: {
+		port: 8080,
+		host: '0.0.0.0',
+		allowedHosts: 'all',
+		hot: 'only',
+		liveReload: false,
+		watchFiles: {
+			paths: [
+				'src/**/*',
+				'public/**/*',
+				'*.js',
+				'*.json',
+				'*.vue'
+			],
+			options: {
+				usePolling: true,
+				interval: 500,
+				ignored: ['**/node_modules/**', '**/.git/**']
+			}
+		},
 
-    // Proxy
-    proxy: {
-      '/api': {
-        target: 'http://localhost:3000',
-        changeOrigin: true
-      }
-    }
-  },
+		client: {
+			webSocketURL: {
+				hostname: '0.0.0.0',
+				pathname: '/ws',
+				port: 8080,
+				protocol: 'ws'
+			},
+			overlay: {
+				errors: true,
+				warnings: false,
+				runtimeErrors: false
+			},
+			progress: false,
+			reconnect: 3
+		},
 
-  // Webpack Konfiguration für File Watching
-  configureWebpack: config => {
-    if (process.env.NODE_ENV === 'development') {
-      config.watchOptions = {
-        poll: 500,
-        aggregateTimeout: 200,
-        ignored: /node_modules/
-      }
+		headers: {
+			'Access-Control-Allow-Origin': '*',
+			'Access-Control-Allow-Methods': '*',
+			'Access-Control-Allow-Headers': '*'
+		},
 
-      // Ensure HMR is enabled
-      config.devtool = 'eval-cheap-module-source-map'
-    }
-  },
+		proxy: {
+			'/api': {
+				target: 'http://localhost:3000',
+				changeOrigin: true
+			}
+		}
+	},
 
-  css: {
-    loaderOptions: {
-      postcss: {
-        postcssOptions: {
-          plugins: [
-            require('tailwindcss'),
-            require('autoprefixer'),
-          ],
-        },
-      },
-    },
-  }
+	css: {
+		loaderOptions: {
+			postcss: {
+				postcssOptions: {
+					plugins: [
+						require('postcss-import'),
+						require('tailwindcss'),
+						require('autoprefixer'),
+					],
+				},
+			},
+		},
+	}
 })

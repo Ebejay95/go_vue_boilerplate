@@ -16,7 +16,6 @@ COPY proto ../proto
 # Konfigurationsdateien kopieren
 COPY frontend/vue.config.js ./
 COPY frontend/tailwind.config.js ./
-COPY frontend/postcss.config.js ./
 COPY frontend/server.js ./
 
 # Source files kopieren

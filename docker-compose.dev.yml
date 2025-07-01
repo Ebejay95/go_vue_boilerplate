@@ -33,7 +33,6 @@ services:
       - ./frontend/public:/app/public:delegated
       - ./frontend/vue.config.js:/app/vue.config.js:delegated
       - ./frontend/tailwind.config.js:/app/tailwind.config.js:delegated
-      - ./frontend/postcss.config.js:/app/postcss.config.js:delegated
       - ./frontend/package.json:/app/package.json:delegated
       - ./frontend/server.js:/app/server.js:delegated
 
