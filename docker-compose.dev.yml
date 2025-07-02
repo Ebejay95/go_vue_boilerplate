@@ -5,16 +5,17 @@ services:
     build:
       context: .
       dockerfile: ./frontend/Dockerfile.dev
-    image: ${APP_NAME}-frontend-dev:${IMAGE_TAG:-latest}
+    image: ${APP_NAME}-frontend-grpc-dev:${IMAGE_TAG:-latest}
     ports:
-      - "8080:3001"  # Vue Dev Server (Container läuft auf 3001!)
-      - "${FRONTEND_PORT}:${FRONTEND_PORT}"  # Express Server
+      - "8080:8080"  # Vue Dev Server
     networks:
       - app-network
     environment:
-      - GRPC_SERVER_URL=${BACKEND_HOST}:${BACKEND_PORT}
-      - PORT=${FRONTEND_PORT}
       - NODE_ENV=development
+
+      # KRITISCH: gRPC-Web URL muss vom Browser (Host) erreichbar sein!
+      # Nicht backend-grpc-server:8081 (das ist nur container-intern)
+      - VUE_APP_GRPC_WEB_URL=http://localhost:8081
 
       # ABSOLUTE KRITISCH für Docker Hot Reload
       - CHOKIDAR_USEPOLLING=true
@@ -27,39 +28,51 @@ services:
       # Vue CLI Environment
       - VUE_CLI_BABEL_TRANSPILE_MODULES=true
 
+      # REST API Fallback (optional)
+      - VUE_APP_API_BASE_URL=http://localhost:3000/api
+
     volumes:
-      # KRITISCH: Alle Source Files als bind mounts
+      # KRITISCH: Source Files als bind mounts
       - ./frontend/src:/app/src:delegated
       - ./frontend/public:/app/public:delegated
       - ./frontend/vue.config.js:/app/vue.config.js:delegated
       - ./frontend/tailwind.config.js:/app/tailwind.config.js:delegated
       - ./frontend/package.json:/app/package.json:delegated
-      - ./frontend/server.js:/app/server.js:delegated
+
+      # Proto files für Regeneration
+      - ./proto:/app/proto:delegated
 
       # Node modules im Container lassen
       - frontend-node-modules:/app/node_modules
 
-    container_name: ${APP_NAME}-frontend-dev
-    command: ["npm", "run", "dev"]
+    container_name: ${APP_NAME}-frontend-grpc-dev
+    command: ["npm", "run", "serve"]
     stdin_open: true
     tty: true
-
-    # Restart policy
     restart: unless-stopped
+
+    depends_on:
+      - backend-grpc-server
 
   backend-grpc-server:
     build:
       context: .
-      dockerfile: ./server/Dockerfile
+      dockerfile: ./server/Dockerfile.dev
     image: ${APP_NAME}-backend-grpc-server-dev:${IMAGE_TAG:-latest}
     ports:
-      - "${BACKEND_PORT}:${BACKEND_PORT}"
+      - "${BACKEND_PORT}:${BACKEND_PORT}"    # Standard gRPC Port (50051)
+      - "8081:8081"                          # gRPC-Web Port - MUSS auf Host exponiert sein!
     networks:
       - app-network
     environment:
       - PORT=${BACKEND_PORT}
+      - WEB_PORT=8081
     container_name: ${APP_NAME}-backend-grpc-server-dev
     restart: unless-stopped
+
+    volumes:
+      # Server source files für Live Reload
+      - ./server:/app/server:delegated
 
 volumes:
   frontend-node-modules:
@@ -68,4 +81,4 @@ volumes:
 networks:
   app-network:
     driver: bridge
-    name: ${APP_NAME}-dev-network
+    name: ${APP_NAME}-grpc-dev-network

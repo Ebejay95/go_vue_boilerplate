@@ -1,48 +1,97 @@
-# Multi-stage build for Vue.js application
-FROM node:18-alpine AS build-stage
+# Development Dockerfile für Vue.js mit gRPC-Web Hot Reload
+FROM node:18-alpine
+
+# Install protoc and tools
+RUN apk add --no-cache protobuf-dev curl unzip bash
+
+# Install protoc-gen-grpc-web für JavaScript Generation
+RUN curl -sSL https://github.com/grpc/grpc-web/releases/download/1.4.2/protoc-gen-grpc-web-1.4.2-linux-x86_64 \
+	-o /usr/local/bin/protoc-gen-grpc-web && \
+	chmod +x /usr/local/bin/protoc-gen-grpc-web
 
 WORKDIR /app
 
-# Copy package files first
+# Package.json und lock files zuerst kopieren
 COPY frontend/package*.json ./
 
-# Install all dependencies (including devDependencies for build)
+# Install dependencies including grpc-tools for protoc-gen-js
 RUN npm install
+RUN npm install -g grpc-tools@latest
 
-# Copy proto files
+# Konfigurationsdateien kopieren
+COPY frontend/vue.config.js ./
+COPY frontend/tailwind.config.js ./
+
+# Proto files kopieren und JavaScript generieren
 COPY proto ../proto
+RUN mkdir -p src/proto
 
-# Copy ALL frontend source code (this will overwrite package.json but that's ok after npm install)
-COPY frontend/ ./
+# STEP 1: Generate JavaScript files from proto
+RUN echo "=== Generating JavaScript protobuf files ==="
+RUN npx grpc_tools_node_protoc \
+	--js_out=import_style=commonjs,binary:src/proto \
+	--proto_path=../proto \
+	../proto/*.proto
 
-# Debug: List files to verify structure
-RUN echo "=== Frontend files ===" && ls -la
-RUN echo "=== Source files ===" && ls -la src/
+# STEP 2: Generate gRPC-Web files
+RUN echo "=== Generating gRPC-Web files ==="
+RUN npx grpc_tools_node_protoc \
+	--grpc-web_out=import_style=commonjs,mode=grpcwebtext:src/proto \
+	--proto_path=../proto \
+	../proto/*.proto
 
-# Build Vue.js application
-RUN npm run build:vue
+# Verification: Check generated files exist
+RUN echo "=== Verifying generated files ==="
+RUN ls -la src/proto/
+RUN echo "=== Checking user_pb.js ===" && test -f src/proto/user_pb.js && echo "✅ user_pb.js exists" || echo "❌ user_pb.js missing"
+RUN echo "=== Checking user_grpc_web_pb.js ===" && test -f src/proto/user_grpc_web_pb.js && echo "✅ user_grpc_web_pb.js exists" || echo "❌ user_grpc_web_pb.js missing"
 
-# Production stage
-FROM node:18-alpine AS production-stage
+# Show first few lines of generated files for debugging
+RUN echo "=== user_pb.js content preview ==="
+RUN head -10 src/proto/user_pb.js 2>/dev/null || echo "Could not read user_pb.js"
 
-WORKDIR /app
+RUN echo "=== user_grpc_web_pb.js content preview ==="
+RUN head -10 src/proto/user_grpc_web_pb.js 2>/dev/null || echo "Could not read user_grpc_web_pb.js"
 
-# Copy package files first
-COPY frontend/package*.json ./
+# Source files kopieren NACH proto generation
+COPY frontend/src ./src
+COPY frontend/public ./public
 
-# Install only production dependencies
-RUN npm install --omit=dev
+# WICHTIG: Proto files in src/ überschreiben, falls sie durch COPY überschrieben wurden
+RUN echo "=== Re-verifying proto files after src copy ==="
+RUN ls -la src/proto/
+RUN test -f src/proto/user_pb.js && echo "✅ user_pb.js still exists" || (echo "❌ user_pb.js disappeared, regenerating..." && \
+	npx grpc_tools_node_protoc --js_out=import_style=commonjs,binary:src/proto --proto_path=../proto ../proto/*.proto)
+RUN test -f src/proto/user_grpc_web_pb.js && echo "✅ user_grpc_web_pb.js still exists" || (echo "❌ user_grpc_web_pb.js disappeared, regenerating..." && \
+	npx grpc_tools_node_protoc --grpc-web_out=import_style=commonjs,mode=grpcwebtext:src/proto --proto_path=../proto ../proto/*.proto)
 
-# Copy built Vue files and server
-COPY --from=build-stage /app/dist ./dist
-COPY --from=build-stage /app/server.js ./
+# Final verification
+RUN echo "=== Final file check ==="
+RUN ls -la src/proto/
+RUN file src/proto/* || echo "No proto files found"
 
-# Copy proto files
-COPY proto ../proto
+# KRITISCHE Environment Variablen für File Watching
+ENV NODE_ENV=development
+ENV CHOKIDAR_USEPOLLING=true
+ENV CHOKIDAR_INTERVAL=500
+ENV WATCHPACK_POLLING=true
+ENV WDS_SOCKET_HOST=0.0.0.0
+ENV WDS_SOCKET_PORT=8080
+ENV FAST_REFRESH=true
 
-# Set production environment
-ENV NODE_ENV=production
+# Vue CLI spezifische Env Vars
+ENV VUE_CLI_BABEL_TRANSPILE_MODULES=true
+ENV VUE_CLI_BABEL_TARGET_NODE=true
 
-EXPOSE 3000
+# gRPC-Web URL für Development (wird vom docker-compose überschrieben)
+ENV VUE_APP_GRPC_WEB_URL=http://backend-grpc-server:8081
 
-CMD ["npm", "start"]
+# Ports freigeben
+EXPOSE 8080
+
+# Gesundheitscheck
+HEALTHCHECK --interval=30s --timeout=3s --start-period=10s --retries=3 \
+	CMD curl -f http://localhost:8080 || exit 1
+
+# Development command with proto file check
+CMD ["sh", "-c", "echo '=== Starting with proto files: ===' && ls -la src/proto/ && npm run serve"]

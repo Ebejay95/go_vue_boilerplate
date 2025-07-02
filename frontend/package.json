@@ -1,7 +1,7 @@
 {
 	"name": "grpc-vue-frontend",
 	"version": "1.0.0",
-	"description": "Vue.js Frontend for gRPC service",
+	"description": "Vue.js Frontend for direct gRPC-Web communication",
 	"main": "server.js",
 	"scripts": {
 	  "start": "node server.js",
@@ -11,18 +11,19 @@
 	  "serve": "vue-cli-service serve",
 	  "server": "node server.js",
 	  "postinstall": "npm run lock-check || echo 'Package lock generated'",
-	  "lock-check": "test -f package-lock.json"
+	  "lock-check": "test -f package-lock.json",
+	  "proto:generate": "npm run proto:js && npm run proto:grpc-web",
+	  "proto:js": "npx grpc_tools_node_protoc --js_out=import_style=commonjs,binary:src/proto --proto_path=../proto ../proto/*.proto",
+	  "proto:grpc-web": "npx grpc_tools_node_protoc --grpc-web_out=import_style=commonjs,mode=grpcwebtext:src/proto --proto_path=../proto ../proto/*.proto"
 	},
-	"keywords": ["vue", "grpc", "frontend"],
+	"keywords": ["vue", "grpc", "grpc-web", "frontend"],
 	"author": "",
 	"license": "ISC",
 	"dependencies": {
-	  "express": "^4.18.2",
-	  "@grpc/grpc-js": "^1.9.0",
-	  "@grpc/proto-loader": "^0.7.8",
 	  "vue": "^3.3.0",
 	  "vue-router": "^4.5.1",
-	  "axios": "^1.5.0"
+	  "grpc-web": "^1.4.2",
+	  "google-protobuf": "^3.21.2"
 	},
 	"devDependencies": {
 	  "@vue/cli-service": "^5.0.8",
@@ -32,7 +33,8 @@
 	  "autoprefixer": "^10.4.0",
 	  "postcss": "^8.4.0",
 	  "postcss-loader": "^7.3.0",
-	  "postcss-import": "^16.1.0"
+	  "postcss-import": "^16.1.0",
+	  "grpc-tools": "^1.12.4"
 	},
 	"engines": {
 	  "node": ">=16.0.0",
@@ -43,4 +45,4 @@
 	  "last 2 versions",
 	  "not dead"
 	]
-  }
+}

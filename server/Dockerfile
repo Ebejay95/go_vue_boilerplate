@@ -1,10 +1,15 @@
 # Build stage
 FROM golang:1.21-alpine AS builder
 
-# Install protoc and protoc-gen-go
-RUN apk add --no-cache protobuf-dev git
+# Install protoc, protoc-gen-go und protoc-gen-grpc-web
+RUN apk add --no-cache protobuf-dev git curl unzip
 RUN go install google.golang.org/protobuf/cmd/protoc-gen-go@v1.31.0
 RUN go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@v1.3.0
+
+# Install protoc-gen-grpc-web für Frontend Proto Generation
+RUN curl -sSL https://github.com/grpc/grpc-web/releases/download/1.4.2/protoc-gen-grpc-web-1.4.2-linux-x86_64 \
+	-o /usr/local/bin/protoc-gen-grpc-web && \
+	chmod +x /usr/local/bin/protoc-gen-grpc-web
 
 WORKDIR /app
 
@@ -31,6 +36,7 @@ WORKDIR /root/
 
 COPY --from=builder /app/main .
 
-EXPOSE 50051
+# Expose both gRPC and gRPC-Web ports
+EXPOSE 50051 8081
 
 CMD ["./main"]
