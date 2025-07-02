@@ -1,6 +1,6 @@
 <template>
 	<header>
-		<p>Header</p>
+		<router-link to="/">Header</router-link>
 		<navigation-component></navigation-component>
 	</header>
 </template>

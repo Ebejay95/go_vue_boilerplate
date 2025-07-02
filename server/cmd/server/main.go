@@ -83,6 +83,7 @@ func (s *UserServer) CreateUser(ctx context.Context, req *pb.CreateUserRequest) 
 			Name:  user.Name,
 			Email: user.Email,
 			Age:   user.Age,
+			Role:   user.Role,
 		},
 	}, nil
 }

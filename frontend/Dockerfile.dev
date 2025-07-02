@@ -1,6 +1,9 @@
 # Development Dockerfile für Vue.js mit GARANTIERTEM Hot Reload
 FROM node:18-alpine
 
+# Installiere curl für Health Checks
+RUN apk add --no-cache curl
+
 WORKDIR /app
 
 # Package.json und lock files zuerst kopieren

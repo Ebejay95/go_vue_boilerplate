@@ -133,7 +133,6 @@
   </template>
 
   <script>
-  import { mapGetters, mapActions } from 'vuex'
 
   export default {
 	name: 'Welcome',
@@ -147,28 +146,28 @@
 		}
 		}
 	},
-	computed: {
-		...mapGetters('users', [
-		'users',
-		'hasUsers',
-		'userCount',
-		'isLoading',
-		'isCreating',
-		'error',
-		'adminUsers',
-		'regularUsers'
-		])
-	},
+	// computed: {
+	// 	...mapGetters('users', [
+	// 	'users',
+	// 	'hasUsers',
+	// 	'userCount',
+	// 	'isLoading',
+	// 	'isCreating',
+	// 	'error',
+	// 	'adminUsers',
+	// 	'regularUsers'
+	// 	])
+	// },
 	methods: {
-		...mapActions('users', [
-		'fetchUsers',
-		'createUser',
-		'clearError'
-		]),
+		// ...mapActions('users', [
+		// 'fetchUsers',
+		// 'createUser',
+		// 'clearError'
+		// ]),
 
 		async loadUsers() {
 		try {
-			await this.fetchUsers()
+			//await this.fetchUsers()
 		} catch (error) {
 			console.error('Fehler beim Laden der Users:', error)
 		}
