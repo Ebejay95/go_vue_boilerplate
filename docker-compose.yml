@@ -7,11 +7,13 @@ services:
       dockerfile: ./server/Dockerfile
     image: ${APP_NAME}-backend-grpc-server:${IMAGE_TAG:-latest}
     ports:
-      - "${BACKEND_PORT}:${BACKEND_PORT}"
+      - "${BACKEND_PORT}:${BACKEND_PORT}"  # Standard gRPC (50051:50051)
+      - "8081:8081"                        # ✅ FIXED: gRPC-Web Port korrekt unter ports
     networks:
       - app-network
     environment:
-      - PORT=${BACKEND_PORT}
+      - PORT=${BACKEND_PORT}               # Standard gRPC Port (50051)
+      - WEB_PORT=8081                      # gRPC-Web Port (8081)
     container_name: ${APP_NAME}-backend-grpc-server
 
   frontend:
@@ -24,7 +26,8 @@ services:
     networks:
       - app-network
     environment:
-      # WICHTIG: Kein http:// und kein trailing slash für gRPC!
+      # ✅ FIXED: Für gRPC-Web den korrekten Port verwenden
+      - VUE_APP_GRPC_WEB_URL=http://localhost:8081
       - GRPC_SERVER_URL=${BACKEND_HOST}:${BACKEND_PORT}
       - PORT=${FRONTEND_PORT}
     depends_on:

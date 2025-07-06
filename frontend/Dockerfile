@@ -83,9 +83,6 @@ ENV FAST_REFRESH=true
 ENV VUE_CLI_BABEL_TRANSPILE_MODULES=true
 ENV VUE_CLI_BABEL_TARGET_NODE=true
 
-# gRPC-Web URL für Development (wird vom docker-compose überschrieben)
-ENV VUE_APP_GRPC_WEB_URL=http://backend-grpc-server:8081
-
 # Ports freigeben
 EXPOSE 8080
 

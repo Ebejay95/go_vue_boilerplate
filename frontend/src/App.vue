@@ -1,252 +1,225 @@
 <template>
-	<div class="max-w-6xl mx-auto p-6">
-	  <!-- Header -->
-	  <div class="mb-8">
-		<h1 class="text-3xl font-bold text-gray-900 mb-2">🚀 Direct gRPC-Web Testing</h1>
-		<p class="text-gray-600">Test direkte gRPC-Web Verbindung (ohne REST Proxy)</p>
-	  </div>
-
-	  <!-- Connection Method Selection -->
-	  <div class="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
-		<h3 class="text-lg font-medium text-blue-900 mb-3">Verbindungsmethode wählen:</h3>
-		<div class="space-y-2">
-		  <label class="inline-flex items-center">
-			<input
-			  type="radio"
-			  v-model="connectionMethod"
-			  value="grpc-web"
-			  class="text-blue-600 focus:ring-blue-500"
-			>
-			<span class="ml-2">⚡ Direct gRPC-Web (Empfohlen)</span>
-		  </label>
-		  <label class="inline-flex items-center">
-			<input
-			  type="radio"
-			  v-model="connectionMethod"
-			  value="rest"
-			  class="text-blue-600 focus:ring-blue-500"
-			>
-			<span class="ml-2">🌐 REST API (Express Proxy - Fallback)</span>
-		  </label>
-		</div>
-	  </div>
-
-	  <!-- Status Display -->
-	  <div class="mb-6 p-4 rounded-lg" :class="connectionStatus.healthy ? 'bg-green-50 border border-green-200' : 'bg-red-50 border border-red-200'">
-		<div class="flex items-center justify-between">
-		  <div class="flex items-center">
-			<div class="flex-shrink-0">
-			  <div class="w-3 h-3 rounded-full mr-3" :class="connectionStatus.healthy ? 'bg-green-500 animate-pulse' : 'bg-red-500'"></div>
-			</div>
-			<div>
-			  <p class="text-sm font-medium" :class="connectionStatus.healthy ? 'text-green-800' : 'text-red-800'">
-				{{ connectionStatus.healthy ? `✅ ${getCurrentMethodName()} Connected` : `❌ ${getCurrentMethodName()} Disconnected` }}
-			  </p>
-			  <p class="text-xs" :class="connectionStatus.healthy ? 'text-green-600' : 'text-red-600'">
-				{{ connectionStatus.message }}
-			  </p>
+	<div id="app" class="min-h-screen bg-gray-50">
+	  <header class="bg-white shadow-sm border-b">
+		<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+		  <div class="flex justify-between items-center h-16">
+			<h1 class="text-xl font-semibold text-gray-900">
+			  Direct gRPC-Web Test
+			</h1>
+			<div class="flex items-center space-x-4">
+			  <!-- Connection Status -->
+			  <div class="flex items-center space-x-2">
+				<div
+				  :class="[
+					'w-3 h-3 rounded-full',
+					connectionStatus.healthy ? 'bg-green-500' : 'bg-red-500'
+				  ]"
+				></div>
+				<span class="text-sm text-gray-600">
+				  {{ connectionStatus.message }}
+				</span>
+			  </div>
 			</div>
 		  </div>
-		  <button
-			@click="checkHealth"
-			class="text-xs px-3 py-1 rounded border bg-white"
-			:class="connectionStatus.healthy ? 'border-green-300 text-green-700 hover:bg-green-50' : 'border-red-300 text-red-700 hover:bg-red-50'"
-		  >
-			Test Connection
-		  </button>
 		</div>
-	  </div>
+	  </header>
 
-	  <!-- Create User Form -->
-	  <div class="bg-white shadow-lg rounded-lg p-6 mb-8 border">
-		<h2 class="text-xl font-semibold text-gray-900 mb-4 flex items-center">
-		  <span class="text-2xl mr-2">➕</span>
-		  User erstellen via {{ getCurrentMethodName() }}
-		</h2>
+	  <main class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+		<!-- Status Message -->
+		<div v-if="message"
+			 :class="[
+			   'mb-6 p-4 rounded-md',
+			   message.type === 'success' ? 'bg-green-50 text-green-800 border border-green-200' : 'bg-red-50 text-red-800 border border-red-200'
+			 ]">
+		  {{ message.text }}
+		</div>
 
-		<form @submit.prevent="submitCreateUser" class="space-y-4">
-		  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-			<div>
-			  <label for="name" class="block text-sm font-medium text-gray-700 mb-1">Name</label>
-			  <input
-				type="text"
-				id="name"
-				v-model="newUser.name"
-				required
-				placeholder="Name eingeben"
-				class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-			  />
-			</div>
+		<div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+		  <!-- Create User Form -->
+		  <div class="bg-white p-6 rounded-lg shadow">
+			<h2 class="text-lg font-medium text-gray-900 mb-4">Create New User</h2>
 
-			<div>
-			  <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Email</label>
-			  <input
-				type="email"
-				id="email"
-				v-model="newUser.email"
-				required
-				placeholder="email@example.com"
-				class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-			  />
-			</div>
+			<form @submit.prevent="submitCreateUser" class="space-y-4">
+			  <div>
+				<label for="name" class="block text-sm font-medium text-gray-700">Name</label>
+				<input
+				  type="text"
+				  id="name"
+				  v-model="newUser.name"
+				  required
+				  placeholder="Enter name"
+				  class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+				/>
+			  </div>
 
-			<div>
-			  <label for="age" class="block text-sm font-medium text-gray-700 mb-1">Alter</label>
-			  <input
-				type="number"
-				id="age"
-				v-model.number="newUser.age"
-				required
-				min="1"
-				max="150"
-				placeholder="25"
-				class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-			  />
-			</div>
+			  <div>
+				<label for="email" class="block text-sm font-medium text-gray-700">Email</label>
+				<input
+				  type="email"
+				  id="email"
+				  v-model="newUser.email"
+				  required
+				  placeholder="email@example.com"
+				  class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+				/>
+			  </div>
 
-			<div>
-			  <label for="role" class="block text-sm font-medium text-gray-700 mb-1">Rolle</label>
-			  <select
-				id="role"
-				v-model="newUser.role"
-				class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+			  <div>
+				<label for="age" class="block text-sm font-medium text-gray-700">Age</label>
+				<input
+				  type="number"
+				  id="age"
+				  v-model.number="newUser.age"
+				  required
+				  min="1"
+				  max="150"
+				  placeholder="25"
+				  class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+				/>
+			  </div>
+
+			  <div>
+				<label for="role" class="block text-sm font-medium text-gray-700">Role</label>
+				<select
+				  id="role"
+				  v-model="newUser.role"
+				  class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+				>
+				  <option value="user">User</option>
+				  <option value="admin">Admin</option>
+				</select>
+			  </div>
+
+			  <button
+				type="submit"
+				:disabled="isCreating || !connectionStatus.healthy"
+				class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
 			  >
-				<option value="user">User</option>
-				<option value="admin">Admin</option>
-			  </select>
+				<svg v-if="isCreating" class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+				  <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+				  <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+				</svg>
+				{{ isCreating ? 'Creating User...' : 'Create User' }}
+			  </button>
+			</form>
+		  </div>
+
+		  <!-- Users List -->
+		  <div class="bg-white p-6 rounded-lg shadow">
+			<div class="flex justify-between items-center mb-4">
+			  <h2 class="text-lg font-medium text-gray-900">All Users</h2>
+			  <button
+				@click="loadUsers"
+				:disabled="isLoading || !connectionStatus.healthy"
+				class="inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
+			  >
+				<svg v-if="isLoading" class="animate-spin -ml-1 mr-2 h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+				  <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+				  <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+				</svg>
+				{{ isLoading ? 'Loading...' : 'Refresh' }}
+			  </button>
 			</div>
-		  </div>
 
-		  <button
-			type="submit"
-			:disabled="isCreating || !connectionStatus.healthy"
-			class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
-		  >
-			<svg v-if="isCreating" class="animate-spin -ml-1 mr-3 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-			  <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-			  <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-			</svg>
-			{{ isCreating ? 'Creating...' : `User erstellen (${getCurrentMethodName()})` }}
-		  </button>
-		</form>
-	  </div>
+			<div class="space-y-4">
+			  <!-- Loading State -->
+			  <div v-if="isLoading && !hasUsers" class="flex items-center justify-center py-8">
+				<div class="flex items-center">
+				  <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+					<circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+					<path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+				  </svg>
+				  <span class="text-gray-500">Loading users...</span>
+				</div>
+			  </div>
 
-	  <!-- Users List -->
-	  <div class="bg-white shadow-lg rounded-lg border">
-		<div class="px-6 py-4 border-b border-gray-200 flex justify-between items-center bg-gray-50">
-		  <h2 class="text-xl font-semibold text-gray-900 flex items-center">
-			<span class="text-2xl mr-2">📋</span>
-			Users via {{ getCurrentMethodName() }}
-		  </h2>
-		  <button
-			@click="loadUsers"
-			:disabled="isLoading || !connectionStatus.healthy"
-			class="inline-flex items-center px-3 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:ring-2 focus:ring-blue-500 disabled:opacity-50"
-		  >
-			<svg v-if="isLoading" class="animate-spin -ml-1 mr-2 h-4 w-4 text-gray-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-			  <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-			  <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-			</svg>
-			{{ isLoading ? 'Loading...' : 'Refresh' }}
-		  </button>
-		</div>
+			  <!-- Empty State -->
+			  <div v-else-if="!hasUsers && !isLoading" class="text-center py-8">
+				<svg class="mx-auto h-12 w-12 text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48">
+				  <path d="M34 40h10v-4a6 6 0 00-10.712-3.714M34 40H14m20 0v-4a9.971 9.971 0 00-.712-3.714M14 40H4v-4a6 6 0 0110.713-3.714M14 40v-4c0-1.313.253-2.566.713-3.714m0 0A10.003 10.003 0 0124 26c4.21 0 7.813 2.602 9.288 6.286M30 14a6 6 0 11-12 0 6 6 0 0112 0z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+				</svg>
+				<h3 class="mt-2 text-sm font-medium text-gray-900">No users found</h3>
+				<p class="mt-1 text-sm text-gray-500">Create the first user to get started.</p>
+			  </div>
 
-		<div class="p-6">
-		  <!-- Loading State -->
-		  <div v-if="isLoading && !hasUsers" class="text-center py-8">
-			<div class="inline-flex items-center">
-			  <svg class="animate-spin -ml-1 mr-3 h-6 w-6 text-blue-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-				<circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-				<path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-			  </svg>
-			  <span class="text-gray-600">Loading users via {{ getCurrentMethodName() }}...</span>
-			</div>
-		  </div>
-
-		  <!-- Empty State -->
-		  <div v-else-if="!hasUsers && !isLoading" class="text-center py-8">
-			<div class="text-6xl mb-4">👥</div>
-			<h3 class="text-lg font-medium text-gray-900 mb-2">Keine Users gefunden</h3>
-			<p class="text-gray-500 mb-4">Erstellen Sie den ersten User.</p>
-		  </div>
-
-		  <!-- Users Table -->
-		  <div v-else class="overflow-x-auto">
-			<table class="min-w-full divide-y divide-gray-200">
-			  <thead class="bg-gray-50">
-				<tr>
-				  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">👤 User</th>
-				  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">📧 Email</th>
-				  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">🎂 Alter</th>
-				  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">🏷️ Rolle</th>
-				</tr>
-			  </thead>
-			  <tbody class="bg-white divide-y divide-gray-200">
-				<tr v-for="user in users" :key="user.id" class="hover:bg-gray-50">
-				  <td class="px-6 py-4 whitespace-nowrap">
-					<div class="flex items-center">
-					  <div class="flex-shrink-0 h-8 w-8">
-						<div class="h-8 w-8 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 flex items-center justify-center">
-						  <span class="text-xs font-bold text-white">{{ user.name.charAt(0).toUpperCase() }}</span>
+			  <!-- Users Table -->
+			  <div v-else class="overflow-hidden">
+				<table class="min-w-full divide-y divide-gray-200">
+				  <thead class="bg-gray-50">
+					<tr>
+					  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">User</th>
+					  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
+					  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Age</th>
+					  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Role</th>
+					</tr>
+				  </thead>
+				  <tbody class="bg-white divide-y divide-gray-200">
+					<tr v-for="user in users" :key="user.id" class="hover:bg-gray-50">
+					  <td class="px-6 py-4 whitespace-nowrap">
+						<div class="flex items-center">
+						  <div class="flex-shrink-0 h-10 w-10">
+							<div class="h-10 w-10 rounded-full bg-blue-500 flex items-center justify-center">
+							  <span class="text-white font-medium text-sm">{{ user.name.charAt(0).toUpperCase() }}</span>
+							</div>
+						  </div>
+						  <div class="ml-4">
+							<div class="text-sm font-medium text-gray-900">{{ user.name }}</div>
+							<div class="text-sm text-gray-500">ID: {{ user.id }}</div>
+						  </div>
 						</div>
-					  </div>
-					  <div class="ml-4">
-						<div class="text-sm font-medium text-gray-900">{{ user.name }}</div>
-						<div class="text-xs text-gray-500">ID: {{ user.id }}</div>
-					  </div>
-					</div>
-				  </td>
-				  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ user.email }}</td>
-				  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ user.age }}</td>
-				  <td class="px-6 py-4 whitespace-nowrap">
-					<span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full"
-						  :class="user.role === 'admin' ? 'bg-purple-100 text-purple-800' : 'bg-green-100 text-green-800'">
-					  {{ user.role === 'admin' ? '👑 Admin' : '👤 User' }}
-					</span>
-				  </td>
-				</tr>
-			  </tbody>
-			</table>
+					  </td>
+					  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ user.email }}</td>
+					  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ user.age }}</td>
+					  <td class="px-6 py-4 whitespace-nowrap">
+						<span :class="[
+						  'inline-flex px-2 py-1 text-xs font-semibold rounded-full',
+						  user.role === 'admin' ? 'bg-purple-100 text-purple-800' : 'bg-green-100 text-green-800'
+						]">
+						  {{ user.role }}
+						</span>
+					  </td>
+					</tr>
+				  </tbody>
+				</table>
+			  </div>
+
+			  <!-- Last Updated -->
+			  <div v-if="lastUpdated" class="text-center text-xs text-gray-500 mt-4">
+				Last updated: {{ lastUpdated }}
+			  </div>
+			</div>
 		  </div>
 		</div>
-	  </div>
 
-	  <!-- Success/Error Messages -->
-	  <div v-if="message" class="fixed bottom-4 right-4 max-w-sm z-50">
-		<div class="p-4 rounded-lg shadow-lg border" :class="message.type === 'success' ? 'bg-green-50 border-green-200' : 'bg-red-50 border-red-200'">
-		  <div class="flex items-center">
-			<span class="text-lg mr-2">{{ message.type === 'success' ? '✅' : '❌' }}</span>
-			<p class="text-sm" :class="message.type === 'success' ? 'text-green-800' : 'text-red-800'">
-			  {{ message.text }}
-			</p>
+		<!-- Debug Info -->
+		<div class="mt-8 bg-gray-100 p-4 rounded-lg">
+		  <h3 class="text-sm font-medium text-gray-900 mb-2">Debug Information</h3>
+		  <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs text-gray-600">
+			<div>
+			  <strong>gRPC-Web URL:</strong> {{ grpcWebUrl }}
+			</div>
+			<div>
+			  <strong>Connection:</strong> {{ connectionStatus.connection }}
+			</div>
+			<div>
+			  <strong>Status:</strong> {{ connectionStatus.status }}
+			</div>
+			<div>
+			  <strong>Users Count:</strong> {{ users.length }}
+			</div>
 		  </div>
 		</div>
-	  </div>
-
-	  <!-- Debug Info -->
-	  <div class="mt-8 p-4 bg-gray-100 rounded-lg border">
-		<h3 class="text-sm font-medium text-gray-900 mb-2">🔧 Debug Info</h3>
-		<div class="text-xs text-gray-600 space-y-1">
-		  <div>Connection Method: {{ connectionMethod }}</div>
-		  <div>Connection Type: {{ connectionStatus.connection || 'unknown' }}</div>
-		  <div>Backend Status: {{ connectionStatus.status || 'unknown' }}</div>
-		  <div>Users Count: {{ users.length }}</div>
-		  <div>Last Updated: {{ lastUpdated || 'never' }}</div>
-		  <div>gRPC-Web URL: {{ grpcWebUrl }}</div>
-		  <div>REST API URL: {{ restApiUrl }}</div>
-		</div>
-	  </div>
+	  </main>
 	</div>
   </template>
 
   <script>
-  import { simpleGrpcClient, restLikeGrpcClient } from './services/grpcClient.js'
+  import { grpcClient } from './services/grpcClient.js'
 
   export default {
 	name: 'DirectGrpcWebTest',
 	data() {
 	  return {
-		connectionMethod: 'grpc-web', // Start with gRPC-Web as default
 		users: [],
 		isLoading: false,
 		isCreating: false,
@@ -256,7 +229,7 @@
 		  healthy: false,
 		  message: 'Checking connection...',
 		  status: 'unknown',
-		  connection: 'unknown'
+		  connection: 'grpc-web'
 		},
 		newUser: {
 		  name: '',
@@ -264,54 +237,45 @@
 		  age: '',
 		  role: 'user'
 		},
-		// Environment URLs (Vue.js macht diese automatisch verfügbar)
-		grpcWebUrl: import.meta.env?.VUE_APP_GRPC_WEB_URL || process.env?.VUE_APP_GRPC_WEB_URL || 'http://localhost:8081',
-		restApiUrl: import.meta.env?.VUE_APP_API_BASE_URL || process.env?.VUE_APP_API_BASE_URL || 'http://localhost:3000/api'
+		// ✅ Nur eine URL - gRPC-Web
+		grpcWebUrl: process.env.VUE_APP_GRPC_WEB_URL || 'http://localhost:8081'
 	  }
 	},
 
 	computed: {
 	  hasUsers() {
 		return this.users && this.users.length > 0
-	  },
-
-	  currentClient() {
-		return this.connectionMethod === 'grpc-web' ? simpleGrpcClient : restLikeGrpcClient
 	  }
 	},
 
 	methods: {
-	  getCurrentMethodName() {
-		return this.connectionMethod === 'grpc-web' ? 'gRPC-Web' : 'REST API'
-	  },
-
 	  async checkHealth() {
-		console.log(`🔍 Checking health via ${this.getCurrentMethodName()}...`)
+		console.log(`🔍 Checking gRPC-Web health...`)
 		try {
-		  const response = await this.currentClient.checkHealth()
+		  const response = await grpcClient.checkHealth()
 		  this.connectionStatus = {
 			healthy: response.status === 'healthy',
 			message: response.status === 'healthy'
-			  ? `✅ Connected via ${this.getCurrentMethodName()} with ${response.users || 0} users`
+			  ? `✅ Connected via gRPC-Web with ${response.users || 0} users`
 			  : `❌ ${response.error || 'Connection failed'}`,
 			status: response.status,
-			connection: response.connection || this.connectionMethod
+			connection: 'grpc-web'
 		  }
 
 		  if (response.status === 'healthy') {
-			this.showMessage(`${this.getCurrentMethodName()} connection successful!`, 'success')
+			this.showMessage(`gRPC-Web connection successful!`, 'success')
 		  } else {
-			this.showMessage(`${this.getCurrentMethodName()} connection failed`, 'error')
+			this.showMessage(`gRPC-Web connection failed`, 'error')
 		  }
 		} catch (error) {
 		  console.error(`❌ Health check failed:`, error)
 		  this.connectionStatus = {
 			healthy: false,
-			message: `❌ ${this.getCurrentMethodName()} server not reachable: ${error.message}`,
+			message: `❌ gRPC-Web server not reachable: ${error.message}`,
 			status: 'disconnected',
-			connection: this.connectionMethod
+			connection: 'grpc-web'
 		  }
-		  this.showMessage(`${this.getCurrentMethodName()} connection failed: ${error.message}`, 'error')
+		  this.showMessage(`gRPC-Web connection failed: ${error.message}`, 'error')
 		}
 	  },
 
@@ -322,14 +286,14 @@
 		}
 
 		this.isLoading = true
-		console.log(`📋 Loading users via ${this.getCurrentMethodName()}...`)
+		console.log(`📋 Loading users via gRPC-Web...`)
 
 		try {
-		  const response = await this.currentClient.listUsers()
+		  const response = await grpcClient.listUsers()
 		  this.users = response.users || []
 		  this.lastUpdated = new Date().toLocaleTimeString()
 
-		  console.log(`✅ Loaded ${this.users.length} users via ${this.getCurrentMethodName()}`)
+		  console.log(`✅ Loaded ${this.users.length} users via gRPC-Web`)
 
 		  if (this.users.length === 0) {
 			this.showMessage('📋 No users found in database', 'success')
@@ -353,10 +317,10 @@
 		}
 
 		this.isCreating = true
-		console.log(`➕ Creating user via ${this.getCurrentMethodName()}: ${this.newUser.name}`)
+		console.log(`➕ Creating user via gRPC-Web: ${this.newUser.name}`)
 
 		try {
-		  const response = await this.currentClient.createUser(this.newUser)
+		  const response = await grpcClient.createUser(this.newUser)
 		  console.log(`✅ User created:`, response.user)
 
 		  // Reset form
@@ -370,7 +334,7 @@
 		  // Reload users list
 		  await this.loadUsers()
 
-		  this.showMessage(`🎉 User "${response.user.name}" created via ${this.getCurrentMethodName()}!`, 'success')
+		  this.showMessage(`🎉 User "${response.user.name}" created via gRPC-Web!`, 'success')
 		} catch (error) {
 		  console.error(`❌ Error creating user:`, error)
 		  this.showMessage(`❌ Error: ${error.message}`, 'error')
@@ -387,32 +351,9 @@
 	  }
 	},
 
-	watch: {
-	  // When connection method changes, re-check health
-	  connectionMethod(newMethod) {
-		console.log(`🔄 Switching to ${this.getCurrentMethodName()}`)
-		this.connectionStatus = {
-		  healthy: false,
-		  message: `Switching to ${this.getCurrentMethodName()}...`,
-		  status: 'switching',
-		  connection: newMethod
-		}
-
-		// Small delay to let UI update
-		setTimeout(async () => {
-		  await this.checkHealth()
-		  if (this.connectionStatus.healthy) {
-			await this.loadUsers()
-		  }
-		}, 500)
-	  }
-	},
-
 	async mounted() {
 	  console.log(`🚀 Direct gRPC-Web Test Component mounted`)
-	  console.log(`🔗 Starting with: ${this.getCurrentMethodName()}`)
 	  console.log(`🌐 gRPC-Web URL: ${this.grpcWebUrl}`)
-	  console.log(`🌐 REST API URL: ${this.restApiUrl}`)
 
 	  await this.checkHealth()
 
@@ -424,3 +365,7 @@
 	}
   }
   </script>
+
+  <style>
+  /* Tailwind CSS ist bereits in main.js geladen */
+  </style>

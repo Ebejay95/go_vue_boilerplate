@@ -7,22 +7,21 @@ import {
 } from '../proto/user_pb'
 
 // ==========================================
-// ECHTER gRPC-Web CLIENT (direkt zu gRPC Server)
+// DIREKTER gRPC-Web CLIENT
 // ==========================================
 class DirectGrpcWebClient {
   constructor() {
-    // gRPC-Web Client - muss vom Browser erreichbar sein!
-    // Nicht backend-grpc-server:8081 (container-intern), sondern localhost:8081 (host)
+    // ✅ Port 8081 für gRPC-Web (vom Backend bestätigt)
     const grpcWebUrl = process.env.VUE_APP_GRPC_WEB_URL || 'http://localhost:8081'
 
     console.log(`🔗 Direct gRPC-Web Client connecting to: ${grpcWebUrl}`)
-    console.log(`🌐 Running in browser - using host-accessible URL`)
+    console.log(`🌐 Backend läuft auf: gRPC-Web Port 8081, Standard gRPC Port 50051`)
 
     this.client = new UserServiceClient(grpcWebUrl, null, null)
     this.grpcWebUrl = grpcWebUrl
   }
 
-  // Promise wrapper für gRPC Calls mit verbessertem Error Handling
+  // Promise wrapper für gRPC Calls
   promisify(method, request) {
     return new Promise((resolve, reject) => {
       const call = method.call(this.client, request, {}, (err, response) => {
@@ -34,15 +33,15 @@ class DirectGrpcWebClient {
             metadata: err.metadata
           })
 
-          // Bessere Error Messages für häufige Probleme
+          // Benutzerfreundliche Error Messages
           let userFriendlyMessage = err.message || 'gRPC-Web connection failed'
 
           if (err.code === 14 || err.message?.includes('UNAVAILABLE')) {
             userFriendlyMessage = `gRPC server not reachable at ${this.grpcWebUrl}. Is the backend running?`
           } else if (err.code === 12 || err.message?.includes('UNIMPLEMENTED')) {
             userFriendlyMessage = 'gRPC method not implemented on server'
-          } else if (err.message?.includes('fetch')) {
-            userFriendlyMessage = `Network error: Cannot connect to ${this.grpcWebUrl}. Check if port 8081 is accessible.`
+          } else if (err.message?.includes('fetch') || err.message?.includes('INVALID_HTTP_RESPONSE')) {
+            userFriendlyMessage = `Network error: Cannot connect to ${this.grpcWebUrl}. Make sure you're using gRPC-Web port 8081!`
           }
 
           reject(new Error(userFriendlyMessage))
@@ -61,7 +60,7 @@ class DirectGrpcWebClient {
     })
   }
 
-  // Health check using ListUsers
+  // Health check
   async checkHealth() {
     try {
       console.log(`🏥 gRPC-Web Health Check to ${this.grpcWebUrl}...`)
@@ -164,91 +163,19 @@ class DirectGrpcWebClient {
 }
 
 // ==========================================
-// REST-LIKE CLIENT (über Express Proxy)
-// ==========================================
-class RestLikeGrpcClient {
-  constructor() {
-    this.baseUrl = process.env.VUE_APP_API_BASE_URL || 'http://localhost:3000/api'
-    console.log(`🌐 REST-like Client connecting to: ${this.baseUrl}`)
-  }
-
-  async request(endpoint, options = {}) {
-    const url = `${this.baseUrl}${endpoint}`
-    const config = {
-      headers: {
-        'Content-Type': 'application/json',
-        ...options.headers
-      },
-      ...options
-    }
-
-    console.log(`📡 REST API Call: ${config.method || 'GET'} ${url}`)
-
-    try {
-      const response = await fetch(url, config)
-
-      if (!response.ok) {
-        const errorText = await response.text()
-        throw new Error(`HTTP ${response.status}: ${errorText}`)
-      }
-
-      const data = await response.json()
-      console.log(`✅ REST API Response:`, data)
-      return data
-    } catch (error) {
-      console.error(`❌ REST API Error:`, error)
-      throw error
-    }
-  }
-
-  async checkHealth() {
-    try {
-      const response = await this.request('/health')
-      return {
-        status: 'healthy',
-        connection: 'rest-api',
-        url: this.baseUrl,
-        ...response
-      }
-    } catch (error) {
-      return {
-        status: 'unhealthy',
-        connection: 'rest-api',
-        error: error.message || 'REST API connection failed',
-        url: this.baseUrl
-      }
-    }
-  }
-
-  async listUsers() {
-    return await this.request('/users')
-  }
-
-  async getUser(id) {
-    return await this.request(`/users/${id}`)
-  }
-
-  async createUser(userData) {
-    return await this.request('/users', {
-      method: 'POST',
-      body: JSON.stringify(userData)
-    })
-  }
-}
-
-// ==========================================
 // EXPORTS
 // ==========================================
 
-// Export instances
-export const simpleGrpcClient = new DirectGrpcWebClient()
-export const restLikeGrpcClient = new RestLikeGrpcClient()
+// Hauptclient exportieren
+export const grpcClient = new DirectGrpcWebClient()
 
-// Default export für backwards compatibility
-export default simpleGrpcClient
+// Für backwards compatibility
+export const simpleGrpcClient = grpcClient
+
+// Default export
+export default grpcClient
 
 // Debug info
-console.log('🔧 gRPC Clients initialized:')
-console.log(`  - simpleGrpcClient: Direct gRPC-Web to ${simpleGrpcClient.grpcWebUrl}`)
-console.log(`  - restLikeGrpcClient: REST API Proxy to ${restLikeGrpcClient.baseUrl}`)
-console.log('🌐 Note: gRPC-Web URL must be accessible from browser (host), not container network!')
+console.log('🔧 gRPC-Web Client initialized:')
+console.log(`  - URL: ${grpcClient.grpcWebUrl}`)
+console.log(`  - Backend Ports: gRPC-Web(8081), Standard gRPC(50051)`)

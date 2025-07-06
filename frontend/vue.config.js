@@ -49,8 +49,27 @@ module.exports = defineConfig({
 		port: 8080,
 		host: '0.0.0.0',
 		allowedHosts: 'all',
-		hot: 'only',
-		liveReload: false,
+
+		// 🔧 WEBSOCKET FIXES
+		hot: true,  // Statt 'only'
+		liveReload: true,  // Aktivieren
+
+		// 🔧 CLIENT CONFIG
+		client: {
+			webSocketURL: {
+				hostname: 'localhost',
+				pathname: '/ws',
+				port: 8080,
+				protocol: 'ws'
+			},
+			overlay: {
+				errors: true,
+				warnings: false,
+				runtimeErrors: false
+			}
+		},
+
+
 		watchFiles: {
 			paths: [
 				'src/**/*',
@@ -64,22 +83,6 @@ module.exports = defineConfig({
 				interval: 500,
 				ignored: ['**/node_modules/**', '**/.git/**']
 			}
-		},
-
-		client: {
-			webSocketURL: {
-				hostname: '0.0.0.0',
-				pathname: '/ws',
-				port: 8080,
-				protocol: 'ws'
-			},
-			overlay: {
-				errors: true,
-				warnings: false,
-				runtimeErrors: false
-			},
-			progress: false,
-			reconnect: 3
 		},
 
 		headers: {
