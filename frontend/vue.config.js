@@ -50,25 +50,13 @@ module.exports = defineConfig({
 		host: '0.0.0.0',
 		allowedHosts: 'all',
 
-		// 🔧 WEBSOCKET FIXES
-		hot: true,  // Statt 'only'
-		liveReload: true,  // Aktivieren
-
-		// 🔧 CLIENT CONFIG
 		client: {
-			webSocketURL: {
-				hostname: 'localhost',
-				pathname: '/ws',
-				port: 8080,
-				protocol: 'ws'
-			},
 			overlay: {
 				errors: true,
 				warnings: false,
 				runtimeErrors: false
 			}
 		},
-
 
 		watchFiles: {
 			paths: [
@@ -80,7 +68,7 @@ module.exports = defineConfig({
 			],
 			options: {
 				usePolling: true,
-				interval: 500,
+				interval: 1000,
 				ignored: ['**/node_modules/**', '**/.git/**']
 			}
 		},
