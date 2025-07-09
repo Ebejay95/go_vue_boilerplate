@@ -238,7 +238,7 @@
 		  role: 'user'
 		},
 		// ✅ Nur eine URL - gRPC-Web
-		grpcWebUrl: process.env.VUE_APP_GRPC_WEB_URL || 'http://localhost:8081'
+		grpcWebUrl: process.env.VUE_APP_GRPC_WEB_URL
 	  }
 	},
 

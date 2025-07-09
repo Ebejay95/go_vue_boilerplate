@@ -52,20 +52,6 @@ cp .env-sample .env
 
 Edit `.env` file with your preferred settings:
 
-```bash
-# General Configuration
-APP_NAME=myapp
-
-# Server Configuration
-BACKEND_PORT=50051
-BACKEND_HOST=backend-grpc-server
-
-# Frontend Configuration
-FRONTEND_PORT=3000
-FRONTEND_PROTOCOL=http
-FRONTEND_HOST=localhost
-```
-
 ### 3. Start Development Environment
 
 ```bash
@@ -76,11 +62,6 @@ make dev
 docker-compose -f docker-compose.yml -f docker-compose.dev.yml up --build
 ```
 
-### 4. Access the Application
-
-- **Frontend**: http://localhost:8080 (Vue Dev Server with hot reload)
-- **API**: http://localhost:3000/api (Express proxy server)
-- **gRPC Server**: localhost:50051
 
 ## 🛠️ Development Mode
 
@@ -119,12 +100,6 @@ make dev-shell-frontend    # Open shell in frontend container
 make dev-clean             # Clean development volumes
 make dev-down              # Stop development environment
 ```
-
-### Development URLs
-
-- **Vue Dev Server**: http://localhost:8080 (with hot reload)
-- **Express Server**: http://localhost:3000
-- **API Endpoints**: http://localhost:3000/api/*
 
 ## 🚀 Production Mode
 
@@ -317,12 +292,6 @@ Key environment variables in `.env`:
 1. Verify backend container is running: `docker ps`
 2. Check backend logs: `make dev-logs-backend`
 3. Ensure correct `GRPC_SERVER_URL` in frontend environment
-
-### Port Conflicts
-
-1. Check if ports are already in use: `netstat -tulpn | grep :8080`
-2. Modify ports in `.env` file
-3. Restart containers: `make dev-restart`
 
 ### Build Failures
 

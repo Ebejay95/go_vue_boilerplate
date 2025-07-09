@@ -75,8 +75,6 @@ ENV NODE_ENV=development
 ENV CHOKIDAR_USEPOLLING=true
 ENV CHOKIDAR_INTERVAL=500
 ENV WATCHPACK_POLLING=true
-ENV WDS_SOCKET_HOST=0.0.0.0
-ENV WDS_SOCKET_PORT=8080
 ENV FAST_REFRESH=true
 
 # Vue CLI spezifische Env Vars
@@ -84,11 +82,7 @@ ENV VUE_CLI_BABEL_TRANSPILE_MODULES=true
 ENV VUE_CLI_BABEL_TARGET_NODE=true
 
 # Ports freigeben
-EXPOSE 8080
-
-# Gesundheitscheck
-HEALTHCHECK --interval=30s --timeout=3s --start-period=10s --retries=3 \
-	CMD curl -f http://localhost:8080 || exit 1
+EXPOSE ${FRONTEND_PORT}
 
 # Development command with proto file check
 CMD ["sh", "-c", "echo '=== Starting with proto files: ===' && ls -la src/proto/ && npm run serve"]

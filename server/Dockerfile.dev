@@ -37,6 +37,6 @@ WORKDIR /root/
 COPY --from=builder /app/main .
 
 # Expose both gRPC and gRPC-Web ports
-EXPOSE 50051 8081
+EXPOSE ${BACKEND_PORT} ${GRPC_WEB_PORT}
 
 CMD ["./main"]

@@ -46,7 +46,7 @@ module.exports = defineConfig({
 	},
 
 	devServer: {
-		port: 8080,
+		port: process.env.PORT,
 		host: '0.0.0.0',
 		allowedHosts: 'all',
 
@@ -79,12 +79,7 @@ module.exports = defineConfig({
 			'Access-Control-Allow-Headers': '*'
 		},
 
-		proxy: {
-			'/api': {
-				target: 'http://localhost:3000',
-				changeOrigin: true
-			}
-		}
+
 	},
 
 	css: {

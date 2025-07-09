@@ -4,8 +4,8 @@ const protoLoader = require('@grpc/proto-loader');
 const path = require('path');
 
 const app = express();
-const PORT = process.env.PORT || process.env.FRONTEND_PORT || 3000;
-const GRPC_SERVER_URL = process.env.GRPC_SERVER_URL || 'localhost:50051';
+const PORT = process.env.PORT || process.env.FRONTEND_PORT;
+const GRPC_SERVER_URL = process.env.GRPC_SERVER_URL;
 
 console.log(`Frontend server starting on port ${PORT}`);
 console.log(`Connecting to gRPC server at: ${GRPC_SERVER_URL}`);
@@ -56,7 +56,4 @@ client.ListUsers({}, (error, response) => {
 
 app.listen(PORT, '0.0.0.0', () => {
 	console.log(`✅ Frontend server listening on port ${PORT}`);
-	if (process.env.NODE_ENV !== 'production') {
-		console.log(`Vue development server should be running on port 8080`);
-	}
 });

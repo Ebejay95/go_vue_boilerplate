@@ -5,29 +5,29 @@ services:
     build:
       context: .
       dockerfile: ./server/Dockerfile
-    image: ${APP_NAME}-backend-grpc-server:${IMAGE_TAG:-latest}
+    image: ${APP_NAME}-backend-grpc-server
     ports:
-      - "${BACKEND_PORT}:${BACKEND_PORT}"  # Standard gRPC (50051:50051)
-      - "8081:8081"                        # ✅ FIXED: gRPC-Web Port korrekt unter ports
+      - "${BACKEND_PORT}:${BACKEND_PORT}"
+      - "${GRPC_WEB_PORT}:${GRPC_WEB_PORT}"
     networks:
       - app-network
     environment:
-      - PORT=${BACKEND_PORT}               # Standard gRPC Port (50051)
-      - WEB_PORT=8081                      # gRPC-Web Port (8081)
+      - PORT=${BACKEND_PORT}
+      - WEB_PORT=${GRPC_WEB_PORT}
     container_name: ${APP_NAME}-backend-grpc-server
 
   frontend:
     build:
       context: .
       dockerfile: ./frontend/Dockerfile
-    image: ${APP_NAME}-frontend:${IMAGE_TAG:-latest}
+    image: ${APP_NAME}-frontend
     ports:
       - "${FRONTEND_PORT}:${FRONTEND_PORT}"
     networks:
       - app-network
     environment:
-      # ✅ FIXED: Für gRPC-Web den korrekten Port verwenden
-      - VUE_APP_GRPC_WEB_URL=http://localhost:8081
+      - GRPC_WEB_URL=${GRPC_WEB_URL}
+      - VUE_APP_GRPC_WEB_URL=${GRPC_WEB_URL}
       - GRPC_SERVER_URL=${BACKEND_HOST}:${BACKEND_PORT}
       - PORT=${FRONTEND_PORT}
     depends_on:

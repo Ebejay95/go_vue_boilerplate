@@ -5,45 +5,30 @@ services:
     build:
       context: .
       dockerfile: ./frontend/Dockerfile.dev
-    image: ${APP_NAME}-frontend-grpc-dev:${IMAGE_TAG:-latest}
+    image: ${APP_NAME}-frontend-grpc-dev
     ports:
-      - "8080:8080"  # Vue Dev Server
+      - "${FRONTEND_PORT}:${FRONTEND_PORT}"
     networks:
       - app-network
     environment:
       - NODE_ENV=development
       - BACKEND_BASE_URL=${BACKEND_BASE_URL}
-      # ✅ FIXED: Für gRPC-Web den korrekten Port verwenden
-      - VUE_APP_GRPC_WEB_URL=http://localhost:8081
-
-      # ABSOLUTE KRITISCH für Docker Hot Reload
+      - GRPC_WEB_URL=${GRPC_WEB_URL}
+      - VUE_APP_GRPC_WEB_URL=${GRPC_WEB_URL}
       - CHOKIDAR_USEPOLLING=true
       - CHOKIDAR_INTERVAL=500
       - WATCHPACK_POLLING=true
-
-      # 🔧 WEBSOCKET FIXES für Vue Dev Server
-      - WDS_SOCKET_HOST=localhost  # Statt 0.0.0.0
-      - WDS_SOCKET_PORT=8080
-      - WDS_SOCKET_PROTOCOL=ws     # Explizit setzen
-      - HMR_HOST=localhost         # Hot Module Replacement
-      - HMR_PORT=8080
+      - HMR_HOST=localhost
       - FAST_REFRESH=true
-
-      # Vue CLI Environment
       - VUE_CLI_BABEL_TRANSPILE_MODULES=true
 
     volumes:
-      # KRITISCH: Source Files als bind mounts
       - ./frontend/src:/app/src:delegated
       - ./frontend/public:/app/public:delegated
       - ./frontend/vue.config.js:/app/vue.config.js:delegated
       - ./frontend/tailwind.config.js:/app/tailwind.config.js:delegated
       - ./frontend/package.json:/app/package.json:delegated
-
-      # Proto files für Regeneration
       - ./proto:/app/proto:delegated
-
-      # Node modules im Container lassen
       - frontend-node-modules:/app/node_modules
 
     container_name: ${APP_NAME}-frontend-grpc-dev
@@ -59,20 +44,19 @@ services:
     build:
       context: .
       dockerfile: ./server/Dockerfile.dev
-    image: ${APP_NAME}-backend-grpc-server-dev:${IMAGE_TAG:-latest}
+    image: ${APP_NAME}-backend-grpc-server-dev
     ports:
-      - "${BACKEND_PORT}:${BACKEND_PORT}"    # Standard gRPC Port (50051)
-      - "8081:8081"                          # ✅ FIXED: gRPC-Web Port korrekt exponiert
+      - "${BACKEND_PORT}:${BACKEND_PORT}"
+      - "${GRPC_WEB_PORT}:${GRPC_WEB_PORT}"
     networks:
       - app-network
     environment:
-      - PORT=${BACKEND_PORT}                 # Standard gRPC (50051)
-      - WEB_PORT=8081                        # gRPC-Web (8081)
+      - PORT=${BACKEND_PORT}
+      - WEB_PORT=${GRPC_WEB_PORT}
     container_name: ${APP_NAME}-backend-grpc-server-dev
     restart: unless-stopped
 
     volumes:
-      # Server source files für Live Reload
       - ./server:/app/server:delegated
 
 volumes:

@@ -11,12 +11,7 @@ import {
 // ==========================================
 class DirectGrpcWebClient {
   constructor() {
-    // ✅ Port 8081 für gRPC-Web (vom Backend bestätigt)
-    const grpcWebUrl = process.env.VUE_APP_GRPC_WEB_URL || 'http://localhost:8081'
-
-    console.log(`🔗 Direct gRPC-Web Client connecting to: ${grpcWebUrl}`)
-    console.log(`🌐 Backend läuft auf: gRPC-Web Port 8081, Standard gRPC Port 50051`)
-
+    const grpcWebUrl = process.env.VUE_APP_GRPC_WEB_URL
     this.client = new UserServiceClient(grpcWebUrl, null, null)
     this.grpcWebUrl = grpcWebUrl
   }
@@ -40,8 +35,6 @@ class DirectGrpcWebClient {
             userFriendlyMessage = `gRPC server not reachable at ${this.grpcWebUrl}. Is the backend running?`
           } else if (err.code === 12 || err.message?.includes('UNIMPLEMENTED')) {
             userFriendlyMessage = 'gRPC method not implemented on server'
-          } else if (err.message?.includes('fetch') || err.message?.includes('INVALID_HTTP_RESPONSE')) {
-            userFriendlyMessage = `Network error: Cannot connect to ${this.grpcWebUrl}. Make sure you're using gRPC-Web port 8081!`
           }
 
           reject(new Error(userFriendlyMessage))
@@ -174,8 +167,3 @@ export const simpleGrpcClient = grpcClient
 
 // Default export
 export default grpcClient
-
-// Debug info
-console.log('🔧 gRPC-Web Client initialized:')
-console.log(`  - URL: ${grpcClient.grpcWebUrl}`)
-console.log(`  - Backend Ports: gRPC-Web(8081), Standard gRPC(50051)`)

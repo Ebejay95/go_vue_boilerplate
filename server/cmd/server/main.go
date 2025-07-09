@@ -120,12 +120,12 @@ func (s *UserServer) ListUsers(ctx context.Context, req *pb.ListUsersRequest) (*
 func main() {
 	port := os.Getenv("PORT")
 	if port == "" {
-		port = "50051"
+		port = os.Getenv("BACKEND_PORT")
 	}
 
 	webPort := os.Getenv("WEB_PORT")
 	if webPort == "" {
-		webPort = "8081"
+		webPort = os.Getenv("GRPC_WEB_PORT")
 	}
 
 	// Standard gRPC Server
