@@ -70,16 +70,18 @@ RUN echo "=== Final file check ==="
 RUN ls -la src/proto/
 RUN file src/proto/* || echo "No proto files found"
 
-# KRITISCHE Environment Variablen für File Watching
+# Development-spezifische Environment Variablen
 ENV NODE_ENV=development
 ENV CHOKIDAR_USEPOLLING=true
 ENV CHOKIDAR_INTERVAL=500
 ENV WATCHPACK_POLLING=true
 ENV FAST_REFRESH=true
-
-# Vue CLI spezifische Env Vars
 ENV VUE_CLI_BABEL_TRANSPILE_MODULES=true
 ENV VUE_CLI_BABEL_TARGET_NODE=true
+
+# Webpack Dev Server Konfiguration für Container
+ENV WEBPACK_DEV_SERVER_HOST=0.0.0.0
+ENV WEBPACK_DEV_SERVER_DISABLE_HOST_CHECK=true
 
 # Ports freigeben
 EXPOSE ${FRONTEND_PORT}

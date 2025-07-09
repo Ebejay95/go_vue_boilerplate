@@ -14,7 +14,12 @@ services:
     environment:
       - PORT=${BACKEND_PORT}
       - WEB_PORT=${GRPC_WEB_PORT}
+      - BACKEND_HOST=${BACKEND_HOST}
+      - BACKEND_BASE_URL=${BACKEND_BASE_URL}
+      - GRPC_WEB_URL=${GRPC_WEB_URL}
+      - DEEPL_API_KEY=${DEEPL_API_KEY}
     container_name: ${APP_NAME}-backend-grpc-server
+    restart: unless-stopped
 
   frontend:
     build:
@@ -26,13 +31,20 @@ services:
     networks:
       - app-network
     environment:
+      - NODE_ENV=production
       - GRPC_WEB_URL=${GRPC_WEB_URL}
       - VUE_APP_GRPC_WEB_URL=${GRPC_WEB_URL}
       - GRPC_SERVER_URL=${BACKEND_HOST}:${BACKEND_PORT}
       - PORT=${FRONTEND_PORT}
+      - FRONTEND_HOST=${FRONTEND_HOST}
+      - FRONTEND_PROTOCOL=${FRONTEND_PROTOCOL}
+      - BASE_URL=${BASE_URL}
+      - BACKEND_BASE_URL=${BACKEND_BASE_URL}
+      - DEEPL_API_KEY=${DEEPL_API_KEY}
     depends_on:
       - backend-grpc-server
     container_name: ${APP_NAME}-frontend
+    restart: unless-stopped
 
 networks:
   app-network:

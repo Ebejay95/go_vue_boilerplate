@@ -15,12 +15,23 @@ services:
       - BACKEND_BASE_URL=${BACKEND_BASE_URL}
       - GRPC_WEB_URL=${GRPC_WEB_URL}
       - VUE_APP_GRPC_WEB_URL=${GRPC_WEB_URL}
+      - FRONTEND_PORT=${FRONTEND_PORT}
+      - FRONTEND_HOST=${FRONTEND_HOST}
+      - FRONTEND_PROTOCOL=${FRONTEND_PROTOCOL}
+      - BASE_URL=${BASE_URL}
+      - DEEPL_API_KEY=${DEEPL_API_KEY}
       - CHOKIDAR_USEPOLLING=true
       - CHOKIDAR_INTERVAL=500
       - WATCHPACK_POLLING=true
       - HMR_HOST=localhost
       - FAST_REFRESH=true
       - VUE_CLI_BABEL_TRANSPILE_MODULES=true
+      - VUE_CLI_BABEL_TARGET_NODE=true
+      - WEBPACK_DEV_SERVER_HOST=0.0.0.0
+      - WEBPACK_DEV_SERVER_PORT=${FRONTEND_PORT}
+      - WEBPACK_DEV_SERVER_DISABLE_HOST_CHECK=true
+      - WDS_SOCKET_HOST=localhost
+      - WDS_SOCKET_PORT=${FRONTEND_PORT}
 
     volumes:
       - ./frontend/src:/app/src:delegated
@@ -28,6 +39,8 @@ services:
       - ./frontend/vue.config.js:/app/vue.config.js:delegated
       - ./frontend/tailwind.config.js:/app/tailwind.config.js:delegated
       - ./frontend/package.json:/app/package.json:delegated
+      - ./frontend/nginx.conf:/app/nginx.conf:delegated
+      - ./frontend/server.js:/app/server.js:delegated
       - ./proto:/app/proto:delegated
       - frontend-node-modules:/app/node_modules
 
@@ -53,15 +66,31 @@ services:
     environment:
       - PORT=${BACKEND_PORT}
       - WEB_PORT=${GRPC_WEB_PORT}
+      - BACKEND_HOST=${BACKEND_HOST}
+      - BACKEND_BASE_URL=${BACKEND_BASE_URL}
+      - GRPC_WEB_URL=${GRPC_WEB_URL}
+      - DEEPL_API_KEY=${DEEPL_API_KEY}
+      - GO_ENV=development
+      - GODEBUG=netdns=go
+      - CGO_ENABLED=0
     container_name: ${APP_NAME}-backend-grpc-server-dev
     restart: unless-stopped
 
     volumes:
       - ./server:/app/server:delegated
+      - ./proto:/app/proto:delegated
+      - ./server/.air.toml:/app/.air.toml:delegated
+      - go-mod-cache:/go/pkg/mod
+    command: ["air", "-c", "/app/.air.toml"]
 
 volumes:
   frontend-node-modules:
     driver: local
+    name: ${APP_NAME}-frontend-node-modules-dev
+
+  go-mod-cache:
+    driver: local
+    name: ${APP_NAME}-go-mod-cache-dev
 
 networks:
   app-network:

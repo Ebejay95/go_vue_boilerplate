@@ -1,4 +1,4 @@
-# Build stage
+# Multi-stage build für Production Go Binary
 FROM golang:1.21-alpine AS builder
 
 # Install protoc, protoc-gen-go und protoc-gen-grpc-web
@@ -13,7 +13,7 @@ RUN curl -sSL https://github.com/grpc/grpc-web/releases/download/1.4.2/protoc-ge
 
 WORKDIR /app
 
-# Copy server code first (including go.mod)
+# Copy server code first (including go.mod und go.sum)
 COPY server/ ./
 
 # Copy proto files and generate Go code
@@ -23,19 +23,37 @@ RUN protoc --go_out=pb --go_opt=paths=source_relative --go-grpc_out=pb --go-grpc
 
 # Debug output
 RUN echo "=== Generated files ===" && ls -la pb/
-RUN echo "=== Package declaration ===" && head -1 pb/user.pb.go
+RUN echo "=== Package declaration ===" && head -1 pb/user.pb.go 2>/dev/null || echo "No user.pb.go found"
 
-# Initialize Go modules and build
+# Initialize Go modules and build optimized binary
 RUN go mod tidy
+RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags="-w -s" -v -o main ./cmd/server
 
-# Development Environment Variables
-ENV GO_ENV=development
-ENV GODEBUG=netdns=go
-ENV CGO_ENABLED=0
+# Runtime stage - minimal image
+FROM alpine:latest
+
+# Install CA certificates for HTTPS requests
+RUN apk --no-cache add ca-certificates tzdata
+
+# Create non-root user
+RUN adduser -D -s /bin/sh appuser
+
+WORKDIR /app
+
+# Copy binary from builder stage
+COPY --from=builder /app/main .
+
+# Change ownership to non-root user
+RUN chown appuser:appuser /app/main
+
+# Switch to non-root user
+USER appuser
 
 # Expose both gRPC and gRPC-Web ports
-EXPOSE ${BACKEND_PORT} ${GRPC_WEB_PORT}
+EXPOSE 50051 8081
 
-# Air configuration will be mounted as volume
-# Air will watch for changes and rebuild automatically
-CMD ["air", "-c", "/app/.air.toml"]
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
+  CMD nc -z localhost 50051 || exit 1
+
+CMD ["./main"]
