@@ -1,90 +1,78 @@
-# Development Dockerfile für Vue.js mit gRPC-Web Hot Reload
+# Development Dockerfile - Korrigierte Proto-Behandlung
 FROM node:18-alpine
 
-# Install protoc and tools
-RUN apk add --no-cache protobuf-dev curl unzip bash
+# Install tools needed for development
+RUN apk add --no-cache protobuf-dev curl unzip bash inotify-tools
 
-# Install protoc-gen-grpc-web für JavaScript Generation
+# Install protoc-gen-grpc-web
 RUN curl -sSL https://github.com/grpc/grpc-web/releases/download/1.4.2/protoc-gen-grpc-web-1.4.2-linux-x86_64 \
 	-o /usr/local/bin/protoc-gen-grpc-web && \
 	chmod +x /usr/local/bin/protoc-gen-grpc-web
 
 WORKDIR /app
 
-# Package.json und lock files zuerst kopieren
+# Copy package files and install dependencies
 COPY frontend/package*.json ./
-
-# Install dependencies including grpc-tools for protoc-gen-js
 RUN npm install
 RUN npm install -g grpc-tools@latest
 
-# Konfigurationsdateien kopieren
-COPY frontend/vue.config.js ./
+# Copy config files
+COPY frontend/vue.config.dev.js ./vue.config.js
 COPY frontend/tailwind.config.js ./
 
-# Proto files kopieren und JavaScript generieren
-COPY proto ../proto
-RUN mkdir -p src/proto
+# Copy proto source files to a DIFFERENT location first
+COPY proto /proto-source
 
-# STEP 1: Generate JavaScript files from proto
-RUN echo "=== Generating JavaScript protobuf files ==="
-RUN npx grpc_tools_node_protoc \
-	--js_out=import_style=commonjs,binary:src/proto \
-	--proto_path=../proto \
-	../proto/*.proto
-
-# STEP 2: Generate gRPC-Web files
-RUN echo "=== Generating gRPC-Web files ==="
-RUN npx grpc_tools_node_protoc \
-	--grpc-web_out=import_style=commonjs,mode=grpcwebtext:src/proto \
-	--proto_path=../proto \
-	../proto/*.proto
-
-# Verification: Check generated files exist
-RUN echo "=== Verifying generated files ==="
-RUN ls -la src/proto/
-RUN echo "=== Checking user_pb.js ===" && test -f src/proto/user_pb.js && echo "✅ user_pb.js exists" || echo "❌ user_pb.js missing"
-RUN echo "=== Checking user_grpc_web_pb.js ===" && test -f src/proto/user_grpc_web_pb.js && echo "✅ user_grpc_web_pb.js exists" || echo "❌ user_grpc_web_pb.js missing"
-
-# Show first few lines of generated files for debugging
-RUN echo "=== user_pb.js content preview ==="
-RUN head -10 src/proto/user_pb.js 2>/dev/null || echo "Could not read user_pb.js"
-
-RUN echo "=== user_grpc_web_pb.js content preview ==="
-RUN head -10 src/proto/user_grpc_web_pb.js 2>/dev/null || echo "Could not read user_grpc_web_pb.js"
-
-# Source files kopieren NACH proto generation
+# Copy source files FIRST (this is important for layer order)
 COPY frontend/src ./src
 COPY frontend/public ./public
 
-# WICHTIG: Proto files in src/ überschreiben, falls sie durch COPY überschrieben wurden
-RUN echo "=== Re-verifying proto files after src copy ==="
-RUN ls -la src/proto/
-RUN test -f src/proto/user_pb.js && echo "✅ user_pb.js still exists" || (echo "❌ user_pb.js disappeared, regenerating..." && \
-	npx grpc_tools_node_protoc --js_out=import_style=commonjs,binary:src/proto --proto_path=../proto ../proto/*.proto)
-RUN test -f src/proto/user_grpc_web_pb.js && echo "✅ user_grpc_web_pb.js still exists" || (echo "❌ user_grpc_web_pb.js disappeared, regenerating..." && \
-	npx grpc_tools_node_protoc --grpc-web_out=import_style=commonjs,mode=grpcwebtext:src/proto --proto_path=../proto ../proto/*.proto)
+# NOW generate proto files AFTER src is copied
+# This prevents volume mounts from overwriting generated files
+RUN echo "=== Creating proto directory ===" && \
+	mkdir -p src/proto
 
-# Final verification
-RUN echo "=== Final file check ==="
-RUN ls -la src/proto/
-RUN file src/proto/* || echo "No proto files found"
+RUN echo "=== Generating JavaScript protobuf files ===" && \
+	npx grpc_tools_node_protoc \
+	--js_out=import_style=commonjs,binary:src/proto \
+	--proto_path=/proto-source \
+	/proto-source/*.proto && \
+	echo "✅ JavaScript proto files generated"
 
-# Development-spezifische Environment Variablen
+RUN echo "=== Generating gRPC-Web files ===" && \
+	npx grpc_tools_node_protoc \
+	--grpc-web_out=import_style=commonjs,mode=grpcwebtext:src/proto \
+	--proto_path=/proto-source \
+	/proto-source/*.proto && \
+	echo "✅ gRPC-Web proto files generated"
+
+# Verify generated files exist
+RUN echo "=== Final verification ===" && \
+	ls -la src/proto/ && \
+	test -f src/proto/user_pb.js && echo "✅ user_pb.js: $(wc -l < src/proto/user_pb.js) lines" || echo "❌ user_pb.js missing" && \
+	test -f src/proto/user_grpc_web_pb.js && echo "✅ user_grpc_web_pb.js: $(wc -l < src/proto/user_grpc_web_pb.js) lines" || echo "❌ user_grpc_web_pb.js missing"
+
+# Create user for security
+RUN addgroup -g 1001 -S nodejs && \
+	adduser -S vuejs -u 1001
+
+# Set proper ownership including proto files
+RUN chown -R vuejs:nodejs /app
+
+# Switch to non-root user
+USER vuejs
+
+# Environment variables for hot reload
 ENV NODE_ENV=development
 ENV CHOKIDAR_USEPOLLING=true
-ENV CHOKIDAR_INTERVAL=500
+ENV CHOKIDAR_INTERVAL=1000
 ENV WATCHPACK_POLLING=true
-ENV FAST_REFRESH=true
-ENV VUE_CLI_BABEL_TRANSPILE_MODULES=true
-ENV VUE_CLI_BABEL_TARGET_NODE=true
 
-# Webpack Dev Server Konfiguration für Container
-ENV WEBPACK_DEV_SERVER_HOST=0.0.0.0
-ENV WEBPACK_DEV_SERVER_DISABLE_HOST_CHECK=true
+EXPOSE 3000
 
-# Ports freigeben
-EXPOSE ${FRONTEND_PORT}
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=10s --retries=3 \
+	CMD curl -f http://localhost:3000 || exit 1
 
-# Development command with proto file check
-CMD ["sh", "-c", "echo '=== Starting with proto files: ===' && ls -la src/proto/ && npm run serve"]
+# Default command
+CMD ["npm", "run", "serve", "--", "--host", "0.0.0.0", "--port", "3000"]

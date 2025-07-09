@@ -1,41 +1,60 @@
-# Build stage
-FROM golang:1.21-alpine AS builder
+# Development Dockerfile - Simplified
+FROM golang:1.21-alpine
 
-# Install protoc, protoc-gen-go und protoc-gen-grpc-web
-RUN apk add --no-cache protobuf-dev git curl unzip
+# Install basic tools
+RUN apk add --no-cache \
+	protobuf-dev \
+	git \
+	curl \
+	unzip \
+	netcat-openbsd \
+	ca-certificates
+
+# Install Go tools with specific versions to avoid conflicts
 RUN go install google.golang.org/protobuf/cmd/protoc-gen-go@v1.31.0
 RUN go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@v1.3.0
 
-# Install protoc-gen-grpc-web für Frontend Proto Generation
+# Install Air for hot reload with specific version
+RUN go install github.com/cosmtrek/air@v1.49.0
+
+# Install protoc-gen-grpc-web
 RUN curl -sSL https://github.com/grpc/grpc-web/releases/download/1.4.2/protoc-gen-grpc-web-1.4.2-linux-x86_64 \
 	-o /usr/local/bin/protoc-gen-grpc-web && \
 	chmod +x /usr/local/bin/protoc-gen-grpc-web
 
 WORKDIR /app
 
-# Copy server code first (including go.mod)
+# Copy server code
 COPY server/ ./
 
 # Copy proto files and generate Go code
 COPY proto ./proto
 RUN mkdir -p pb
-RUN protoc --go_out=pb --go_opt=paths=source_relative --go-grpc_out=pb --go-grpc_opt=paths=source_relative --proto_path=proto proto/*.proto
+RUN protoc \
+	--go_out=pb \
+	--go_opt=paths=source_relative \
+	--go-grpc_out=pb \
+	--go-grpc_opt=paths=source_relative \
+	--proto_path=proto \
+	proto/*.proto
 
-# Debug output
-RUN echo "=== Generated files ===" && ls -la pb/
-RUN echo "=== Package declaration ===" && head -1 pb/user.pb.go
-
-# Initialize Go modules and build
+# Initialize Go modules
 RUN go mod tidy
+
+# Create tmp directory for Air
+RUN mkdir -p tmp
 
 # Development Environment Variables
 ENV GO_ENV=development
 ENV GODEBUG=netdns=go
 ENV CGO_ENABLED=0
 
-# Expose both gRPC and gRPC-Web ports
-EXPOSE ${BACKEND_PORT} ${GRPC_WEB_PORT}
+# Expose ports
+EXPOSE 50051 8081
 
-# Air configuration will be mounted as volume
-# Air will watch for changes and rebuild automatically
-CMD ["air", "-c", "/app/.air.toml"]
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=10s --retries=3 \
+	CMD nc -z localhost 50051 || exit 1
+
+# Default command - use simple go run instead of Air initially
+CMD ["go", "run", "./cmd/server"]

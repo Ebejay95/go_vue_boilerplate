@@ -1,10 +1,11 @@
-# Multi-stage build für Production Go Binary
-FROM golang:1.21-alpine AS builder
+# Development Dockerfile mit Air Hot Reload
+FROM golang:1.21-alpine
 
-# Install protoc, protoc-gen-go und protoc-gen-grpc-web
+# Install protoc, protoc-gen-go und Air für Hot Reload
 RUN apk add --no-cache protobuf-dev git curl unzip
 RUN go install google.golang.org/protobuf/cmd/protoc-gen-go@v1.31.0
 RUN go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@v1.3.0
+RUN go install github.com/cosmtrek/air@latest
 
 # Install protoc-gen-grpc-web für Frontend Proto Generation
 RUN curl -sSL https://github.com/grpc/grpc-web/releases/download/1.4.2/protoc-gen-grpc-web-1.4.2-linux-x86_64 \
@@ -13,7 +14,7 @@ RUN curl -sSL https://github.com/grpc/grpc-web/releases/download/1.4.2/protoc-ge
 
 WORKDIR /app
 
-# Copy server code first (including go.mod und go.sum)
+# Copy server code first (including go.mod)
 COPY server/ ./
 
 # Copy proto files and generate Go code
@@ -21,39 +22,16 @@ COPY proto ./proto
 RUN mkdir -p pb
 RUN protoc --go_out=pb --go_opt=paths=source_relative --go-grpc_out=pb --go-grpc_opt=paths=source_relative --proto_path=proto proto/*.proto
 
-# Debug output
-RUN echo "=== Generated files ===" && ls -la pb/
-RUN echo "=== Package declaration ===" && head -1 pb/user.pb.go 2>/dev/null || echo "No user.pb.go found"
-
-# Initialize Go modules and build optimized binary
+# Initialize Go modules (aber nicht builden!)
 RUN go mod tidy
-RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags="-w -s" -v -o main ./cmd/server
 
-# Runtime stage - minimal image
-FROM alpine:latest
-
-# Install CA certificates for HTTPS requests
-RUN apk --no-cache add ca-certificates tzdata
-
-# Create non-root user
-RUN adduser -D -s /bin/sh appuser
-
-WORKDIR /app
-
-# Copy binary from builder stage
-COPY --from=builder /app/main .
-
-# Change ownership to non-root user
-RUN chown appuser:appuser /app/main
-
-# Switch to non-root user
-USER appuser
+# Development Environment Variables
+ENV GO_ENV=development
+ENV GODEBUG=netdns=go
+ENV CGO_ENABLED=0
 
 # Expose both gRPC and gRPC-Web ports
-EXPOSE 50051 8081
+EXPOSE ${BACKEND_PORT} ${GRPC_WEB_PORT}
 
-# Health check
-HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
-  CMD nc -z localhost 50051 || exit 1
-
-CMD ["./main"]
+# Air wird die Files überwachen und neu builden
+CMD ["air", "-c", ".air.toml"]
