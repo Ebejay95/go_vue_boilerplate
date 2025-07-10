@@ -37,7 +37,7 @@
 		<div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
 		  <!-- Create User Form -->
 		  <div class="bg-white p-6 rounded-lg shadow">
-			<h2 class="text-lg font-medium text-gray-900 mb-4">Creates New User</h2>
+			<h2 class="text-lg font-medium text-gray-900 mb-4">Creates New User Test</h2>
 
 			<form @submit.prevent="submitCreateUser" class="space-y-4">
 			  <div>

@@ -81,10 +81,12 @@ services:
     container_name: ${APP_NAME}-backend-grpc-server-dev
     restart: unless-stopped
     volumes:
-      - ./server:/app/server:cached
-      - ./proto:/app/proto:ro
-      - ./server/.air.toml:/app/.air.toml:ro
-      - go-mod-cache:/go/pkg/mod
+    - ./server/cmd:/app/cmd:cached
+    - ./server/internal:/app/internal:cached
+    - ./server/handler:/app/handler:cached
+    - ./server/service:/app/service:cached
+    - ./server/.air.toml:/app/.air.toml:ro
+    - go-mod-cache:/go/pkg/mod
     command: ["go", "run", "./cmd/server"]
     healthcheck:
       test: ["CMD", "nc", "-z", "localhost", "50051"]

@@ -1,36 +1,41 @@
-# Development Dockerfile - Simplified
+# Development Dockerfile mit Air Hot Reload - Optimiert für gRPC
 FROM golang:1.21-alpine
 
-# Install basic tools
+# Install essential tools + file watching dependencies
 RUN apk add --no-cache \
 	protobuf-dev \
 	git \
 	curl \
 	unzip \
 	netcat-openbsd \
-	ca-certificates
+	ca-certificates \
+	inotify-tools
 
-# Install Go tools with specific versions to avoid conflicts
-RUN go install google.golang.org/protobuf/cmd/protoc-gen-go@v1.31.0
-RUN go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@v1.3.0
+# Install Go tools - pinned versions for stability
+RUN go install google.golang.org/protobuf/cmd/protoc-gen-go@v1.31.0 && \
+	go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@v1.3.0 && \
+	go install github.com/cosmtrek/air@v1.49.0
 
-# Install Air for hot reload with specific version
-RUN go install github.com/cosmtrek/air@v1.49.0
-
-# Install protoc-gen-grpc-web
+# Install protoc-gen-grpc-web für Frontend Proto Generation
 RUN curl -sSL https://github.com/grpc/grpc-web/releases/download/1.4.2/protoc-gen-grpc-web-1.4.2-linux-x86_64 \
 	-o /usr/local/bin/protoc-gen-grpc-web && \
 	chmod +x /usr/local/bin/protoc-gen-grpc-web
 
 WORKDIR /app
 
+# Copy go.mod und go.sum zuerst für besseres Layer Caching
+COPY server/go.mod ./
+
+# Download dependencies
+RUN go mod download
+
 # Copy server code
 COPY server/ ./
 
-# Copy proto files and generate Go code
+# Copy proto files und generate Go code
 COPY proto ./proto
-RUN mkdir -p pb
-RUN protoc \
+RUN mkdir -p pb && \
+	protoc \
 	--go_out=pb \
 	--go_opt=paths=source_relative \
 	--go-grpc_out=pb \
@@ -38,8 +43,9 @@ RUN protoc \
 	--proto_path=proto \
 	proto/*.proto
 
-# Initialize Go modules
 RUN go mod tidy
+# Verify generated files
+RUN ls -la pb/ && echo "Proto files generated successfully"
 
 # Create tmp directory for Air
 RUN mkdir -p tmp
@@ -49,12 +55,15 @@ ENV GO_ENV=development
 ENV GODEBUG=netdns=go
 ENV CGO_ENABLED=0
 
-# Expose ports
+# File watching optimization for Docker
+ENV WATCHEXEC_POLL_INTERVAL=1000
+
+# Expose gRPC and gRPC-Web ports
 EXPOSE 50051 8081
 
-# Health check
-HEALTHCHECK --interval=30s --timeout=10s --start-period=10s --retries=3 \
-	CMD nc -z localhost 50051 || exit 1
+# Health check für gRPC
+HEALTHCHECK --interval=30s --timeout=10s --start-period=15s --retries=3 \
+	CMD nc -z localhost 50051 && nc -z localhost 8081 || exit 1
 
-# Default command - use simple go run instead of Air initially
-CMD ["go", "run", "./cmd/server"]
+# Air für Hot Reload
+CMD ["air", "-c", ".air.toml"]
