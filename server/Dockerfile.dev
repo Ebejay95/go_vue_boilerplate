@@ -59,11 +59,11 @@ ENV CGO_ENABLED=0
 ENV WATCHEXEC_POLL_INTERVAL=1000
 
 # Expose gRPC and gRPC-Web ports
-EXPOSE 50051 8081
+EXPOSE ${BACKEND_PORT} ${GRPC_WEB_PORT}
 
 # Health check für gRPC
 HEALTHCHECK --interval=30s --timeout=10s --start-period=15s --retries=3 \
-	CMD nc -z localhost 50051 && nc -z localhost 8081 || exit 1
+	CMD nc -z localhost ${BACKEND_PORT} && nc -z localhost ${GRPC_WEB_PORT} || exit 1
 
 # Air für Hot Reload
 CMD ["air", "-c", ".air.toml"]

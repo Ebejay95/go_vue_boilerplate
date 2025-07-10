@@ -48,7 +48,7 @@ module.exports = defineConfig({
 	},
 
 	devServer: {
-		port: process.env.FRONTEND_PORT || 3000,
+		port: process.env.FRONTEND_PORT,
 		host: '0.0.0.0',
 		allowedHosts: 'all',
 
@@ -60,7 +60,7 @@ module.exports = defineConfig({
 		client: {
 			webSocketURL: {
 				hostname: 'localhost',
-				port: process.env.FRONTEND_PORT || 3000,
+				port: process.env.FRONTEND_PORT,
 				protocol: 'ws'
 			},
 			overlay: {

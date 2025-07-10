@@ -7,12 +7,12 @@ services:
       dockerfile: ./frontend/Dockerfile.dev
     image: ${APP_NAME}-frontend-grpc-dev
     ports:
-      - "${FRONTEND_PORT}:3000"
+      - "${FRONTEND_PORT}:${FRONTEND_PORT}"
     networks:
       - app-network
     environment:
       - NODE_ENV=development
-      - FRONTEND_PORT=3000
+      - FRONTEND_PORT=${FRONTEND_PORT}
       - BASE_URL=${BASE_URL}
       - VUE_APP_GRPC_WEB_URL=${GRPC_WEB_URL}
       - GRPC_WEB_URL=${GRPC_WEB_URL}
@@ -23,7 +23,7 @@ services:
       - WATCHPACK_POLLING=true
       - WEBPACK_WATCH_FILES_POLL=1000
       - WDS_SOCKET_HOST=localhost
-      - WDS_SOCKET_PORT=3000
+      - WDS_SOCKET_PORT=${FRONTEND_PORT}
       - FAST_REFRESH=true
 
     volumes:
@@ -46,14 +46,14 @@ services:
       # DO NOT mount src/proto - let it stay in container with generated files
 
     container_name: ${APP_NAME}-frontend-grpc-dev
-    command: ["npm", "run", "serve", "--", "--host", "0.0.0.0", "--port", "3000"]
+    command: ["npm", "run", "serve", "--", "--host", "0.0.0.0", "--port", "${FRONTEND_PORT}"]
     stdin_open: true
     tty: true
     restart: unless-stopped
     depends_on:
       - backend-grpc-server
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:3000"]
+      test: ["CMD", "curl", "-f", "${BASE_URL}"]
       interval: 30s
       timeout: 10s
       retries: 3
@@ -64,13 +64,13 @@ services:
       dockerfile: ./server/Dockerfile.dev
     image: ${APP_NAME}-backend-grpc-server-dev
     ports:
-      - "${BACKEND_PORT}:50051"
-      - "${GRPC_WEB_PORT}:8081"
+      - "${BACKEND_PORT}:${BACKEND_PORT}"
+      - "${GRPC_WEB_PORT}:${GRPC_WEB_PORT}"
     networks:
       - app-network
     environment:
-      - PORT=50051
-      - WEB_PORT=8081
+      - PORT=${BACKEND_PORT}
+      - WEB_PORT=${GRPC_WEB_PORT}
       - BACKEND_HOST=${BACKEND_HOST}
       - BACKEND_BASE_URL=${BACKEND_BASE_URL}
       - GRPC_WEB_URL=${GRPC_WEB_URL}
@@ -89,7 +89,7 @@ services:
     - go-mod-cache:/go/pkg/mod
     command: ["go", "run", "./cmd/server"]
     healthcheck:
-      test: ["CMD", "nc", "-z", "localhost", "50051"]
+      test: ["CMD", "nc", "-z", "localhost", "${BACKEND_PORT}"]
       interval: 30s
       timeout: 10s
       retries: 3
