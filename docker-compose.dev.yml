@@ -17,7 +17,6 @@ services:
       - VUE_APP_GRPC_WEB_URL=${GRPC_WEB_URL}
       - GRPC_WEB_URL=${GRPC_WEB_URL}
 
-      # Hot Reload Environment Variables
       - CHOKIDAR_USEPOLLING=true
       - CHOKIDAR_INTERVAL=1000
       - WATCHPACK_POLLING=true
@@ -27,23 +26,18 @@ services:
       - FAST_REFRESH=true
 
     volumes:
-      # WICHTIG: Nur source files mounten, NICHT das proto directory
       - ./frontend/src/components:/app/src/components:cached
       - ./frontend/src/pages:/app/src/pages:cached
       - ./frontend/src/assets:/app/src/assets:cached
       - ./frontend/src/App.vue:/app/src/App.vue:cached
       - ./frontend/src/main.js:/app/src/main.js:cached
       - ./frontend/src/router.js:/app/src/router.js:cached
-      # EXCLUDE: ./frontend/src/services and ./frontend/src/proto to preserve generated files
 
       - ./frontend/public:/app/public:cached
       - ./frontend/vue.config.dev.js:/app/vue.config.js:ro
       - ./frontend/tailwind.config.js:/app/tailwind.config.js:ro
       - ./frontend/package.json:/app/package.json:ro
-
-      # Preserve node_modules and generated proto files in container
       - frontend-node-modules:/app/node_modules
-      # DO NOT mount src/proto - let it stay in container with generated files
 
     container_name: ${APP_NAME}-frontend-grpc-dev
     command: ["npm", "run", "serve", "--", "--host", "0.0.0.0", "--port", "${FRONTEND_PORT}"]

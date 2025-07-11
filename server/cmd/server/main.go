@@ -54,8 +54,6 @@ func (s *UserServer) GetUser(ctx context.Context, req *pb.GetUserRequest) (*pb.G
 		return nil, fmt.Errorf("user with ID %d not found", req.Id)
 	}
 
-	log.Printf("📋 GetUser: Found user %s (ID: %d)", user.Name, user.ID)
-
 	return &pb.GetUserResponse{
 		User: &pb.User{
 			Id:    user.ID,
@@ -82,8 +80,6 @@ func (s *UserServer) CreateUser(ctx context.Context, req *pb.CreateUserRequest) 
 	s.users[s.nextID] = user
 	s.nextID++
 
-	log.Printf("➕ CreateUser: Created user %s (ID: %d)", user.Name, user.ID)
-
 	return &pb.CreateUserResponse{
 		User: &pb.User{
 			Id:    user.ID,
@@ -109,8 +105,6 @@ func (s *UserServer) ListUsers(ctx context.Context, req *pb.ListUsersRequest) (*
 			Role:  user.Role,
 		})
 	}
-
-	log.Printf("📋 ListUsers: Returning %d users", len(users))
 
 	return &pb.ListUsersResponse{
 		Users: users,
@@ -177,16 +171,10 @@ func main() {
 
 	// Standard gRPC Server starten
 	go func() {
-		log.Printf("🚀 gRPC server listening on port %s", port)
-		log.Printf("📡 gRPC reflection enabled - you can use grpcurl")
 		if err := grpcServer.Serve(lis); err != nil {
 			log.Fatalf("Failed to serve gRPC: %v", err)
 		}
 	}()
-
-	// gRPC-Web Server starten
-	log.Printf("🌐 gRPC-Web server listening on port %s", webPort)
-	log.Printf("🔗 Frontend can connect to: http://localhost:%s", webPort)
 
 	if err := http.ListenAndServe(":"+webPort, http.HandlerFunc(httpHandler)); err != nil {
 		log.Fatalf("Failed to serve gRPC-Web: %v", err)
