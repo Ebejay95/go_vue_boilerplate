@@ -184,6 +184,6 @@ func main() {
 	}()
 
 	if err := http.ListenAndServe(":"+webPort, http.HandlerFunc(httpHandler)); err != nil {
-		log.Fatalf("Failed to serve gRPC-Web: %v", err)
+		log.Fatalf("Failed to serve gRPC-Web Test: %v", err)
 	}
 }

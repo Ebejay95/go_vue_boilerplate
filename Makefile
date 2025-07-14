@@ -207,3 +207,170 @@ help:
 	@echo "  make test             Test API endpoints"
 	@echo ""
 	@echo "$(CYAN)For hot reload issues, try: make dev-rebuild$(RESET)"
+
+
+
+# ===========================================
+# SINGLE CONTAINER DEVELOPMENT COMMANDS
+# ===========================================
+
+dev: dev-up
+	$(call print_success,"🚀 Integrated development environment started!")
+	$(call print_status,"Backend: http://localhost:$(shell grep BACKEND_PORT .env | cut -d'=' -f2)")
+	$(call print_status,"Frontend: http://localhost:$(shell grep FRONTEND_PORT .env | cut -d'=' -f2)")
+	$(call print_status,"gRPC-Web: http://localhost:$(shell grep GRPC_WEB_PORT .env | cut -d'=' -f2)")
+
+dev-up: clean-proto
+	$(call print_status,"🏗️ Building and starting integrated development environment...")
+	$(call print_warning,"All file watching and hot reload handled by Docker")
+	docker-compose -f docker-compose.dev.yml up --build
+	$(call print_success,"Development environment running!")
+
+dev-up-detached: clean-proto
+	$(call print_status,"🏗️ Starting development environment in background...")
+	docker-compose -f docker-compose.dev.yml up --build -d
+	$(call print_success,"Development environment running in background!")
+
+dev-down:
+	$(call print_status,"🛑 Stopping development environment...")
+	docker-compose -f docker-compose.dev.yml down
+	$(call print_success,"Development environment stopped!")
+
+dev-logs:
+	$(call print_status,"📋 Showing development logs...")
+	docker-compose -f docker-compose.dev.yml logs -f
+
+dev-logs-tail:
+	$(call print_status,"📋 Showing recent development logs...")
+	docker-compose -f docker-compose.dev.yml logs --tail=100 -f
+
+dev-restart:
+	$(call print_status,"🔄 Restarting development environment...")
+	docker-compose -f docker-compose.dev.yml restart
+	$(call print_success,"Development environment restarted!")
+
+dev-rebuild: dev-clean
+	$(call print_status,"🔨 Completely rebuilding development environment...")
+	docker-compose -f docker-compose.dev.yml up --build --force-recreate
+	$(call print_success,"Development environment rebuilt!")
+
+dev-status:
+	$(call print_status,"📊 Development environment status:")
+	@docker-compose -f docker-compose.dev.yml ps
+	@echo ""
+	$(call print_status,"Health status:")
+	@docker-compose -f docker-compose.dev.yml exec -T dev-environment curl -s http://localhost:$(shell grep FRONTEND_PORT .env | cut -d'=' -f2) >/dev/null && echo "$(GREEN)✓ Frontend responding$(RESET)" || echo "$(RED)✗ Frontend not responding$(RESET)"
+	@docker-compose -f docker-compose.dev.yml exec -T dev-environment curl -s http://localhost:$(shell grep GRPC_WEB_PORT .env | cut -d'=' -f2) >/dev/null && echo "$(GREEN)✓ gRPC-Web responding$(RESET)" || echo "$(RED)✗ gRPC-Web not responding$(RESET)"
+
+dev-clean: clean-proto
+	$(call print_status,"🧹 Cleaning development environment...")
+	docker-compose -f docker-compose.dev.yml down -v --remove-orphans
+	$(call print_success,"Development environment cleaned!")
+
+# ===========================================
+# DEVELOPMENT DEBUGGING & UTILITIES
+# ===========================================
+
+dev-shell:
+	$(call print_status,"🐚 Opening development container shell...")
+	docker-compose -f docker-compose.dev.yml exec dev-environment bash
+
+dev-shell-backend:
+	$(call print_status,"🐚 Opening backend directory in container...")
+	docker-compose -f docker-compose.dev.yml exec dev-environment bash -c "cd /app/server && bash"
+
+dev-shell-frontend:
+	$(call print_status,"🐚 Opening frontend directory in container...")
+	docker-compose -f docker-compose.dev.yml exec dev-environment bash -c "cd /app/frontend && bash"
+
+dev-proto-generate:
+	$(call print_status,"🔧 Manually regenerating proto files...")
+	docker-compose -f docker-compose.dev.yml exec dev-environment bash -c "cd /app && protoc --go_out=server/pb --go_opt=paths=source_relative --go-grpc_out=server/pb --go-grpc_opt=paths=source_relative --proto_path=proto proto/*.proto"
+	docker-compose -f docker-compose.dev.yml exec dev-environment bash -c "cd /app && npx --prefix frontend grpc_tools_node_protoc --js_out=import_style=commonjs,binary:frontend/src/proto --proto_path=proto proto/*.proto"
+	docker-compose -f docker-compose.dev.yml exec dev-environment bash -c "cd /app && npx --prefix frontend grpc_tools_node_protoc --grpc-web_out=import_style=commonjs,mode=grpcwebtext:frontend/src/proto --proto_path=proto proto/*.proto"
+	$(call print_success,"Proto files regenerated!")
+
+dev-test-hotreload:
+	$(call print_status,"🔥 Testing hot reload functionality...")
+	@echo "$(YELLOW)Adding test comments to trigger reload...$(RESET)"
+	@echo "// Hot reload test $(shell date)" >> server/cmd/server/main.go
+	@echo "<!-- Hot reload test $(shell date) -->" >> frontend/src/App.vue
+	@echo "/* Hot reload test $(shell date) */" >> proto/user.proto
+	$(call print_success,"Test modifications made! Check logs for reload activity with: make dev-logs")
+
+dev-reset:
+	$(call print_status,"🔄 Resetting development environment completely...")
+	docker-compose -f docker-compose.dev.yml down -v --rmi all --remove-orphans
+	docker system prune -f
+	$(call print_success,"Development environment reset!")
+
+dev-fix-permissions:
+	$(call print_status,"🔧 Fixing file permissions for development...")
+	@if [ "$(shell uname)" = "Linux" ]; then \
+		sudo chown -R $(shell id -u):$(shell id -g) server/ frontend/ proto/; \
+		$(call print_success,"Permissions fixed!"); \
+	else \
+		$(call print_warning,"Permission fix only needed on Linux"); \
+	fi
+
+# ===========================================
+# DEVELOPMENT MONITORING
+# ===========================================
+
+dev-watch:
+	$(call print_status,"👀 Watching development environment...")
+	watch -n 2 'docker-compose -f docker-compose.dev.yml ps'
+
+dev-ps:
+	$(call print_status,"📋 Development container processes:")
+	docker-compose -f docker-compose.dev.yml ps
+
+dev-top:
+	$(call print_status,"📊 Development container resource usage:")
+	docker-compose -f docker-compose.dev.yml top
+
+dev-exec:
+	$(call print_status,"⚡ Execute command in development container:")
+	@read -p "Command: " cmd; \
+	docker-compose -f docker-compose.dev.yml exec dev-environment bash -c "$$cmd"
+
+# ===========================================
+# DEVELOPMENT TESTING
+# ===========================================
+
+dev-test-api:
+	$(call print_status,"🧪 Testing API endpoints in development...")
+	@echo "$(YELLOW)Testing frontend...$(RESET)"
+	@docker-compose -f docker-compose.dev.yml exec -T dev-environment curl -s http://localhost:$(shell grep FRONTEND_PORT .env | cut -d'=' -f2) >/dev/null && echo "$(GREEN)✓ Frontend responding$(RESET)" || echo "$(RED)✗ Frontend not responding$(RESET)"
+	@echo "$(YELLOW)Testing gRPC-Web...$(RESET)"
+	@docker-compose -f docker-compose.dev.yml exec -T dev-environment curl -s http://localhost:$(shell grep GRPC_WEB_PORT .env | cut -d'=' -f2) >/dev/null && echo "$(GREEN)✓ gRPC-Web responding$(RESET)" || echo "$(RED)✗ gRPC-Web not responding$(RESET)"
+
+dev-healthcheck:
+	$(call print_status,"🏥 Running development health check...")
+	docker-compose -f docker-compose.dev.yml exec dev-environment bash -c "curl -f http://localhost:$(shell grep FRONTEND_PORT .env | cut -d'=' -f2) && curl -f http://localhost:$(shell grep GRPC_WEB_PORT .env | cut -d'=' -f2)"
+	$(call print_success,"Health check completed!")
+
+# ===========================================
+# HELP FOR DEVELOPMENT
+# ===========================================
+
+dev-help:
+	@echo "$(BOLD)Development Commands:$(RESET)"
+	@echo ""
+	@echo "$(YELLOW)🚀 Quick Start:$(RESET)"
+	@echo "  make dev              Start integrated development environment"
+	@echo "  make dev-logs         Watch all development logs"
+	@echo ""
+	@echo "$(YELLOW)🔧 Management:$(RESET)"
+	@echo "  make dev-up           Start development environment"
+	@echo "  make dev-down         Stop development environment"
+	@echo "  make dev-restart      Restart development environment"
+	@echo "  make dev-rebuild      Rebuild development environment"
+	@echo "  make dev-status       Show environment status"
+	@echo ""
+	@echo "$(YELLOW)🐚 Debugging:$(RESET)"
+	@echo "  make dev-shell        Open container shell"
+	@echo "  make dev-test-hotreload  Test hot reload"
+	@echo "  make dev-proto-generate  Regenerate proto files"
+	@echo ""
+	@echo "$(CYAN)All file watching and hot reload is handled automatically by Docker!$(RESET)"

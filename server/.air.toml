@@ -7,28 +7,29 @@ tmp_dir = "tmp"
   bin = "./tmp/main"
   cmd = "go build -o ./tmp/main ./cmd/server"
   delay = 500
-  exclude_dir = ["assets", "tmp", "vendor", "testdata", "pb", "node_modules", "proto"]
+  exclude_dir = ["assets", "tmp", "vendor", "testdata", "node_modules", "dist", ".git"]
   exclude_file = []
-  exclude_regex = ["_test.go", ".*\\.pb\\.go$"]
+  exclude_regex = ["_test.go", ".*\\.log$", ".*\\.tmp$"]
   exclude_unchanged = false
   follow_symlink = false
   full_bin = ""
-  # Wichtig: Überwache diese Verzeichnisse für Änderungen
-  include_dir = ["cmd", "internal", "handler", "service", "pkg"]
+  # Watch these directories and file types
+  include_dir = ["cmd", "internal", "handler", "service", "pkg", "pb"]
   include_ext = ["go", "tpl", "tmpl", "html"]
   include_file = []
-  kill_delay = "500ms"
+  kill_delay = "1s"
   log = "build-errors.log"
-  # Wichtig für Docker: Polling aktivieren
   poll = true
   poll_interval = 1000
+  pre_cmd = ["echo '🔨 Rebuilding Go application...'"]
+  post_cmd = ["echo '✅ Go server reloaded successfully!'"]
   rerun = false
   rerun_delay = 500
   send_interrupt = true
   stop_on_error = false
 
 [color]
-  app = ""
+  app = "blue"
   build = "yellow"
   main = "magenta"
   runner = "green"
@@ -42,5 +43,5 @@ tmp_dir = "tmp"
   clean_on_exit = true
 
 [screen]
-  clear_on_rebuild = true
+  clear_on_rebuild = false
   keep_scroll = true

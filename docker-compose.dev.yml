@@ -1,0 +1,112 @@
+version: '3.8'
+
+services:
+  dev-environment:
+    build:
+      context: .
+      dockerfile: ./Dockerfile.dev
+    image: ${APP_NAME}-dev-environment
+    ports:
+      # Backend ports
+      - "${BACKEND_PORT}:${BACKEND_PORT}"
+      - "${GRPC_WEB_PORT}:${GRPC_WEB_PORT}"
+      # Frontend ports
+      - "${FRONTEND_PORT}:${FRONTEND_PORT}"
+      - "24678:24678"  # Vue HMR WebSocket port
+    networks:
+      - app-network-dev
+    environment:
+      # Backend environment
+      - PORT=${BACKEND_PORT}
+      - WEB_PORT=${GRPC_WEB_PORT}
+      - BACKEND_HOST=${BACKEND_HOST}
+      - BACKEND_BASE_URL=${BACKEND_BASE_URL}
+      - GRPC_WEB_URL=${GRPC_WEB_URL}
+      - DEEPL_API_KEY=${DEEPL_API_KEY}
+      - GO_ENV=development
+
+      # Frontend environment
+      - FRONTEND_PORT=${FRONTEND_PORT}
+      - FRONTEND_HOST=${FRONTEND_HOST}
+      - FRONTEND_PROTOCOL=${FRONTEND_PROTOCOL}
+      - BASE_URL=${BASE_URL}
+      - VUE_APP_GRPC_WEB_URL=${GRPC_WEB_URL}
+      - NODE_ENV=development
+
+      # Hot-reload environment variables
+      - CHOKIDAR_USEPOLLING=true
+      - WATCHPACK_POLLING=true
+      - FAST_REFRESH=true
+
+      # Performance optimizations
+      - NODE_OPTIONS=--max-old-space-size=4096
+    volumes:
+      # CRITICAL: Source code mounting for hot-reload
+      - ./server:/app/server:cached
+      - ./frontend:/app/frontend:cached
+      - ./proto:/app/proto:cached
+
+      # Scripts
+      - ./dev-start.sh:/app/dev-start.sh:ro
+
+      # Persistent caches for faster rebuilds
+      - dev-go-cache:/go/pkg/mod
+      - dev-node-cache:/app/frontend/node_modules
+      - dev-webpack-cache:/app/frontend/node_modules/.cache
+
+      # Exclude build artifacts (but keep proto files!)
+      - /app/server/tmp
+      - /app/frontend/dist
+      - /app/frontend/node_modules/.cache/webpack
+
+    container_name: ${APP_NAME}-dev-environment
+    restart: unless-stopped
+    working_dir: /app
+
+    # Enhanced health check for all services
+    healthcheck:
+      test: |
+        # Check proto files exist
+        test -f /app/frontend/src/proto/user_grpc_web_pb.js &&
+        test -f /app/frontend/src/proto/user_pb.js &&
+        test -f /app/server/pb/user.pb.go &&
+        test -f /app/server/pb/user_grpc.pb.go &&
+        # Check services are responding
+        curl -f http://localhost:${FRONTEND_PORT} &&
+        curl -f http://localhost:${GRPC_WEB_PORT} || exit 1
+      interval: 30s
+      timeout: 15s
+      retries: 3
+      start_period: 180s  # Allow more time for initial setup
+
+    # Proper signal handling
+    init: true
+
+    # Resource limits for development
+    deploy:
+      resources:
+        limits:
+          memory: 2G
+        reservations:
+          memory: 1G
+
+    # Add development labels
+    labels:
+      - "dev.hotreload=true"
+      - "dev.environment=development"
+
+networks:
+  app-network-dev:
+    driver: bridge
+    name: ${APP_NAME}-network-dev
+
+volumes:
+  dev-go-cache:
+    name: ${APP_NAME}-dev-go-cache
+    driver: local
+  dev-node-cache:
+    name: ${APP_NAME}-dev-node-cache
+    driver: local
+  dev-webpack-cache:
+    name: ${APP_NAME}-dev-webpack-cache
+    driver: local

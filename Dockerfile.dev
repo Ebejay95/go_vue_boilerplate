@@ -1,0 +1,159 @@
+# Enhanced Development Dockerfile with optimized hot-reload support
+FROM golang:1.24-alpine AS development
+
+# Set environment variables for optimal development
+ENV GO_ENV=development
+ENV CGO_ENABLED=0
+ENV GOOS=linux
+ENV GOARCH=amd64
+ENV PATH="/go/bin:${PATH}"
+
+# Install all necessary tools and dependencies
+RUN apk add --no-cache \
+	protobuf-dev \
+	git \
+	curl \
+	unzip \
+	bash \
+	make \
+	inotify-tools \
+	nodejs \
+	npm \
+	build-base \
+	ca-certificates \
+	tzdata \
+	&& rm -rf /var/cache/apk/*
+
+# Install Go development tools with specific versions for stability
+RUN go install google.golang.org/protobuf/cmd/protoc-gen-go@v1.31.0 \
+	&& go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@v1.3.0
+
+# Install Air for hot reload - FIXED: Use the new repository location
+RUN go install github.com/air-verse/air@latest
+
+# Ensure Air is accessible and verify installation
+RUN ls -la /go/bin/ && \
+	find /go -name "air" -type f 2>/dev/null && \
+	if [ -f "/go/bin/air" ]; then \
+	echo "✅ Air installed successfully at /go/bin/air"; \
+	elif [ -f "/go/bin/linux_amd64/air" ]; then \
+	echo "✅ Air found at /go/bin/linux_amd64/air, creating symlink..."; \
+	ln -sf /go/bin/linux_amd64/air /go/bin/air; \
+	else \
+	echo "⚠️ Air binary location:"; \
+	find /go -name "air" -type f 2>/dev/null | head -5; \
+	fi
+
+# Install protoc-gen-grpc-web for frontend proto generation
+RUN curl -sSL https://github.com/grpc/grpc-web/releases/download/1.4.2/protoc-gen-grpc-web-1.4.2-linux-x86_64 \
+	-o /usr/local/bin/protoc-gen-grpc-web && \
+	chmod +x /usr/local/bin/protoc-gen-grpc-web
+
+# Set working directory
+WORKDIR /app
+
+# Copy dependency files for layer caching optimization
+COPY frontend/package*.json /app/frontend/
+COPY server/go.mod server/go.sum* /app/server/
+
+# Install Go dependencies
+RUN cd /app/server && go mod download && go mod verify
+
+# Install Node.js dependencies with optimization for development
+RUN cd /app/frontend && \
+	if [ -f package-lock.json ]; then \
+	npm ci --include=dev --no-audit --prefer-offline; \
+	else \
+	npm install --include=dev --no-audit; \
+	fi
+
+# Ensure grpc-tools is available for proto generation
+RUN cd /app/frontend && \
+	(npm list grpc-tools >/dev/null 2>&1 || npm install grpc-tools@latest --no-audit)
+
+# Install additional development tools for better DX
+RUN npm install -g @vue/cli-service concurrently
+
+# Copy Air configuration for Go hot-reload
+COPY server/.air.toml /app/server/
+
+# Create necessary directories with proper permissions
+RUN mkdir -p /app/server/pb /app/server/tmp /app/frontend/src/proto /app/frontend/dist \
+	&& chmod -R 755 /app
+
+# Copy the enhanced development script
+COPY dev-start.sh /app/dev-start.sh
+RUN chmod +x /app/dev-start.sh
+
+# Create a helper script for proto generation only
+RUN echo '#!/bin/bash\n\
+	echo "🔧 Generating proto files..."\n\
+	mkdir -p /app/server/pb /app/frontend/src/proto\n\
+	\n\
+	# Generate Go files\n\
+	protoc --go_out=/app/server/pb --go_opt=paths=source_relative \\\n\
+	--go-grpc_out=/app/server/pb --go-grpc_opt=paths=source_relative \\\n\
+	--proto_path=/app/proto /app/proto/*.proto\n\
+	\n\
+	# Generate JavaScript files\n\
+	cd /app/frontend\n\
+	npx grpc_tools_node_protoc \\\n\
+	--js_out=import_style=commonjs,binary:src/proto \\\n\
+	--proto_path=../proto ../proto/*.proto\n\
+	\n\
+	npx grpc_tools_node_protoc \\\n\
+	--grpc-web_out=import_style=commonjs,mode=grpcwebtext:src/proto \\\n\
+	--proto_path=../proto ../proto/*.proto\n\
+	\n\
+	cd /app\n\
+	echo "✅ Proto files generated successfully"\n\
+	' > /app/generate-proto.sh && chmod +x /app/generate-proto.sh
+
+# Create health check script
+RUN echo '#!/bin/bash\n\
+	# Check if proto files exist\n\
+	test -f /app/frontend/src/proto/user_grpc_web_pb.js || exit 1\n\
+	test -f /app/frontend/src/proto/user_pb.js || exit 1\n\
+	test -f /app/server/pb/user.pb.go || exit 1\n\
+	test -f /app/server/pb/user_grpc.pb.go || exit 1\n\
+	\n\
+	# Check if services are responding\n\
+	curl -f http://localhost:${FRONTEND_PORT:-3000} >/dev/null 2>&1 || exit 1\n\
+	curl -f http://localhost:${GRPC_WEB_PORT:-8081} >/dev/null 2>&1 || exit 1\n\
+	\n\
+	echo "✅ All health checks passed"\n\
+	' > /app/health-check.sh && chmod +x /app/health-check.sh
+
+# Create log monitoring script
+RUN echo '#!/bin/bash\n\
+	echo "📋 Available log commands:"\n\
+	echo "  tail -f /app/backend.log    # Backend logs"\n\
+	echo "  tail -f /app/frontend.log   # Frontend logs"\n\
+	echo "  tail -f /app/proto.log      # Proto generation logs"\n\
+	echo ""\n\
+	echo "📊 Current service status:"\n\
+	ps aux | grep -E "(air|node|npm)" | grep -v grep || echo "No services running"\n\
+	' > /app/show-logs.sh && chmod +x /app/show-logs.sh
+
+# Set proper file ownership and permissions
+RUN chown -R root:root /app && \
+	find /app -type f -name "*.sh" -exec chmod +x {} \;
+
+# Expose all necessary ports
+EXPOSE 50051 8081 3000 24678
+
+# Add labels for better container management
+LABEL maintainer="development"
+LABEL project="grpc-web-hotreload"
+LABEL environment="development"
+LABEL features="hotreload,proto-generation,go-air,vue-hmr"
+
+# Health check configuration
+HEALTHCHECK --interval=30s --timeout=15s --retries=3 --start-period=120s \
+	CMD /app/health-check.sh
+
+# Set up proper signal handling
+STOPSIGNAL SIGTERM
+
+# Default command runs the enhanced development script
+CMD ["/app/dev-start.sh"]
