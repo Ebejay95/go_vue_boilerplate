@@ -62,123 +62,6 @@ logs-frontend:
 	docker-compose logs -f frontend
 
 # ===========================================
-# DEVELOPMENT COMMANDS (HOT RELOAD)
-# ===========================================
-
-dev: dev-clean dev-up
-
-dev-up: clean-proto
-	$(call print_status,"Starting development environment with HOT RELOAD...")
-	$(call print_warning,"This will enable aggressive file watching for hot reload")
-	@echo "$(YELLOW)If hot reload doesn't work, try: make dev-rebuild$(RESET)"
-	docker-compose -f docker-compose.yml -f docker-compose.dev.yml up --build
-
-dev-up-detached: clean-proto
-	$(call print_status,"Starting development environment in detached mode...")
-	docker-compose -f docker-compose.yml -f docker-compose.dev.yml up --build -d
-	$(call print_success,"Development environment running in background!")
-	@echo "$(CYAN)View logs with: make dev-logs$(RESET)"
-	@echo "$(CYAN)Access frontend: http://localhost:$(shell grep FRONTEND_PORT .env | cut -d'=' -f2)$(RESET)"
-
-dev-down:
-	$(call print_status,"Stopping development environment...")
-	docker-compose -f docker-compose.yml -f docker-compose.dev.yml down
-	$(call print_success,"Development environment stopped!")
-
-dev-logs:
-	$(call print_status,"Showing development logs...")
-	docker-compose -f docker-compose.yml -f docker-compose.dev.yml logs -f
-
-dev-logs-backend:
-	$(call print_status,"Showing backend development logs...")
-	docker-compose -f docker-compose.yml -f docker-compose.dev.yml logs -f backend-grpc-server
-
-dev-logs-frontend:
-	$(call print_status,"Showing frontend development logs...")
-	docker-compose -f docker-compose.yml -f docker-compose.dev.yml logs -f frontend
-
-# ===========================================
-# DEVELOPMENT REBUILD & RESTART
-# ===========================================
-
-dev-rebuild: dev-down clean-volumes dev-up-detached
-	$(call print_success,"Development environment completely rebuilt!")
-
-dev-rebuild-frontend:
-	$(call print_status,"Rebuilding frontend for development...")
-	docker-compose -f docker-compose.yml -f docker-compose.dev.yml stop frontend
-	docker-compose -f docker-compose.yml -f docker-compose.dev.yml rm -f frontend
-	docker-compose -f docker-compose.yml -f docker-compose.dev.yml build --no-cache frontend
-	docker-compose -f docker-compose.yml -f docker-compose.dev.yml up -d frontend
-	$(call print_success,"Frontend rebuilt and restarted!")
-	@echo "$(CYAN)Follow logs with: make dev-logs-frontend$(RESET)"
-
-dev-rebuild-backend:
-	$(call print_status,"Rebuilding backend for development...")
-	docker-compose -f docker-compose.yml -f docker-compose.dev.yml stop backend-grpc-server
-	docker-compose -f docker-compose.yml -f docker-compose.dev.yml rm -f backend-grpc-server
-	docker-compose -f docker-compose.yml -f docker-compose.dev.yml build --no-cache backend-grpc-server
-	docker-compose -f docker-compose.yml -f docker-compose.dev.yml up -d backend-grpc-server
-	$(call print_success,"Backend rebuilt and restarted!")
-	@echo "$(CYAN)Follow logs with: make dev-logs-backend$(RESET)"
-
-dev-restart:
-	$(call print_status,"Restarting development containers...")
-	docker-compose -f docker-compose.yml -f docker-compose.dev.yml restart
-	$(call print_success,"Development containers restarted!")
-
-dev-restart-frontend:
-	$(call print_status,"Restarting frontend container...")
-	docker-compose -f docker-compose.yml -f docker-compose.dev.yml restart frontend
-	$(call print_success,"Frontend container restarted!")
-
-dev-restart-backend:
-	$(call print_status,"Restarting backend container...")
-	docker-compose -f docker-compose.yml -f docker-compose.dev.yml restart backend-grpc-server
-	$(call print_success,"Backend container restarted!")
-
-# ===========================================
-# DEVELOPMENT DEBUGGING
-# ===========================================
-
-dev-shell-frontend:
-	$(call print_status,"Opening shell in frontend container...")
-	docker-compose -f docker-compose.yml -f docker-compose.dev.yml exec frontend sh
-
-dev-shell-backend:
-	$(call print_status,"Opening shell in backend container...")
-	docker-compose -f docker-compose.yml -f docker-compose.dev.yml exec backend-grpc-server sh
-
-dev-status:
-	$(call print_status,"Development environment status:")
-	@docker-compose -f docker-compose.yml -f docker-compose.dev.yml ps
-	@echo ""
-	$(call print_status,"Volume information:")
-	@docker volume ls | grep $(shell grep APP_NAME .env | cut -d'=' -f2) || echo "$(YELLOW)No volumes found$(RESET)"
-	@echo ""
-	$(call print_status,"Port information:")
-	@echo "Frontend: http://localhost:$(shell grep FRONTEND_PORT .env | cut -d'=' -f2)"
-	@echo "Backend gRPC: localhost:$(shell grep BACKEND_PORT .env | cut -d'=' -f2)"
-	@echo "gRPC-Web: http://localhost:$(shell grep GRPC_WEB_PORT .env | cut -d'=' -f2)"
-
-# Hot Reload troubleshooting
-dev-hotreload-test:
-	$(call print_status,"Testing hot reload functionality...")
-	@echo "$(YELLOW)Testing if containers can detect file changes...$(RESET)"
-	docker-compose -f docker-compose.yml -f docker-compose.dev.yml exec frontend sh -c "touch /app/src/test-hotreload.txt && ls -la /app/src/test-hotreload.txt && rm /app/src/test-hotreload.txt"
-	@echo "$(GREEN)If you see the file, hot reload should work$(RESET)"
-
-dev-fix-permissions:
-	$(call print_status,"Fixing file permissions for hot reload...")
-	@if [ "$(shell uname)" = "Linux" ]; then \
-		sudo chown -R $(shell id -u):$(shell id -g) ./frontend/src ./frontend/public; \
-		chmod -R 755 ./frontend/src ./frontend/public; \
-		$(call print_success,"Permissions fixed for Linux"); \
-	else \
-		$(call print_warning,"Permission fix only needed on Linux"); \
-	fi
-
-# ===========================================
 # PRODUCTION BUILD COMMANDS
 # ===========================================
 
@@ -226,8 +109,6 @@ clean-volumes:
 	@docker volume rm $(shell grep APP_NAME .env | cut -d'=' -f2)-frontend-node-modules-dev 2>/dev/null || true
 	@docker volume rm $(shell grep APP_NAME .env | cut -d'=' -f2)-go-mod-cache-dev 2>/dev/null || true
 	$(call print_success,"Development volumes cleaned!")
-
-dev-clean: clean-volumes
 
 clean-docker:
 	$(call print_status,"Cleaning Docker artifacts...")

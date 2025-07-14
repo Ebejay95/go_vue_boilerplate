@@ -138,9 +138,16 @@ func main() {
 	// gRPC-Web Wrapper
 	wrappedGrpc := grpcweb.WrapServer(grpcServer,
 		grpcweb.WithOriginFunc(func(origin string) bool {
-			// Erlaube alle Origins für Development
-			// In Production solltest du spezifische Origins definieren
-			return true
+			allowedOrigins := []string{
+				os.Getenv("BASE_URL"),
+				os.Getenv("BACKEND_BASE_URL"),
+			}
+			for _, allowed := range allowedOrigins {
+				if origin == allowed {
+					return true
+				}
+			}
+			return false
 		}),
 		grpcweb.WithWebsockets(true),
 		grpcweb.WithWebsocketOriginFunc(func(req *http.Request) bool {

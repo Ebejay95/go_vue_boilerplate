@@ -1,88 +1,86 @@
-# Development Dockerfile für Vue.js mit gRPC-Web Hot Reload
-FROM node:18-alpine
+# Multi-stage build für maximale Effizienz
+FROM node:18-alpine AS builder
 
-# Install protoc and tools
-RUN apk add --no-cache protobuf-dev curl unzip bash
+# Install protoc and protoc-gen-grpc-web
+RUN apk add --no-cache protobuf-dev curl unzip
 
-# Install protoc-gen-grpc-web für JavaScript Generation
+# Install protoc-gen-grpc-web für gRPC-Web Generation
 RUN curl -sSL https://github.com/grpc/grpc-web/releases/download/1.4.2/protoc-gen-grpc-web-1.4.2-linux-x86_64 \
 	-o /usr/local/bin/protoc-gen-grpc-web && \
 	chmod +x /usr/local/bin/protoc-gen-grpc-web
 
 WORKDIR /app
 
-# Package.json und lock files zuerst kopieren
+# Dependencies first (besseres Caching)
 COPY frontend/package*.json ./
 
-# Install dependencies including grpc-tools for protoc-gen-js
-RUN npm install
-RUN npm install -g grpc-tools@latest
+# Smart dependency installation: npm ci if lock file exists, npm install otherwise
+RUN if [ -f package-lock.json ]; then \
+	echo "=== Using npm ci (package-lock.json found) ===" && \
+	npm ci --no-audit; \
+	else \
+	echo "=== Using npm install (no package-lock.json found) ===" && \
+	npm install --no-audit; \
+	fi
 
-# Konfigurationsdateien kopieren
-COPY frontend/vue.config.js ./
-COPY frontend/tailwind.config.js ./
+# Proto generation needs grpc-tools, so ensure it's available
+RUN npm list grpc-tools >/dev/null 2>&1 || npm install grpc-tools@latest
 
-# Proto files kopieren und JavaScript generieren
+# Proto generation
 COPY proto ../proto
 RUN mkdir -p src/proto
 
-# STEP 1: Generate JavaScript files from proto
-RUN echo "=== Generating JavaScript protobuf files ==="
+# Generate proto files
 RUN npx grpc_tools_node_protoc \
 	--js_out=import_style=commonjs,binary:src/proto \
-	--proto_path=../proto \
-	../proto/*.proto
+	--proto_path=../proto ../proto/*.proto
 
-# STEP 2: Generate gRPC-Web files
-RUN echo "=== Generating gRPC-Web files ==="
 RUN npx grpc_tools_node_protoc \
 	--grpc-web_out=import_style=commonjs,mode=grpcwebtext:src/proto \
-	--proto_path=../proto \
-	../proto/*.proto
+	--proto_path=../proto ../proto/*.proto
 
-# Verification: Check generated files exist
-RUN echo "=== Verifying generated files ==="
-RUN ls -la src/proto/
-RUN echo "=== Checking user_pb.js ===" && test -f src/proto/user_pb.js && echo "✅ user_pb.js exists" || echo "❌ user_pb.js missing"
-RUN echo "=== Checking user_grpc_web_pb.js ===" && test -f src/proto/user_grpc_web_pb.js && echo "✅ user_grpc_web_pb.js exists" || echo "❌ user_grpc_web_pb.js missing"
+# Copy source code
+COPY frontend/ ./
 
-# Show first few lines of generated files for debugging
-RUN echo "=== user_pb.js content preview ==="
-RUN head -10 src/proto/user_pb.js 2>/dev/null || echo "Could not read user_pb.js"
+# Build Args - diese werden zur Build-Zeit übergeben
+ARG VUE_APP_GRPC_WEB_URL
+ARG NODE_ENV=production
 
-RUN echo "=== user_grpc_web_pb.js content preview ==="
-RUN head -10 src/proto/user_grpc_web_pb.js 2>/dev/null || echo "Could not read user_grpc_web_pb.js"
+# Environment Variables für den Build setzen
+ENV VUE_APP_GRPC_WEB_URL=${VUE_APP_GRPC_WEB_URL}
+ENV NODE_ENV=${NODE_ENV}
 
-# Source files kopieren NACH proto generation
-COPY frontend/src ./src
-COPY frontend/public ./public
+# Debug: Build Args anzeigen
+RUN echo "Building with VUE_APP_GRPC_WEB_URL=${VUE_APP_GRPC_WEB_URL}"
 
-# WICHTIG: Proto files in src/ überschreiben, falls sie durch COPY überschrieben wurden
-RUN echo "=== Re-verifying proto files after src copy ==="
-RUN ls -la src/proto/
-RUN test -f src/proto/user_pb.js && echo "✅ user_pb.js still exists" || (echo "❌ user_pb.js disappeared, regenerating..." && \
-	npx grpc_tools_node_protoc --js_out=import_style=commonjs,binary:src/proto --proto_path=../proto ../proto/*.proto)
-RUN test -f src/proto/user_grpc_web_pb.js && echo "✅ user_grpc_web_pb.js still exists" || (echo "❌ user_grpc_web_pb.js disappeared, regenerating..." && \
-	npx grpc_tools_node_protoc --grpc-web_out=import_style=commonjs,mode=grpcwebtext:src/proto --proto_path=../proto ../proto/*.proto)
+# Build app with environment variables
+RUN npm run build
 
-# Final verification
-RUN echo "=== Final file check ==="
-RUN ls -la src/proto/
-RUN file src/proto/* || echo "No proto files found"
+# Production image
+FROM nginx:alpine
 
-# KRITISCHE Environment Variablen für File Watching
-ENV NODE_ENV=development
-ENV CHOKIDAR_USEPOLLING=true
-ENV CHOKIDAR_INTERVAL=500
-ENV WATCHPACK_POLLING=true
-ENV FAST_REFRESH=true
+# Remove default nginx config
+RUN rm /etc/nginx/conf.d/default.conf
 
-# Vue CLI spezifische Env Vars
-ENV VUE_CLI_BABEL_TRANSPILE_MODULES=true
-ENV VUE_CLI_BABEL_TARGET_NODE=true
+# Copy our template from project root to the templates directory
+COPY nginx.conf.template /etc/nginx/templates/default.conf.template
 
-# Ports freigeben
+# Copy built app
+COPY --from=builder /app/dist /usr/share/nginx/html
+
+# Create nginx cache directories
+RUN mkdir -p /var/cache/nginx/client_temp \
+	/var/cache/nginx/proxy_temp \
+	/var/cache/nginx/fastcgi_temp \
+	/var/cache/nginx/uwsgi_temp \
+	/var/cache/nginx/scgi_temp
+
+# Set default environment variables (can be overridden by docker-compose)
+ENV FRONTEND_PORT=3000
+ENV BACKEND_HOST=backend-grpc-server
+ENV GRPC_WEB_PORT=8081
+
 EXPOSE ${FRONTEND_PORT}
 
-# Development command with proto file check
-CMD ["sh", "-c", "echo '=== Starting with proto files: ===' && ls -la src/proto/ && npm run serve"]
+# Let nginx handle the template processing automatically
+CMD ["nginx", "-g", "daemon off;"]

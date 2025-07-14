@@ -26,7 +26,6 @@ const client = new userProto.user.UserService(GRPC_SERVER_URL, grpc.credentials.
 
 app.use(express.json());
 
-// CORS middleware for Vue development
 app.use((req, res, next) => {
 	res.header('Access-Control-Allow-Origin', '*');
 	res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
