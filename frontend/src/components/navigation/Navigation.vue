@@ -1,6 +1,6 @@
 <template>
 	<nav>
-		<router-link to="/signup">Singup</router-link>
-		<router-link to="/login">Login</router-link>
+		<base-button link to="/signup" mode="flat">Singup</base-button>
+		<base-button link to="/login" mode="flat">Login</base-button>
 	</nav>
 </template>

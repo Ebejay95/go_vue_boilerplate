@@ -1,6 +1,5 @@
 
 dialogs
-meesages
 language
 loading animations on components and buttons
 

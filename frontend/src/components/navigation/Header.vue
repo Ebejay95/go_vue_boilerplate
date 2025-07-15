@@ -1,86 +1,49 @@
 <template>
-	<header class="bg-white shadow-sm border-b border-gray-200 px-4 py-3">
-	  <div class="flex items-center justify-between">
-		<!-- Left: Logo/Brand -->
-		<div class="flex items-center space-x-4">
-		  <router-link
-			to="/"
-			class="text-xl font-semibold text-gray-900 hover:text-blue-600 transition-colors"
-		  >
-			Header
-		  </router-link>
-		  <navigation-component></navigation-component>
-		</div>
+	<header class="bg-white shadow-sm border-b">
+	  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+		<div class="flex justify-between items-center h-16">
 
-		<!-- Right: Connection Status -->
-		<div class="flex items-center space-x-3">
-		  <!-- Connection Indicator Dot -->
-		  <div class="flex items-center space-x-2">
-			<div
-			  :class="[
-				'w-3 h-3 rounded-full transition-colors duration-300',
-				connectionStatus.healthy ? 'bg-green-500' : 'bg-red-500'
-			  ]"
-			  :title="connectionStatus.message"
-			></div>
-			<span class="text-sm text-gray-600 hidden sm:inline">
-			  {{ connectionStatus.message }}
-			</span>
+		  <!-- Logo/Brand -->
+		  <div class="flex items-center space-x-8">
+			<base-button link to="/">
+				MyApp
+			</base-button>
+			<navigation-component></navigation-component>
 		  </div>
 
-		  <!-- Reconnect Button (nur bei Problemen) -->
-		  <button
-			v-if="!connectionStatus.healthy"
-			@click="handleReconnect"
-			:disabled="isReconnecting"
-			class="inline-flex items-center px-3 py-1 border border-gray-300 shadow-sm text-xs font-medium rounded text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
-		  >
-			<svg
-			  v-if="isReconnecting"
-			  class="animate-spin -ml-1 mr-1 h-3 w-3"
-			  xmlns="http://www.w3.org/2000/svg"
-			  fill="none"
-			  viewBox="0 0 24 24"
-			>
-			  <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-			  <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-			</svg>
-			{{ isReconnecting ? 'Reconnecting...' : 'Reconnect' }}
-		  </button>
+		  <!-- Right Side -->
+		  <div class="flex items-center space-x-4">
 
-		  <!-- Debug Info (nur im Development) -->
-		  <div
-			v-if="isDevelopment && connectionStatus.url"
-			class="text-xs text-gray-400 hidden md:block"
-			:title="`gRPC-Web URL: ${connectionStatus.url}`"
-		  >
-			{{ connectionStatus.url.split('//')[1] }}
+			<!-- Connection Status -->
+			<div class="flex items-center space-x-2">
+			  <div
+				:class="[
+				  'w-3 h-3 rounded-full transition-colors duration-300',
+				  connectionStatus.healthy ? 'bg-green-500' : 'bg-red-500'
+				]"
+				:title="connectionStatus.message"
+			  ></div>
+			  <span class="text-sm text-gray-600 hidden sm:inline">
+				{{ connectionStatus.message }}
+			  </span>
+			</div>
+
+			<!-- Notification Bell mit Badge -->
+			<notification-list :show-badge="true" :show-panel="true"></notification-list>
+
+			<!-- Settings/Profile (optional) -->
+			<button class="text-gray-500 hover:text-gray-700 transition-colors">
+			  <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+				<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+					  d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+				<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+			  </svg>
+			</button>
 		  </div>
 		</div>
 	  </div>
 
-	  <!-- Status Message (erscheint unter dem Header) -->
-	  <div
-		v-if="message"
-		:class="[
-		  'mt-3 p-3 rounded-md transition-all duration-300',
-		  message.type === 'success'
-			? 'bg-green-50 text-green-800 border border-green-200'
-			: 'bg-red-50 text-red-800 border border-red-200'
-		]"
-	  >
-		<div class="flex items-center justify-between">
-		  <span class="text-sm">{{ message.text }}</span>
-		  <button
-			@click="clearMessage"
-			class="text-gray-400 hover:text-gray-600 ml-2"
-		  >
-			<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-			  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-			</svg>
-		  </button>
-		</div>
-	  </div>
+	  <!-- Notification Toast Area wird durch notification-list verwaltet -->
 	</header>
   </template>
 
@@ -89,14 +52,6 @@
 
   export default {
 	name: 'HeaderComponent',
-
-	data() {
-	  return {
-		message: null,
-		isReconnecting: false,
-		isDevelopment: process.env.NODE_ENV === 'development'
-	  }
-	},
 
 	computed: {
 	  ...mapState('connection', ['status', 'healthy', 'message', 'grpcWebUrl', 'lastChecked', 'error']),
@@ -114,86 +69,89 @@
 
 	methods: {
 	  ...mapActions('connection', ['checkHealth', 'reconnect']),
+	  ...mapActions('notifications', ['success', 'error', 'warning', 'info']),
 
 	  getStatusMessage() {
 		if (this.healthy) {
-		  return 'Connected'
+		  return 'Verbunden'
 		}
 
 		if (this.status === 'connecting') {
-		  return 'Connecting...'
+		  return 'Verbindung...'
 		}
 
 		if (this.error) {
-		  return `Connection Error`
+		  return `Verbindungsfehler`
 		}
 
-		return 'Disconnected'
+		return 'Getrennt'
 	  },
 
 	  async handleReconnect() {
-		this.isReconnecting = true
-		this.clearMessage()
-
 		try {
+		  this.info('Verbindung wird wiederhergestellt...')
 		  const result = await this.reconnect()
 
 		  if (result.status === 'healthy') {
-			this.showMessage('✅ Connection restored!', 'success')
+			this.success('✅ Verbindung wiederhergestellt!')
 		  } else {
-			this.showMessage(`❌ Reconnection failed: ${result.error}`, 'error')
+			this.error(`❌ Wiederverbindung fehlgeschlagen: ${result.error}`, {
+			  actions: [
+				{
+				  label: 'Erneut versuchen',
+				  handler: () => this.handleReconnect()
+				}
+			  ]
+			})
 		  }
 		} catch (error) {
 		  console.error('❌ Reconnection error:', error)
-		  this.showMessage(`❌ Reconnection failed: ${error.message}`, 'error')
-		} finally {
-		  this.isReconnecting = false
+		  this.error(`❌ Verbindungsfehler: ${error.message}`, {
+			persistent: true,
+			actions: [
+			  {
+				label: 'Erneut versuchen',
+				handler: () => this.handleReconnect()
+			  }
+			]
+		  })
 		}
 	  },
 
-	  showMessage(text, type = 'success') {
-		this.message = { text, type }
-
-		// Auto-hide success messages after 3 seconds
-		if (type === 'success') {
-		  setTimeout(() => {
-			if (this.message && this.message.type === 'success') {
-			  this.message = null
-			}
-		  }, 3000)
-		}
-	  },
-
-	  clearMessage() {
-		this.message = null
-	  },
-
-	  // Watch for connection changes
+	  // Watch für Connection-Änderungen
 	  handleConnectionChange(newStatus, oldStatus) {
 		if (oldStatus && newStatus !== oldStatus) {
 		  if (newStatus === 'connected') {
-			this.showMessage('✅ Connection established', 'success')
+			this.success('🔗 Verbindung hergestellt')
 		  } else if (newStatus === 'error' && oldStatus === 'connected') {
-			this.showMessage('⚠️ Connection lost', 'error')
+			this.error('🔌 Verbindung verloren', {
+			  persistent: true,
+			  actions: [
+				{
+				  label: 'Neu verbinden',
+				  handler: () => this.handleReconnect()
+				}
+			  ]
+			})
 		  }
 		}
 	  }
 	},
 
 	watch: {
-	  // React to connection status changes
+	  // React auf Connection-Status-Änderungen
 	  status: {
 		handler: 'handleConnectionChange',
 		immediate: false
 	  },
 
-	  // React to health changes
+	  // React auf Health-Änderungen
 	  healthy(newHealthy, oldHealthy) {
 		if (oldHealthy !== undefined && newHealthy !== oldHealthy) {
 		  if (newHealthy) {
-			this.showMessage('✅ Connection healthy', 'success')
+			this.success('✅ Verbindung stabil')
 		  } else {
-			this.showMessage('⚠️ Connection unhealthy', 'error')
+			this.warning('⚠️ Verbindung instabil')
 		  }
 		}
 	  }
@@ -202,13 +160,13 @@
 	mounted() {
 	  console.log('🎯 Header component mounted - monitoring connection status')
 
-	  // Optional: Periodic health check every 30 seconds
-	  if (this.isDevelopment) {
+	  // Optional: Periodische Health-Checks
+	  if (process.env.NODE_ENV === 'development') {
 		this.healthCheckInterval = setInterval(async () => {
 		  try {
 			await this.checkHealth()
 		  } catch (error) {
-			// Silent fail for background checks
+			// Silent fail für Background-Checks
 			console.warn('⚠️ Background health check failed:', error.message)
 		  }
 		}, 30000)
@@ -222,4 +180,3 @@
 	}
   }
   </script>
-
