@@ -1,4 +1,3 @@
-// vue.config.js - Enhanced Development Configuration
 const { defineConfig } = require('@vue/cli-service')
 const { DefinePlugin } = require('webpack')
 const path = require('path')
@@ -7,17 +6,14 @@ module.exports = defineConfig({
   transpileDependencies: true,
   publicPath: process.env.BASE_URL || '/',
 
-  // Production Build Optimierungen
   productionSourceMap: process.env.NODE_ENV !== 'production',
 
-  // Development Server Configuration
   devServer: {
     host: '0.0.0.0',
     port: process.env.FRONTEND_PORT,
     hot: true,
     liveReload: true,
 
-    // Enhanced file watching
     watchFiles: {
       paths: ['src/**/*', 'public/**/*'],
       options: {
@@ -27,7 +23,6 @@ module.exports = defineConfig({
       }
     },
 
-    // Client configuration for better HMR
     client: {
       webSocketURL: 'auto://0.0.0.0:0/ws',
       overlay: {
@@ -38,7 +33,6 @@ module.exports = defineConfig({
       reconnect: 5
     },
 
-    // Headers for development
     headers: {
       'Access-Control-Allow-Origin': '*',
       'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, PATCH, OPTIONS',
@@ -55,26 +49,21 @@ module.exports = defineConfig({
       })
     )
 
-    // Development optimizations
     if (process.env.NODE_ENV === 'development') {
-      // Enhanced file watching
       config.watchOptions = {
         poll: process.env.WATCHPACK_POLLING === 'true' ? 1000 : false,
         aggregateTimeout: 300,
         ignored: /node_modules/
       }
 
-      // FIXED: Use absolute path for webpack cache directory
       config.cache = {
         type: 'filesystem',
         cacheDirectory: path.resolve(__dirname, 'node_modules/.cache/webpack')
       }
 
-      // Source maps for debugging
       config.devtool = 'eval-cheap-module-source-map'
     }
 
-    // Production optimizations
     if (process.env.NODE_ENV === 'production') {
       config.optimization = {
         ...config.optimization,
@@ -108,16 +97,12 @@ module.exports = defineConfig({
     },
   },
 
-  // Chain webpack configuration for additional HMR optimizations
   chainWebpack: config => {
-    // Ensure proper HMR for Vue files
     if (process.env.NODE_ENV === 'development') {
       config.plugin('html').tap(args => {
         args[0].template = './public/index.html'
         return args
       })
-
-      // Remove problematic watch ignore plugin that might interfere
       config.plugins.delete('watch-ignore')
     }
   }

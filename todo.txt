@@ -3,3 +3,6 @@ dialogs
 meesages
 language
 loading animations on components and buttons
+
+
+(find . -type f -not -path "./.git/*" -not -path "./node_modules/*" -not -name "package-lock.json" -exec ls -la {} \; && echo "=== FILE CONTENTS ===" && find . -type f -not -path "./.git/*" -not -path "./node_modules/*" -not -name "package-lock.json" -exec sh -c 'echo "=== {} ==="; cat "{}"' \;) > ./../out

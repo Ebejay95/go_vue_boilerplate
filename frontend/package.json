@@ -4,45 +4,52 @@
 	"description": "Vue.js Frontend for direct gRPC-Web communication",
 	"main": "server.js",
 	"scripts": {
-	  "start": "node server.js",
-	  "build": "npm run build:vue && echo 'Build completed'",
-	  "build:vue": "vue-cli-service build",
-	  "dev": "concurrently \"npm run serve\" \"npm run server\"",
-	  "serve": "vue-cli-service serve",
-	  "server": "node server.js",
-	  "postinstall": "npm run lock-check || echo 'Package lock generated'",
-	  "lock-check": "test -f package-lock.json",
-	  "proto:generate": "npm run proto:js && npm run proto:grpc-web",
-	  "proto:js": "npx grpc_tools_node_protoc --js_out=import_style=commonjs,binary:src/proto --proto_path=../proto ../proto/*.proto",
-	  "proto:grpc-web": "npx grpc_tools_node_protoc --grpc-web_out=import_style=commonjs,mode=grpcwebtext:src/proto --proto_path=../proto ../proto/*.proto"
+		"start": "node server.js",
+		"build": "npm run build:vue && echo 'Build completed'",
+		"build:vue": "vue-cli-service build",
+		"dev": "concurrently \"npm run serve\" \"npm run server\"",
+		"serve": "vue-cli-service serve",
+		"server": "node server.js",
+		"postinstall": "npm run lock-check || echo 'Package lock generated'",
+		"lock-check": "test -f package-lock.json",
+		"proto:generate": "npm run proto:js && npm run proto:grpc-web",
+		"proto:js": "npx grpc_tools_node_protoc --js_out=import_style=commonjs,binary:src/proto --proto_path=../proto ../proto/*.proto",
+		"proto:grpc-web": "npx grpc_tools_node_protoc --grpc-web_out=import_style=commonjs,mode=grpcwebtext:src/proto --proto_path=../proto ../proto/*.proto"
 	},
-	"keywords": ["vue", "grpc", "grpc-web", "frontend"],
+	"keywords": [
+		"vue",
+		"grpc",
+		"grpc-web",
+		"frontend"
+	],
 	"author": "",
 	"license": "ISC",
 	"dependencies": {
-	  "vue": "^3.3.0",
-	  "vue-router": "^4.5.1",
-	  "grpc-web": "^1.4.2",
-	  "google-protobuf": "^3.21.2"
+		"axios": "^1.10.0",
+		"google-protobuf": "^3.21.2",
+		"grpc-web": "^1.4.2",
+		"vue": "^3.3.0",
+		"vue-router": "^4.5.1",
+		"vuex": "^4.1.0"
 	},
 	"devDependencies": {
-	  "@vue/cli-service": "^5.0.8",
-	  "@vue/cli-plugin-router": "^5.0.8",
-	  "concurrently": "^8.2.0",
-	  "tailwindcss": "^3.3.0",
-	  "autoprefixer": "^10.4.0",
-	  "postcss": "^8.4.0",
-	  "postcss-loader": "^7.3.0",
-	  "postcss-import": "^16.1.0",
-	  "grpc-tools": "^1.12.4"
+		"@vue/cli-plugin-router": "^5.0.8",
+		"@vue/cli-service": "^5.0.8",
+		"autoprefixer": "^10.4.0",
+		"concurrently": "^8.2.0",
+		"grpc-tools": "^1.12.4",
+		"postcss": "^8.4.0",
+		"postcss-import": "^16.1.0",
+		"postcss-loader": "^7.3.0",
+		"tailwindcss": "^3.3.0"
 	},
 	"engines": {
-	  "node": ">=16.0.0",
-	  "npm": ">=8.0.0"
+		"node": ">=16.0.0",
+		"npm": ">=8.0.0"
 	},
 	"browserslist": [
-	  "> 1%",
-	  "last 2 versions",
-	  "not dead"
+		"> 1%",
+		"last 2 versions",
+		"not dead"
 	]
 }

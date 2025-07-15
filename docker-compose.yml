@@ -34,14 +34,13 @@ services:
     networks:
       - app-network
     environment:
-      # Fix: Add the missing environment variables for Nginx template
       - PORT=${FRONTEND_PORT}
       - FRONTEND_PORT=${FRONTEND_PORT}
       - FRONTEND_HOST=${FRONTEND_HOST}
       - FRONTEND_PROTOCOL=${FRONTEND_PROTOCOL}
       - BASE_URL=${BASE_URL}
       - BACKEND_BASE_URL=${BACKEND_BASE_URL}
-      - BACKEND_HOST=backend-grpc-server  # Fix: Use service name for internal communication
+      - BACKEND_HOST=backend-grpc-server
       - GRPC_WEB_PORT=${GRPC_WEB_PORT}
     depends_on:
       - backend-grpc-server

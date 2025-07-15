@@ -61,11 +61,7 @@ RUN cd /app/server && go mod download && go mod verify
 
 # Install Node.js dependencies with optimization for development
 RUN cd /app/frontend && \
-	if [ -f package-lock.json ]; then \
-	npm ci --include=dev --no-audit --prefer-offline; \
-	else \
-	npm install --include=dev --no-audit; \
-	fi
+	npm install --include=dev --no-audit;
 
 # Ensure grpc-tools is available for proto generation
 RUN cd /app/frontend && \

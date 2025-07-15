@@ -10,7 +10,6 @@ const GRPC_SERVER_URL = process.env.GRPC_SERVER_URL;
 console.log(`Frontend server starting on port ${PORT}`);
 console.log(`Connecting to gRPC server at: ${GRPC_SERVER_URL}`);
 
-// Load protobuf
 const PROTO_PATH = path.join(__dirname, '../proto/user.proto');
 const packageDefinition = protoLoader.loadSync(PROTO_PATH, {
 	keepCase: true,
@@ -20,7 +19,6 @@ const packageDefinition = protoLoader.loadSync(PROTO_PATH, {
 	oneofs: true,
 });
 
-// WICHTIG: user.UserService statt nur userProto.UserService
 const userProto = grpc.loadPackageDefinition(packageDefinition);
 const client = new userProto.user.UserService(GRPC_SERVER_URL, grpc.credentials.createInsecure());
 
@@ -38,12 +36,10 @@ app.use((req, res, next) => {
 	}
 });
 
-// Serve Vue.js build files in production
 if (process.env.NODE_ENV === 'production') {
 	app.use(express.static(path.join(__dirname, 'dist')));
 }
 
-// Test der gRPC-Verbindung beim Start
 client.ListUsers({}, (error, response) => {
 	if (error) {
 		console.error('❌ gRPC connection failed:', error.message);

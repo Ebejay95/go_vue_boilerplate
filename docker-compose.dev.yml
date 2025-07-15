@@ -7,17 +7,13 @@ services:
       dockerfile: ./Dockerfile.dev
     image: ${APP_NAME}-dev-environment
     ports:
-      # Backend ports
       - "${BACKEND_PORT}:${BACKEND_PORT}"
       - "${GRPC_WEB_PORT}:${GRPC_WEB_PORT}"
-      # Frontend ports
       - "${FRONTEND_PORT}:${FRONTEND_PORT}"
-      - "24678:24678"  # Vue HMR WebSocket port
+      - "24678:24678"
     networks:
       - app-network-dev
     environment:
-      # CRITICAL: Ensure all environment variables are properly set
-      # Backend environment
       - PORT=${BACKEND_PORT:-50051}
       - WEB_PORT=${GRPC_WEB_PORT:-8081}
       - BACKEND_PORT=${BACKEND_PORT:-50051}
@@ -28,7 +24,6 @@ services:
       - DEEPL_API_KEY=${DEEPL_API_KEY}
       - GO_ENV=development
 
-      # Frontend environment
       - FRONTEND_PORT=${FRONTEND_PORT:-3000}
       - FRONTEND_HOST=${FRONTEND_HOST:-localhost}
       - FRONTEND_PROTOCOL=${FRONTEND_PROTOCOL:-http}
@@ -36,28 +31,22 @@ services:
       - VUE_APP_GRPC_WEB_URL=${GRPC_WEB_URL:-http://localhost:8081}
       - NODE_ENV=development
 
-      # Hot-reload environment variables
       - CHOKIDAR_USEPOLLING=true
       - WATCHPACK_POLLING=true
       - FAST_REFRESH=true
 
-      # Performance optimizations
       - NODE_OPTIONS=--max-old-space-size=4096
     volumes:
-      # CRITICAL: Source code mounting for hot-reload
       - ./server:/app/server:cached
       - ./frontend:/app/frontend:cached
       - ./proto:/app/proto:cached
 
-      # Scripts
       - ./dev-start.sh:/app/dev-start.sh:ro
 
-      # Persistent caches for faster rebuilds
       - dev-go-cache:/go/pkg/mod
       - dev-node-cache:/app/frontend/node_modules
       - dev-webpack-cache:/app/frontend/node_modules/.cache
 
-      # Exclude build artifacts (but keep proto files!)
       - /app/server/tmp
       - /app/frontend/dist
       - /app/frontend/node_modules/.cache/webpack
@@ -66,7 +55,6 @@ services:
     restart: unless-stopped
     working_dir: /app
 
-    # Enhanced health check for all services
     healthcheck:
       test: |
         # Check proto files exist
@@ -80,12 +68,10 @@ services:
       interval: 30s
       timeout: 15s
       retries: 3
-      start_period: 180s  # Allow more time for initial setup
+      start_period: 180s
 
-    # Proper signal handling
     init: true
 
-    # Resource limits for development
     deploy:
       resources:
         limits:
@@ -93,7 +79,6 @@ services:
         reservations:
           memory: 1G
 
-    # Add development labels
     labels:
       - "dev.hotreload=true"
       - "dev.environment=development"

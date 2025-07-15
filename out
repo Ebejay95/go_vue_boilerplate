@@ -1,0 +1,3752 @@
+-rw-r--r--@ 1 jonathaneberle  staff  268 30 Jun 11:21 ./tailwind.config.js
+-rw-r--r--@ 1 jonathaneberle  staff  1644 15 Jul 17:57 ./server.js
+-rw-r--r--@ 1 jonathaneberle  staff  2537 15 Jul 12:10 ./Dockerfile
+-rw-r--r--@ 1 jonathaneberle  staff  688  2 Jul 16:05 ./public/favicon-16x16.png
+-rw-r--r--@ 1 jonathaneberle  staff  15406  2 Jul 16:05 ./public/favicon.ico
+-rw-r--r--@ 1 jonathaneberle  staff  503 14 Jul 11:54 ./public/index.html
+-rw-r--r--@ 1 jonathaneberle  staff  16292  2 Jul 16:05 ./public/android-chrome-192x192.png
+-rw-r--r--@ 1 jonathaneberle  staff  14528  2 Jul 16:05 ./public/apple-touch-icon.png
+-rw-r--r--@ 1 jonathaneberle  staff  50946  2 Jul 16:05 ./public/android-chrome-512x512.png
+-rw-r--r--@ 1 jonathaneberle  staff  1692  2 Jul 16:05 ./public/favicon-32x32.png
+-rw-r--r--@ 1 jonathaneberle  staff  1564 15 Jul 19:19 ./package.json
+-rw-r--r--@ 1 jonathaneberle  staff  2712 15 Jul 17:58 ./vue.config.js
+-rw-r--r--@ 1 jonathaneberle  staff  225 15 Jul 18:22 ./src/App.vue
+-rw-r--r--@ 1 jonathaneberle  staff  38363 15 Jul 19:16 ./src/proto/user_pb.js
+-rw-r--r--@ 1 jonathaneberle  staff  6748 15 Jul 19:16 ./src/proto/user_grpc_web_pb.js
+-rw-r--r--@ 1 jonathaneberle  staff  551 15 Jul 18:50 ./src/main.js
+-rw-r--r--@ 1 jonathaneberle  staff  0  2 Jul 16:05 ./src/components/layout/Card.vue
+-rw-r--r--@ 1 jonathaneberle  staff  59  2 Jul 16:05 ./src/components/navigation/Footer.vue
+-rw-r--r--@ 1 jonathaneberle  staff  135 15 Jul 19:02 ./src/components/navigation/Header.vue
+-rw-r--r--@ 1 jonathaneberle  staff  133  2 Jul 16:05 ./src/components/navigation/Navigation.vue
+-rw-r--r--@ 1 jonathaneberle  staff  0  2 Jul 16:05 ./src/components/Button.vue
+-rw-r--r--@ 1 jonathaneberle  staff  840  2 Jul 16:05 ./src/router.js
+-rw-r--r--@ 1 jonathaneberle  staff  475 15 Jul 00:18 ./src/assets/styles/index.css
+-rw-r--r--@ 1 jonathaneberle  staff  1375 30 Jun 17:40 ./src/assets/styles/utilities/spacing.css
+-rw-r--r--@ 1 jonathaneberle  staff  0  2 Jul 16:05 ./src/assets/styles/utilities/animations.css
+-rw-r--r--@ 1 jonathaneberle  staff  0  2 Jul 16:05 ./src/assets/styles/utilities/helpers.css
+-rw-r--r--@ 1 jonathaneberle  staff  0  2 Jul 16:05 ./src/assets/styles/components/forms.css
+-rw-r--r--@ 1 jonathaneberle  staff  0  2 Jul 16:05 ./src/assets/styles/components/navigation.css
+-rw-r--r--@ 1 jonathaneberle  staff  0  2 Jul 16:05 ./src/assets/styles/components/layout.css
+-rw-r--r--@ 1 jonathaneberle  staff  0  2 Jul 16:05 ./src/assets/styles/components/buttons.css
+-rw-r--r--@ 1 jonathaneberle  staff  0  2 Jul 16:05 ./src/assets/styles/components/cards.css
+-rw-r--r--@ 1 jonathaneberle  staff  1328 15 Jul 00:19 ./src/assets/styles/base/typography.css
+-rw-r--r--@ 1 jonathaneberle  staff  904 30 Jun 17:38 ./src/assets/styles/base/reset.css
+-rw-r--r--@ 1 jonathaneberle  staff  3169 30 Jun 21:04 ./src/assets/styles/base/variables.css
+-rw-r--r--@ 1 jonathaneberle  staff  0 30 Jun 17:12 ./src/assets/styles/vendor/overrides.css
+-rw-r--r--@ 1 jonathaneberle  staff  40  2 Jul 16:05 ./src/pages/general/Dashboard.vue
+-rw-r--r--@ 1 jonathaneberle  staff  11034 15 Jul 18:59 ./src/pages/general/Welcome.vue
+-rw-r--r--@ 1 jonathaneberle  staff  36  2 Jul 16:05 ./src/pages/authentication/PasswordReset.vue
+-rw-r--r--@ 1 jonathaneberle  staff  36  2 Jul 16:05 ./src/pages/authentication/Login.vue
+-rw-r--r--@ 1 jonathaneberle  staff  37  2 Jul 16:05 ./src/pages/authentication/Signup.vue
+-rw-r--r--@ 1 jonathaneberle  staff  46  2 Jul 16:05 ./src/pages/NotFound.vue
+-rw-rw-r--@ 1 jonathaneberle  staff  1340 15 Jul 18:59 ./src/store/index.js
+-rw-r--r--@ 1 jonathaneberle  staff  5222 15 Jul 18:58 ./src/store/modules/connection/index.js
+-rw-rw-r--@ 1 jonathaneberle  staff  597 15 Jul 18:43 ./src/store/modules/users/mutations.js
+-rw-rw-r--@ 1 jonathaneberle  staff  1778 15 Jul 18:43 ./src/store/modules/users/actions.js
+-rw-rw-r--@ 1 jonathaneberle  staff  703 15 Jul 18:43 ./src/store/modules/users/getters.js
+-rw-rw-r--@ 1 jonathaneberle  staff  4729 15 Jul 18:58 ./src/store/modules/users/index.js
+=== FILE CONTENTS ===
+=== ./tailwind.config.js ===
+/** @type {import('tailwindcss').Config} */
+module.exports = {
+	content: [
+	  "./public/**/*.html",
+	  "./src/**/*.{vue,js,ts,jsx,tsx}"
+	],
+	theme: {
+	  extend: {
+		fontFamily: {
+		  sans: ['Avenir', 'Helvetica', 'Arial', 'sans-serif']
+		}
+	  },
+	},
+	plugins: [],
+  }
+=== ./server.js ===
+const express = require('express');
+const grpc = require('@grpc/grpc-js');
+const protoLoader = require('@grpc/proto-loader');
+const path = require('path');
+
+const app = express();
+const PORT = process.env.PORT || process.env.FRONTEND_PORT;
+const GRPC_SERVER_URL = process.env.GRPC_SERVER_URL;
+
+console.log(`Frontend server starting on port ${PORT}`);
+console.log(`Connecting to gRPC server at: ${GRPC_SERVER_URL}`);
+
+const PROTO_PATH = path.join(__dirname, '../proto/user.proto');
+const packageDefinition = protoLoader.loadSync(PROTO_PATH, {
+	keepCase: true,
+	longs: String,
+	enums: String,
+	defaults: true,
+	oneofs: true,
+});
+
+const userProto = grpc.loadPackageDefinition(packageDefinition);
+const client = new userProto.user.UserService(GRPC_SERVER_URL, grpc.credentials.createInsecure());
+
+app.use(express.json());
+
+app.use((req, res, next) => {
+	res.header('Access-Control-Allow-Origin', '*');
+	res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+	res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
+
+	if (req.method === 'OPTIONS') {
+		res.sendStatus(200);
+	} else {
+		next();
+	}
+});
+
+if (process.env.NODE_ENV === 'production') {
+	app.use(express.static(path.join(__dirname, 'dist')));
+}
+
+client.ListUsers({}, (error, response) => {
+	if (error) {
+		console.error('âŒ gRPC connection failed:', error.message);
+	} else {
+		console.log('âœ… gRPC connection successful');
+		console.log(`Found ${response.users ? response.users.length : 0} users`);
+	}
+});
+
+app.listen(PORT, '0.0.0.0', () => {
+	console.log(`âœ… Frontend server listening on port ${PORT}`);
+});
+=== ./Dockerfile ===
+# Multi-stage build fÃ¼r maximale Effizienz
+FROM node:18-alpine AS builder
+
+# Install protoc and protoc-gen-grpc-web
+RUN apk add --no-cache protobuf-dev curl unzip
+
+# Install protoc-gen-grpc-web fÃ¼r gRPC-Web Generation
+RUN curl -sSL https://github.com/grpc/grpc-web/releases/download/1.4.2/protoc-gen-grpc-web-1.4.2-linux-x86_64 \
+	-o /usr/local/bin/protoc-gen-grpc-web && \
+	chmod +x /usr/local/bin/protoc-gen-grpc-web
+
+WORKDIR /app
+
+# Dependencies first (besseres Caching)
+COPY frontend/package*.json ./
+
+# Smart dependency installation: npm ci if lock file exists, npm install otherwise
+RUN if [ -f package-lock.json ]; then \
+	echo "=== Using npm ci (package-lock.json found) ===" && \
+	npm ci --no-audit; \
+	else \
+	echo "=== Using npm install (no package-lock.json found) ===" && \
+	npm install --no-audit; \
+	fi
+
+# Proto generation needs grpc-tools, so ensure it's available
+RUN npm list grpc-tools >/dev/null 2>&1 || npm install grpc-tools@latest
+
+# Proto generation
+COPY proto ../proto
+RUN mkdir -p src/proto
+
+# Generate proto files
+RUN npx grpc_tools_node_protoc \
+	--js_out=import_style=commonjs,binary:src/proto \
+	--proto_path=../proto ../proto/*.proto
+
+RUN npx grpc_tools_node_protoc \
+	--grpc-web_out=import_style=commonjs,mode=grpcwebtext:src/proto \
+	--proto_path=../proto ../proto/*.proto
+
+# Copy source code
+COPY frontend/ ./
+
+# Build Args - diese werden zur Build-Zeit Ã¼bergeben
+ARG VUE_APP_GRPC_WEB_URL
+ARG NODE_ENV=production
+
+# Environment Variables fÃ¼r den Build setzen
+ENV VUE_APP_GRPC_WEB_URL=${VUE_APP_GRPC_WEB_URL}
+ENV NODE_ENV=${NODE_ENV}
+
+# Debug: Build Args anzeigen
+RUN echo "Building with VUE_APP_GRPC_WEB_URL=${VUE_APP_GRPC_WEB_URL}"
+
+# Build app with environment variables
+RUN npm run build
+
+# Production image
+FROM nginx:alpine
+
+# Remove default nginx config
+RUN rm /etc/nginx/conf.d/default.conf
+
+# Copy our template from project root to the templates directory
+COPY nginx.conf.template /etc/nginx/templates/default.conf.template
+
+# Copy built app
+COPY --from=builder /app/dist /usr/share/nginx/html
+
+# Create nginx cache directories
+RUN mkdir -p /var/cache/nginx/client_temp \
+	/var/cache/nginx/proxy_temp \
+	/var/cache/nginx/fastcgi_temp \
+	/var/cache/nginx/uwsgi_temp \
+	/var/cache/nginx/scgi_temp
+
+# Set default environment variables (can be overridden by docker-compose)
+ENV FRONTEND_PORT=${FRONTEND_PORT}
+ENV BACKEND_HOST=${BACKEND_HOST}
+ENV GRPC_WEB_PORT=${GRPC_WEB_PORT}
+
+EXPOSE ${FRONTEND_PORT}
+
+# Let nginx handle the template processing automatically
+CMD ["nginx", "-g", "daemon off;"]
+=== ./public/favicon-16x16.png ===
+‰PNG
+
+   IHDR         óÿa   sRGB ®Îé  jIDAT8O“KH”QÇ×ùæÕ˜”:#š£I4ÙËÈ… QLƒ
+’h‘Š¶	¢AkkS.­E¸30†D‘aø*	J´œÑ&_X:£ã|Îxc>LfPİİ¹çœ?çñ;‚uOv8ˆĞ•E±]sK9¼@†ëD^ë»è±jÈö3f{@)ˆµÿ_õ¥ š¯ˆüÇˆO\I~¢`}EÛ²Õ|<"²,Ğí¬ô†Êú<!Á%RòvĞ+Ë…„Â’n—ÊÈD£Ai×ãHUêEnK¹ØŸ]²=Iß (Bäï1bÒƒgb‘Ñ0‡vµ;úƒìLÑ‘fÓ£†¡£/Èü‚”ÉÅKbá³æòıéŠ‹Ç,f™xÔä¦È‡5ÃÎGwEt›ÂüØ(i)›(;—AgêfõWj…ìvT7û	q1œ/²p·ŞÅ ÛuGY&LAkg€÷0©ÉfnVfÒôzÏŞE®s	Ùs*øÖ¥ªg¸S¶ßl€ç]>Zzu4Ş²¢×AñíIœÂÉ±Ÿ`áÆÃT:7“¿Ï¨jH/çhnğİ¿DºMGéÉXrFmˆ½C*uOı|±Åƒó°™’£–ÈU­¿[ßoØ¹"5 *"®Yÿ"#Ş {qê}ø4‹=ÙL\¬~Å/kÅ
+º=«ô5<ñà—OJ’Iô/Ğõ~š›™Åi«ÉÎY	DÙ2öĞÖ=…½°Š©Éi-ØjMÀóê:¹‰QËeşˆrÒi¾ÍmÓ’-_a¼)ª­u(G‰üß1EOì_Ïù'Ë’¨Ç9c{    IEND®B`‚=== ./public/favicon.ico ===
+         h  6          (    00     h&  Æ  (                                                     IËÿ1LÌÿ—LÌÿÙMÍÿùMÍÿùLÌÿÙLÌÿ—IËÿ1                        UÆÿ	LÌÿšLÌÿşMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿLÌÿşLÌÿšUÆÿ	            UÆÿ	LÌÿÂMÌÿÿMÌÿÿMÌÿÿŸãÿÿºØæÿºØæÿŸãÿÿMÌÿÿMÌÿÿMÌÿÿLÌÿÂUÆÿ	        LÌÿšMÌÿÿMÌÿÿMËşÿ9—ÁÿÃÕŞÿ±ÀÊÿ±ÀÊÿÄÕßÿ9—ÁÿMËşÿMÌÿÿMÌÿÿLÌÿš    IËÿ1LÌÿşMÌÿÿMÌÿÿ/{¢ÿ&eˆÿ8“½ÿ@ª×ÿ@ª×ÿ8“½ÿ&eˆÿ/{¢ÿMÌÿÿMÌÿÿLÌÿşIËÿ1LÌÿ—MÌÿÿMÌÿÿHÀñÿ?¦ÔÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿ?§ÔÿHÀñÿMÌÿÿMÌÿÿLÌÿ—LÌÿÙMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿLÌÿÙMÍÿùMÌÿÿBŒ©ÿ9RYÿ7FHÿ:\gÿF¦ËÿMÌÿÿMÌÿÿG©Ïÿ;^iÿ7FHÿ9QXÿB‰¤ÿMÌÿÿMÍÿùMÍÿùG§Íÿ8QWÿI¶âÿ@¨Õÿ3sÿ6CDÿKÀîÿKÃóÿ6CDÿ3rÿ>¥ÑÿI¸ãÿ9U\ÿF¡ÅÿMÍÿùLÌÿÙ@|’ÿBŠ¥ÿMÌÿÿ'g‹ÿHgÿ<k|ÿD™¹ÿEŸÁÿ<ixÿJiÿ%c…ÿMÌÿÿC­ÿ>v‹ÿLÌÿÙLÇø—:YbÿEÁÿMÌÿÿ.z ÿ!Wxÿ>xÿ:Ycÿ:]gÿ>s†ÿ"[|ÿ,ušÿMÌÿÿF¤Éÿ9T\ÿLÆ÷—22-[7IMş8MQÿ?w‹ÿ?|“ÿ:fuÿ7JNÿ>s…ÿ>s†ÿ7KOÿ:etÿ?{’ÿ?xŒÿ8OUÿ7GKş22-a    LÌÿšH²ÛÿD”²ÿB©ÿF¡ÅÿLÈúÿMÌÿÿMÌÿÿLÉûÿF£ÇÿBªÿC“±ÿH°ÙÿLÌÿš        UÆÿ	LÌÿÂMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿLÌÿÂUÆÿ	            UÆÿ	LÌÿšLÌÿşMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿLÌÿşLÌÿšUÆÿ	                        IËÿ1LÌÿ—LÌÿÙMÍÿùMÍÿùLÌÿÙLÌÿ—IËÿ1                                                                                (       @                                                                      DÌÿMËÿYMÌÿ›LÌÿÌMÌÿìMÌÿüMÌÿüMÌÿìLÌÿÌMÌÿ›MËÿYDÌÿ                                                                        JÉÿ&LÍÿMÌÿõMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿõLÍÿJÉÿ&                                                        MÌÿ
+LÎÿŒLÌÿúMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿLÌÿúLÎÿŒMÌÿ
+                                            LÏÿ%MËÿÔMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMËÿÔLÏÿ%                                    LÌÿ2MÌÿëMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿOÌÿÿœâÿÿ¾ìÿÿ†¿Ùÿ†¿Ùÿ¾ìÿÿœâÿÿOÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿëLÌÿ2                            LÏÿ%MÌÿëMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿ”àÿÿÿÿÿÿÿÿÿÿ¥·Ãÿ¥·Ãÿÿÿÿÿÿÿÿÿ”àÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿëLÏÿ%                    MÌÿ
+MËÿÔMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿF»ëÿ¢ËŞÿÿÿÿÿÿÿÿÿ¥¶Âÿ¥¶Âÿÿÿÿÿÿÿÿÿ£ÌßÿF»ëÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMËÿÔMÌÿ
+                LÎÿŒMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿLÊıÿ4Š³ÿKiÿ“¨¶ÿÚáæÿ³ÂÌÿm‰œÿm‰œÿ³ÂÌÿÚáæÿ”©·ÿJiÿ4Š³ÿLÊıÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿLÎÿŒ            JÉÿ&LÌÿúMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿKÈúÿ*n“ÿGeÿGeÿOmÿ(jÿ1©ÿ5·ÿ5·ÿ1©ÿ(jÿOmÿGeÿGeÿ*n“ÿKÇúÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿLÌÿúJÉÿ&        LÍÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMËşÿ+q—ÿGeÿ'g‹ÿ< ËÿKÇùÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿKÇùÿ<ŸËÿ'g‹ÿGeÿ+r–ÿMËşÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿLÍÿ    DÌÿMÌÿõMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿ< Ìÿ#\~ÿ?©ÖÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿ@©×ÿ#]~ÿ< ÌÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿõDÌÿMËÿYMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿLÉüÿLÉüÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿLÉûÿLÉüÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMËÿYMÌÿ›MÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿ›LÌÿÌMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿLÌÿÌMÌÿìMÌÿÿMÌÿÿMÌÿÿMÌÿÿI·ãÿA…ÿ<gvÿ:[eÿ;_jÿ>uˆÿEŸÂÿMÊüÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMËşÿF£Çÿ?w‹ÿ;`lÿ:[dÿ<ftÿA‚›ÿI´ŞÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿìMÌÿüMÌÿÿMÌÿÿMÌÿÿ@~•ÿ31,ÿ3/)ÿ3/)ÿ3/)ÿ3/)ÿ3/)ÿ3/)ÿ7KPÿI·âÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿJ¼éÿ8QXÿ3/)ÿ3/)ÿ3/)ÿ3/)ÿ3/)ÿ3/)ÿ30+ÿ>tˆÿMËşÿMÌÿÿMÌÿÿMÌÿüMÌÿüMÌÿÿMÌÿÿF¢Æÿ3/)ÿ6BBÿB©ÿIµàÿLÈúÿI¾îÿ?’´ÿ<ftÿ3/)ÿ7JNÿLÉûÿMÌÿÿMÌÿÿMËşÿ9S[ÿ3/)ÿ;_jÿ?²ÿH»êÿLÉûÿI·âÿC‘®ÿ7FIÿ3/)ÿD—·ÿMÌÿÿMÌÿÿMÌÿüMÌÿìMÌÿÿMÌÿÿ;boÿ3/)ÿF¤ÈÿMÌÿÿMÌÿÿIÂôÿ!XxÿGeÿ5Œ´ÿ<drÿ3/)ÿEÀÿMÌÿÿMÌÿÿG©Ïÿ3/)ÿ:Zcÿ8”¾ÿGeÿSsÿG½îÿMÌÿÿMÌÿÿH¯×ÿ3/)ÿ9W_ÿMÌÿÿMÌÿÿMÌÿìLÌÿÌMÌÿÿMËşÿ5;9ÿ5:8ÿMËıÿMÌÿÿMÌÿÿ7‘»ÿGeÿGeÿMlÿEŸÂÿ3/)ÿ>t‡ÿMÌÿÿMÌÿÿ@€—ÿ3/)ÿD—·ÿ TtÿGeÿGeÿ3ˆ°ÿMÌÿÿMÌÿÿMÌÿÿ6DFÿ33/ÿLÇùÿMÌÿÿLÌÿÌMÌÿ›MÌÿÿJ¼éÿ3/)ÿ9W`ÿMÌÿÿMÌÿÿMÌÿÿ0¦ÿGeÿGeÿGeÿE°İÿ3/)ÿ9W`ÿMÌÿÿMÌÿÿ;coÿ3/)ÿG®ØÿGeÿGeÿGeÿ,v›ÿMÌÿÿMÌÿÿMÌÿÿ;coÿ3/)ÿH±ÚÿMÌÿÿMÌÿ›MËÿYMÌÿÿF§Ìÿ3/)ÿ=m~ÿMÌÿÿMÌÿÿMÌÿÿ6¹ÿGeÿGeÿLjÿJÆøÿ30+ÿ485ÿKÃóÿLÇøÿ5?@ÿ3/)ÿKÀïÿRqÿGeÿGeÿ2…­ÿMÌÿÿMÌÿÿMÌÿÿ?xÿ3/)ÿE›½ÿMÌÿÿMËÿYDÌÿKÀîõ;`kÿ3/)ÿ?u‰ÿMÌÿÿMÌÿÿMÌÿÿHÀñÿSsÿGeÿ2„¬ÿJºçÿ3/)ÿ3/)ÿ5;:ÿ5>=ÿ3/)ÿ3/)ÿH¯×ÿ5·ÿGeÿOnÿFºêÿMÌÿÿMÌÿÿMÌÿÿ@˜ÿ3/)ÿ9X`ÿJ»éõDÌÿ@@ 42,ò3/)ÿ3/)ÿ6CEÿC’¯ÿIµßÿLÈúÿMÌÿÿH¾ïÿ?ŸÈÿE›¼ÿ8NTÿ3/)ÿ3/)ÿ3/)ÿ3/)ÿ3/)ÿ3/)ÿ7HLÿD—¶ÿ?ŸÇÿG¼ìÿMÌÿÿLÉûÿI·âÿD•µÿ7IMÿ3/)ÿ3/)ÿ31*÷33"   484v?}•ú8LQÿ3/)ÿ3/)ÿ3/)ÿ30+ÿ451ÿ32-ÿ3/)ÿ3/)ÿ440ÿ?xŒÿH°ÙÿJ½êÿJ½ëÿI²Ûÿ@~”ÿ462ÿ3/)ÿ3/)ÿ31-ÿ451ÿ31,ÿ3/)ÿ3/)ÿ3/)ÿ7GJÿ?{’ú575y333        LÎÿŒMÌşÿH­Õÿ@‚›ÿ<erÿ9RYÿ7KPÿ8QXÿ<esÿB‰¤ÿJ¾ëÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿKÀïÿB©ÿ<guÿ9RYÿ7KPÿ8QXÿ;cpÿ@€—ÿG©ĞÿMËşÿLÎÿŒ                MÌÿ
+MËÿÔMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMËÿÔMÌÿ
+                    LÏÿ%MÌÿëMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿëLÏÿ%                            LÌÿ2MÌÿëMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿëLÌÿ2                                    LÏÿ%MËÿÔMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMËÿÔLÏÿ%                                            MÌÿ
+LÎÿŒLÌÿúMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿLÌÿúLÎÿŒMÌÿ
+                                                        JÉÿ&LÍÿMÌÿõMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿõLÍÿJÉÿ&                                                                        DÌÿMËÿYMÌÿ›LÌÿÌMÌÿìMÌÿüMÌÿüMÌÿìLÌÿÌMÌÿ›MËÿYDÌÿ                                                                                                                                                                                                                                                                                                        (   0   `                                                                                          €ÿÿKÃÿKËÿ"OËÿJMËÿ…MÌÿµLËÿÙLÌÿğMÌÿüMÌÿüLÌÿğLËÿÙMÌÿµMËÿ…OËÿJKËÿ"KÃÿ€ÿÿ                                                                                                                @¿ÿLÌÿ2LÍÿuLÍÿ±MÌÿåMÍÿşMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÍÿşMÌÿåLÍÿ±LÍÿuLÌÿ2@¿ÿ                                                                                                    JÎÿLÍÿLËÿãLÌÿúMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿLÌÿúLËÿãLÍÿJÎÿ                                                                                     ÿÿIÎÿNÌÿsMÌÿñMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿñNÌÿsIÎÿ ÿÿ                                                                        MÊÿ?LÌÿ¸NÌÿúMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿNÌÿúLÌÿ¸MÊÿ?                                                                 €ÿLÍÿeMËÿèMÌÿşMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿşMËÿèLÍÿe €ÿ                                                    @¿ÿMËÿqLÌÿôMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿWÏÿÿyØÿÿ“ßÿÿ”àÿÿY°×ÿY°×ÿ”àÿÿ“ßÿÿxØÿÿWÏÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿLÌÿôMËÿq@¿ÿ                                             €ÿMËÿqLËÿíMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿVÏÿÿ³éÿÿùıÿÿÿÿÿÿÿÿÿÿjˆœÿjˆœÿÿÿÿÿÿÿÿÿúıÿÿ³éÿÿVÏÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿLËÿíMËÿq €ÿ                                        LÍÿeLÌÿôMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿlÕÿÿöüÿÿÿÿÿÿÿÿÿÿÿÿÿÿj‡›ÿj‡›ÿÿÿÿÿÿÿÿÿÿÿÿÿöüÿÿlÔÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿLÌÿôLÍÿe                                 ÿÿMÊÿ?MËÿèMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMËşÿJÃõÿrÇëÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿi†šÿi†šÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿsÇëÿJÃõÿMËşÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMËÿèMÊÿ? ÿÿ                        IÎÿLÌÿ¸MÌÿşMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿLÈûÿ=¢Îÿ*p•ÿPvÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿi†šÿi†šÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿQwÿ*p•ÿ=¡ÎÿLÈûÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿşLÌÿ¸IÎÿ                        NÌÿsNÌÿúMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿLÈúÿ/}£ÿPoÿGeÿMp‡ÿçìïÿµÃÌÿ‰ ¯ÿnŠÿ3[vÿ3ZvÿnŠÿˆŸ¯ÿµÂÌÿçìïÿOqˆÿGeÿPoÿ/}¤ÿLÈúÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿNÌÿúNÌÿs                    JÎÿMÌÿñMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMËşÿFºêÿ(hŒÿGeÿGeÿGeÿJgÿ!Poÿ Tuÿ"Z{ÿ$_‚ÿ'gŠÿ&gŠÿ$_ÿ"Z{ÿ Ttÿ!PoÿJgÿGeÿGeÿGeÿ(iŒÿFºëÿMËşÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿñJÎÿ            @¿ÿLÍÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿG¼ìÿ)m‘ÿHgÿGeÿLkÿ&f‰ÿ2„«ÿ;ÈÿC²áÿIÁòÿLÊüÿMÌşÿMÌÿÿLÊüÿIÁòÿC±àÿ;Èÿ2„¬ÿ&eˆÿLkÿGeÿHgÿ)lÿG¼ìÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿLÍÿ@¿ÿ        LÌÿ2LËÿãMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿLÊüÿ*n“ÿHgÿGeÿ)l‘ÿ?§ÔÿHÀñÿLÉüÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿLÉüÿHÀñÿ?§Õÿ(lÿGeÿIgÿ)n‘ÿLÊıÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿLËÿãLÌÿ2    €ÿÿLÍÿuLÌÿúMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿ5¶ÿJiÿ&d‡ÿ>¦ÔÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿ?¦Ôÿ&e‡ÿJiÿ5·ÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿLÌÿúLÍÿu€ÿÿKÃÿLÍÿ±MÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿ:šÅÿ6¸ÿG¾ïÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿG¾ïÿ6¸ÿ:šÅÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿLÍÿ±KÃÿKËÿ"MÌÿåMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿLÊıÿLÊıÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿLÊıÿLÊıÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿåKËÿ"OËÿJMÍÿşMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÍÿşOËÿJMËÿ…MÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMËÿ…MÌÿµMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿµLËÿÙMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMËşÿKÂñÿIµàÿE ÃÿB‡¡ÿ?yÿ?xŒÿA‚šÿDš»ÿI²ÜÿKÀïÿMËşÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌşÿKÁñÿI´ßÿE¿ÿA„ÿ?yÿ?yÿA…ÿEÀÿI´ŞÿKÀïÿMÊıÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿLËÿÙLÌÿğMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿLÆ÷ÿC“±ÿ;`lÿ5>=ÿ30*ÿ3/)ÿ3/)ÿ3/)ÿ3/)ÿ3/*ÿ5:8ÿ:ZcÿB‰£ÿJ½ëÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿKÁğÿC­ÿ;^iÿ5=<ÿ30*ÿ3/)ÿ3/)ÿ3/)ÿ3/)ÿ3/*ÿ5;9ÿ:\fÿB©ÿKÄóÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿLÌÿğMÌÿüMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿ?yÿ474ÿ3/)ÿ3/)ÿ3/)ÿ3/)ÿ3/)ÿ3/)ÿ3/)ÿ3/)ÿ3/)ÿ3/)ÿ440ÿ<boÿKÀïÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿKÃóÿ=m~ÿ462ÿ3/)ÿ3/)ÿ3/)ÿ3/)ÿ3/)ÿ3/)ÿ3/)ÿ3/)ÿ3/)ÿ3/)ÿ462ÿ<iyÿMËşÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿüMÌÿüMÌÿÿMÌÿÿMÌÿÿMÌÿÿE¿ÿ30*ÿ3/)ÿ597ÿ:X`ÿB‰¤ÿH®ÖÿLÃóÿMÈúÿI¹åÿA’²ÿ;cpÿ5==ÿ3/)ÿ3/)ÿ>s†ÿMËıÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿA„ÿ3/*ÿ3/)ÿ5:8ÿ:^iÿA­ÿHµàÿLÈùÿLÅõÿH±ÚÿC«ÿ:]hÿ5<;ÿ3/)ÿ3/)ÿB‹¦ÿMÌşÿMÌÿÿMÌÿÿMÌÿÿMÌÿüLÌÿğMÌÿÿMÌÿÿMÌÿÿLÄõÿ9U]ÿ3/)ÿ5:8ÿC“±ÿMÉûÿMÌÿÿMÌÿÿMÌÿÿF»ìÿ2„¬ÿ*p”ÿ6¶ÿDÂÿ7ILÿ3/)ÿ440ÿH¬ÔÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿI¹åÿ5:8ÿ3/)ÿ6@@ÿC—¸ÿ8‘ºÿ*q•ÿ0€¦ÿE¶æÿMÌÿÿMÌÿÿMÌÿÿMËıÿEœ¾ÿ6@@ÿ3/)ÿ7KOÿJ½ëÿMÌÿÿMÌÿÿMÌÿÿLÌÿğLËÿÙMÌÿÿMÌÿÿMÌÿÿG©Ïÿ5==ÿ3/)ÿ;amÿKÂòÿMÌÿÿMÌÿÿMÌÿÿKÇùÿ0¦ÿIgÿGeÿLkÿ9—ÁÿEœ¿ÿ32-ÿ3/)ÿ>qƒÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿAƒœÿ3/)ÿ3/)ÿB«ÿ>£ÏÿNmÿGeÿHgÿ-v›ÿJÄöÿMÌÿÿMÌÿÿMÌÿÿLÆ÷ÿ=k{ÿ3/)ÿ5:7ÿE¿ÿMÌÿÿMÌÿÿMÌÿÿLËÿÙMÌÿµMÌÿÿMÌÿÿMÌÿÿC«ÿ451ÿ31,ÿ@™ÿMËşÿMÌÿÿMÌÿÿMÌÿÿFºêÿ UvÿGeÿGeÿGeÿ!XxÿJ¹æÿ8MRÿ3/)ÿ8KOÿLÆ÷ÿMÌÿÿMÌÿÿMÊıÿ9Xaÿ3/)ÿ6BDÿJ¸ãÿ&f‰ÿGeÿGeÿGeÿNmÿD´ãÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿBŒ©ÿ440ÿ31,ÿA‚›ÿMËşÿMÌÿÿMÌÿÿMÌÿµMËÿ…MÌÿÿMÌÿÿMÊüÿ?zÿ30*ÿ485ÿD˜¸ÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿ@«ÙÿHfÿGeÿGeÿGeÿGeÿD²ßÿ<esÿ3/)ÿ6ABÿI´ŞÿMÌÿÿMÌÿÿJ¾íÿ7EHÿ3/)ÿ:ZdÿIºèÿKjÿGeÿGeÿGeÿGeÿ;ÈÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿF£Çÿ5<:ÿ3/)ÿ=n€ÿLÇøÿMÌÿÿMÌÿÿMËÿ…OËÿJMÍÿşMÌÿÿLÅöÿ=jyÿ3/)ÿ5>=ÿGªÑÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿ>¤ÑÿGeÿGeÿGeÿGeÿGeÿB¯İÿ>tˆÿ3/)ÿ5;9ÿF¢ÅÿMÌÿÿMÌÿÿH­Ôÿ6??ÿ3/)ÿ=ixÿH»êÿGeÿGeÿGeÿGeÿGeÿ8”¿ÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿIµàÿ6BCÿ3/)ÿ;^jÿKÁñÿMÌÿÿMÍÿşOËÿJKËÿ"MÌÿåMÌÿÿKÁïÿ:\fÿ3/)ÿ6CDÿJ¸äÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿC²áÿJiÿGeÿGeÿGeÿJhÿH¿ñÿ@|“ÿ3/)ÿ440ÿB‰¤ÿMËşÿMËşÿC”³ÿ474ÿ3/)ÿ>q„ÿKÆ÷ÿQpÿGeÿGeÿGeÿHfÿ>¤ÑÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿLÃóÿ7GJÿ3/)ÿ9QWÿK½êÿMÌÿÿMÌÿåKËÿ"KÃÿLÍÿ±MÌÿÿI¶áÿ6FIÿ3/)ÿ7FIÿKÃòÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿH¿ğÿ%d†ÿGeÿGeÿGeÿ*n’ÿLÊıÿ?|‘ÿ3/*ÿ3/)ÿ8OUÿB«ÿC‘¯ÿ9V^ÿ30*ÿ3/)ÿ>p‚ÿLÈùÿ/}¤ÿGeÿGeÿGeÿ"Z{ÿG»ëÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMËıÿ8OTÿ3/)ÿ5=<ÿH¯×ÿMÌÿÿLÍÿ±KÃÿ€ÿÿLËÿuGªÑú9U]ÿ31,ÿ3/)ÿ7FIÿLÃòÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿLÊıÿ:™ÄÿNmÿGeÿ!XxÿC±àÿLÃóÿ<cpÿ3/)ÿ3/)ÿ3/)ÿ462ÿ463ÿ30*ÿ3/)ÿ3/)ÿ:XaÿK¿îÿE¸èÿ$_€ÿGeÿLjÿ6¹ÿLÉüÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMËıÿ8OTÿ3/)ÿ30*ÿ8MRÿE¡ÅúLËûu€ÿÿ   383m30+ø3/)ÿ3/)ÿ3/)ÿ5:8ÿC“²ÿJ»çÿKÃòÿLÈúÿMËşÿMÌÿÿLËşÿA¬Úÿ6¸ÿC­ÙÿJ¹åÿ@€˜ÿ43/ÿ3/)ÿ3/)ÿ3/)ÿ3/)ÿ3/)ÿ3/)ÿ3/)ÿ3/)ÿ30+ÿ>t‡ÿJ·âÿD°Üÿ7¸ÿ?§ÔÿLÊıÿMÌÿÿMËşÿLÉûÿLÃóÿJ¼éÿEÁÿ5>=ÿ3/)ÿ3/)ÿ3/)ÿ30*û33/|UUU   3.(y31,ô462ÿ3/*ÿ3/)ÿ3/)ÿ440ÿ7JNÿ;bnÿ>r…ÿ@}”ÿAƒœÿ@‚›ÿ@}”ÿ>s†ÿ;amÿ7EGÿ3/)ÿ3/)ÿ5>>ÿ;^iÿ=jzÿ=o€ÿ=o€ÿ=k{ÿ;`lÿ6CDÿ3/)ÿ3/)ÿ6AAÿ:^iÿ>qƒÿ@|’ÿ@‚šÿAƒœÿ@–ÿ>t‡ÿ<dqÿ8NSÿ463ÿ3/)ÿ3/)ÿ3/)ÿ451ÿ31,õ30(‹***    9**6Xb4H±ÚñC“±ÿ8LQÿ3/)ÿ3/)ÿ3/)ÿ3/)ÿ3/)ÿ30*ÿ31,ÿ31,ÿ30*ÿ3/)ÿ3/)ÿ3/)ÿ32-ÿ;`mÿH®ÖÿKÁñÿLÆöÿLÇøÿLÇøÿLÆ÷ÿKÂñÿH²Ûÿ<hxÿ43.ÿ3/)ÿ3/)ÿ3/)ÿ30*ÿ31+ÿ31,ÿ30*ÿ3/)ÿ3/)ÿ3/)ÿ3/)ÿ3/)ÿ7FHÿBŒ¨ÿH°Ùñ6Xb411$               NÌÿsNÌÿúMËşÿG¦Ìÿ>r…ÿ8MRÿ6BCÿ5==ÿ5:8ÿ496ÿ597ÿ5;:ÿ6@@ÿ7ILÿ<jyÿG¦ÌÿMËıÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌşÿG¬Ôÿ>pÿ8KOÿ6@@ÿ5<:ÿ597ÿ496ÿ5:8ÿ5=<ÿ6BBÿ8KOÿ=m~ÿE ÃÿLÊüÿNÌÿúNÌÿs                        IÎÿLÌÿ¸MÌÿşMÌÿÿMÌÿÿLÈùÿI·ãÿG¨ÎÿEŸÁÿDš»ÿE›½ÿF¢ÆÿH¯×ÿKÂñÿMÌşÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿKÃóÿH±ÚÿF£ÇÿEœ½ÿDš»ÿEÀÿG§ÍÿIµàÿLÆ÷ÿMÌÿÿMÌÿÿMÌÿşLÌÿ¸IÎÿ                         ÿÿMÊÿ?MËÿèMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMËÿèMÊÿ? ÿÿ                                LÍÿeLÌÿôMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿLÌÿôLÍÿe                                         €ÿMËÿqLËÿíMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿLËÿíMËÿq €ÿ                                            @¿ÿMËÿqLÌÿôMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿLÌÿôMËÿq@¿ÿ                                                     €ÿLÍÿeMËÿèMÌÿşMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿşMËÿèLÍÿe €ÿ                                                                MÊÿ?LÌÿ¸NÌÿúMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿNÌÿúLÌÿ¸MÊÿ?                                                                         ÿÿIÎÿNÌÿsMÌÿñMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿñNÌÿsIÎÿ ÿÿ                                                                                    JÎÿLÍÿLËÿãLÌÿúMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿLÌÿúLËÿãLÍÿJÎÿ                                                                                                    @¿ÿLÌÿ2LÍÿuLÍÿ±MÌÿåMÍÿşMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÌÿÿMÍÿşMÌÿåLÍÿ±LÍÿuLÌÿ2@¿ÿ                                                                                                                €ÿÿKÃÿKËÿ"OËÿJMËÿ…MÌÿµLËÿÙLÌÿğMÌÿüMÌÿüLÌÿğLËÿÙMÌÿµMËÿ…OËÿJKËÿ"KÃÿ€ÿÿ                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            === ./public/index.html ===
+<!DOCTYPE html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <link rel="icon" href="<%= BASE_URL %>favicon.ico">
+    <title>Title</title>
+  </head>
+  <body>
+    <noscript>
+      <strong>We're sorry but this app doesn't work properly without JavaScript enabled. Please enable it to continue.</strong>
+    </noscript>
+    <div id="app"></div>
+  </body>
+</html>
+=== ./public/android-chrome-192x192.png ===
+‰PNG
+
+   IHDR   À   À   RÜl   sRGB ®Îé    IDATx^í]x”UÖ~ï73É¤w tBoRDÅ–]QÀ‚¸ö²ö®ëZW]Ôı×¶.v]uÕU¬ˆH³­Š¨«	Ò{/)¤g’L¹?ï$$d¾™ùf2æøğÌın9÷{O?ğ	X5Å‚ò
++`‰A”Ã
+—)f‘	—ì
+:Cğ§è ÉH„D<€ Ñ Ìuƒ; Ô °A e(PMî†;¡a74±¹šÓ†Zs5`·!!¾ƒgØ }ZÈş‘8Â×ïÕòå¯g'Ãaï
+ İ Ğ™ z ² ¥CÊxğ<
+@„_Iz“àBT ®B@ì°{ ±; l†Ù²SŒø”Ä0hƒtŒ†MäGSLèkË‚4—ëƒD€¤º[<
+|	ÜÚxëóO­z=€R@b94íçÏØ³Yœ?ÃÙ“‡1ÛjãB7rêTSVÅ¢Ô–+À…±€8ƒ!Àr“n}BNHT‘Qä×Ğğª±I1¥˜1¸JLê
+³õdºG4Ôññq¨®êhÙpÉÑ FBˆŞ@Xú–	_€*H¹	ÀRhbàÊƒ5vÏ¨<’å‡#’ ÔÁÏ=·Díép‰³ äp@µ±ĞrÕ„N§¼ù«Y )–A“³!£¾@Î'{DB8b@.kFtt",Ñ¡É³!1İ!Âµ1–”$œØ™p‰Oa¯Yƒšš21î;j¦Ú=´{¹×Z€=diN†”¿Äh¤‡!OèÃH™¡‹ Ä— ¾27‰œWí¸-ûo· 48}*úÃi¾BND÷:¾¾İ®Ù ƒD­R ·CŠ909ŞÆÆøuíU“Ô®ƒ›·Ÿ‹+víb èÖ†jJƒÎd›uCb }á=X\ïÂ®mFÎ\[{’ÚÈUS¢P]=RL!A¶§½´Á¢6AŠ¹r¬Ö¥bğÚÂÂ ¤„ÀÒI½h5n”`Û	€%ìw&4`‡ -Ğ3hÍ^ÄÈ9›„oŒ°% Åã÷¬Ì€I›—¸ı"¬NĞ¨†Në¡É§átÍÅÖ¸‚p•Â’ ä“í<BûãmÅ‰ueAÛıÈ@ ß÷®7Pcš/ŸSn¸	+h`w„|.Œ¹õÛüÈQP.†Ï!Å_Ã-
+P˜.Ç9=S•+¡‡Ô §B3Ï
+Ô' )§˜W™Í|#\8ôÄŒ@Èb@”BÃl¸/!;.WˆĞöDiÆG£Ôt) îqûàGÔš!{î›NŒşF›ù’œïˆ¾ŸSVIIrª†%¿vœwBÓ®$£¨"vp¹ş˜Æ¨»„=ì# ·ïÎîqânH¥á‰èôÃîà7™0mßCÊ'ÎBÍ·(¤@ş+Û‚‘/;át?zFXğ>ùfï‚ÄV ÇÒİo‹ëòBÆÁ.$@©7Wœ“»ıv@Ü
+ ®İl}d!1P	Èç`±<ƒ£f„‚94`É¤şò> Sê<6#Ç¦ıb 
+ÀHñ˜5g][/³Í	@æM:
+/ *‘Aæhÿ¨Ä"Ü,²ç¬hËå¶¨­øøã!Ä‹ µ%"c·VCÊ›PQñc[E µ	¨Ã“p&Ìxä€gáĞˆ;C›À¶˜n¿Á‡`+ŸßDt¹ÙÈN“!LO²Käğ·õlóñÇ´ÒyÄŞ™"'¸¢ €Û²kÈ§A¿ıD0P‡¹w"É13˜–ã €ºùÑy
+¤|BĞ­!hcGÎXX`@BÊÍâ!`÷Œ`½A9„n7î<1#‡?,d[LRr¤¼•C&8xUL,<`@eÁ¾9‚qà	`É„±âÙˆ¶'rê½À€[;$åmbÔ¼ï¼øÎë¦% ·‘K¾``„íñzoôHk Ä…4–„ ”oOî¤~x'é;Y¿??@âäÌYß¡ÀÀòs:ÀîxÀ…÷6?òm]íƒ÷a1ß-†ÍÊ7#†€riÎÎ|·EÛŒŞ®#¶?¦j|y{şj´+µ¡ ‚YäË @¡7âÒ|Ä×€,¼·Ad¾mdPa ÂórO…/C¨øİD0`,$6CÈóµQá•ÆÀâ³ºÁäzã"‘\Æî{¤·0Gé8µ+ÅÑ³™´×o0„ ”O±é	hâÆH¯ß{é uØá’/!Åy>C~€;oíJ@›ÉŞ9»ÁÁ€*{²cŞô7ïÿ{ÆhÀ4@Ÿà,>2J
+ç%"ç³EşàÃ/Pé
+¥ëY¸ä%äûY&ÚE7))árNàpJ8%àlT—¿§ùPš˜4ş0›Ì&ºŸºÿ¿Qå«ıA|(~K<»q-ëpL\ÓIÓsâ&~ë%nÍš€fLÂQ‡û ®ÓML‡Ğnó'£ÏàNT;á
+HÅú–®¯µÕ.ì+v¡¨Ì‰â
+J+\Ø_îB¹MÂVãBUµDµ]¢²šGŞÎ:¢ˆ¶ğÕ"eâ¬Râ5ÄÇhHKÔš ¡CŠ	™©&ÄY¢Ìâˆ$
+^"5v`™;
+œ(*'İ?K*$*m.TÕ$ªkİm.©ğU“@¬U(<ÆD»&Åš’àÆsr¼çé‰¢¸†âZ”B¸îÀÈyoùj%ö ò&õ9àæğ¿‰jy»TØ\Ø]äÄòMµX·Ë­{êßD~­]ÂÎƒí„úÉ[ÈàK`2	Xx[™İÄ‘'Ğ-ÃŒşİ,Ù7
+C{Z£©W¢½ò"'~ø­ëwÚ±q·…e.Øˆk‡„ÃY÷ºúˆgõ"hî×b°˜¡.£ÔD™)&ìnÁÀé…„X7Aø*!¯8EdÏÙèK?>®òóÇÊWàR5¸t;oíò*ò‹]Xµ­¹ëk‘·¡{÷7âet÷h\C"‚7Õ1ƒ¢1ª†eE¡SŠI½áJÄ7uQ™[ö:ğÃÊj,]_‹µ;ìê ·%$Äuñ•…1ƒ£‘™fR/_k²®^†÷P%®÷¥>× *³ôªš¡½ EÏDkì›÷8°bs-~Ûâ¾u¶ìu*BEà-–‘¤aH¯(d÷uoP¯Nfu£…P^*.wbñZ÷å²tC­Ây[ú–pÇ¦K_b÷k<´Wõ0#5Á¤d8Péº[bgx[©F_÷f ŸÑ	šém §zrq.­tá‹%ÕøïR6ív€ÿæNÀ'šÏ7Ù£«ÆÇcpÏ(ïo¨ .˜·ı›_UàûÕêU¥ŒÄ— \€·?ÙĞôdÇˆÆ¹ÇÇ¢_W‹§W˜+ü.çeâèÏXÃL7xE u‚ïÕâù–Ê‘—Ü–ïÀW¹6|òcòKBó–×¡F­Q§´â’Sã•iQÂŸWôePßP˜¥ÂàË\Şü¢B	±íˆócFãü±±Ú3J	Õ-°H5òŒœ÷º7±Wû')øºä<ô?ÁÔĞ,ÛX‹ïVTcáòj–2jû"Œ›pÒ°hL:69ı¢”šµ-€øİUèÀÜŸmø2·Z±9¾*	ÚbşŞŒIBÔÃ‚“‡[qÂP+zgš$ÖA¼ˆuï\]Ş'”G^]FŞ<v9»¾³şgSÚòõäAÛ;7ÍH6aò	±¸èä8%ÀÈÖüoUÿ´L	µvG0Go»±È’R…}Ì€(ü.Çªä…¤¸ÜS9ÿ,¬Ö{ôÖ1n‘ ú5â³Ğş"¥LPœ” U8$æ¤˜h$‘Íá3»u¯Céækjİ¨#(0÷ëjÆíç&bxï(¥5òZ‹¡qJ‹V+±{¿,¨ÄŒ…UJËs¤U­I±:¥šĞ%Ã¤ş^]+K~XUûuq¹Ó ƒˆKÍâİyyLÌÛš%€±cÇš÷W|È“=	ºG*ò¯›HLŒÓ”útHOzv4«×jÕØh>ßÑQš²AèÚ<øºÒb«u«©«ß¶×»øeMv8Ú-»£G^µ‘¨vA³nÅÒ/tÀĞ¡£²šë ^„Æ´&’Òc¢İ^.[¦ƒ)ù`·Q‡ÖK©¬ÆÔ†”Û\UÖ¢£ æoÕ¬¤Ö(ñV‹Š(š²1œ«2 :êçí¶~s|yı1êÙ®!&J(¶"ÊÄÇu–õÆöåâà|à¶Ì×pŞ.”Uùn¬Ô3?_ÛàéÕËóş¬‹ ú>J3›¾èËwdÈãYëLêI&tIw»,ôîlVV[òÚ4¹³İø³Ş÷§~Lå»â”pĞoˆDàp›ñÉ>—ÓêìÀö|'¶ísbo±£A]ÈMäA'µ¡·x&Û@Ë,/¾P’MèÙÑ„©üiF×t“Â?	Ø¢Ñ’ë¶æª¦İºıƒÜúZ§Û}…DK—•½ÅnÜnİç@~±S±ld•I(lG">Å‡k–ç^ ‹ 5òÁ|,ÑŞ"ØÛöÜŒ)²:YĞ³“Y™&uĞyğcİ,D P¼Áªj%J¸iûJ _·Ãm¨£á7oğ7Ê[znOÖ‹‚cŸÎèN[”…¼3zK/’ç[oÁW‚®,tu¡:|g¡;œØ²Ï¡ìBÛóİ¶¡ i®f­Yw®NÈ!`˜“[ãyÓ÷è`Æqƒ£•Î€îå¬ÆÍ0ÖYÊ»-äFğ «DB˜ı³?­ªQÀ›ıÜb•5›·} /=8â‹Á¹ªÚ…]…N¬ÜjÇÂÕêg ñ, _X½|é-º`èĞ¡)Í²}õ,JonH—4®Ÿ˜€SFX«¯ôváW;Ÿìºg›rƒ¦	˜Z±µóö_½­¯Ì«P„@4€KêÖÁŒ)'Äâìãc[UÑÒ…œ‡’xáwÄ	ÿÓeœc¯ßéÀËsÊñıÊõj¥¼nÍ²¼×u 5?‡e? î•±FM&)NàŞ’pæè˜ ÈêìÜkÃÆm(Ø_ƒ*›1V’-èÓ==»Æ":ªeMA©Ÿü`Ãş[Ğ[Ê<óàòe½aB<†õnQ%ËË`_Q6n-ÇŞÂTT:a¡‚!Á‚]bÑ«[âcÍFLIwô ¾çõbä­¯Õıç†’áK£à8gÅŠ;õ ¿gLw§ÃôÁ·Ëª¥Ë^xDï(¼|{ªâíƒ¥åv|öİ>¬X[‚²
+N—Zå9ºGÇÆšÑ¯G<Æí„n™-ËüğfıX…'?,é—€,å?®MAÇS‹·x­İ…ÿş/¿üZ„’2;øïúı%Nx9téƒÓOêˆ½Ô‹à>ş¾
+Sß)1ä¼‘İÔÃ²¶¬V^1{ö/‹ÁxC Å•É%“ÆH)gæ—:;ÒÔ>±Û÷9üÚü‹OÃ_.ˆXqØşìwî±áÃy;±a[…ÇıËHÆ”3ºbh¿DEÍAEµÄ”bÖÿª‚%¸yœwãİ;šñk“•¯}sÀV\Z‹O¾Ü…Å+Š=ökÂÙ§uÆ1ÃÓ”#@ÍÑÿWˆ²Jßä.Ê—ô"–eÁ¥§ÅaDïè}f“˜,FÍù_sóov§Õ™7ñIHÜÁ‹’ˆãóôıoÕÊÁmív»
+‘óşïÊdœs¼aU«ÃïÚgÃ;³¶cËÎJİ·IFZ4ÎßÃ6O¤ÄÃ’u5¸ó_ÅÊÇ>”€êÍ+~›ÏJP‘WÍoûæíÀ²5¥ ¤HgËÄ¸c2Z•—ôô¥§½
+&=”¯"Ô¼*RNË¶büÑ1Ê*O#!0Ùsïz_ ™{n&`'Åôj<	jIHo|Q™?Ú`÷ÂOŞô•ÛR•#S <şËïmÂú-ºıœÒR¢pıEYèÑ¹yB¥ |×«ûñí¯5^†WıÓ>òÏRqtÿæoÚC>œ¿?ä*Ûˆ7k5áâ³ºcÔQºÂ?¼éú°¶œÙÅ/Ä²MŞÉı»ZpÿEIÜÓÒœZw`#r>Ùsè€‡]îÛÂp‰× Ğ¬dH‹åKsËñÖ—Jm¨ø4½~gF¬i…O¿Ú/Ø§gZÍ¶Ô'WŸßñqÍ|W‰GŞ)õ¹ÿ@|Ø·‹oß“Ş¬f/WîŠıxí£­>İ)ÃŠ/Î.}¼Pòèz‰>~u²²s4NhòdÏ{ëĞWàpX5%UÕÓ!pVk 	œüğ{ßVêš'Íè¯ı)Ç,PÓóú‡[±¿T?]€5Ú„'vÅèa©Í
+€4âL|Ğ÷DÅ¼è+Ä@qâ…nõÁ+ºÙL#²–_–Ô¬v­°¸ÿz¶í:ÌL÷pŒ£>ıÄNRGXÌ•.z¬ Ë6ÚuÍ-=IÃ«w¤©H²VEu‰Ùˆµ^"Ïh"N ygfCŠ™€èáiw9pÍ´"ì+ÖÇ¯½ps*N¸„ÚŒ™_ìÂÂÅ…ºyÜ–Ö8 w®ùC/$4ó
+”U¹pÒû”¬7@—‚ãYqé©qèœæ6J‘5¬uB©Wü­ï[‰üRïå‹kÏŒÇmç$¦ù!¯¿à—Ìúj·ÒöøÒ¢qóe½Ñ)=p{ÈùõP¾²ÊëÛÏMÀ5g$è°[Èmr²ÈŸ×¸ß& §Hp;1ïjHLÓ“Úœfì{_/ÆÂúøá¿ı1ç	œ\TR‹çş³{ò«õà®Õ6±1&ÜpQúg%Ö>-§ß—/jB¬¦tóŒ‹Sïæ€réÊ-µxtz)Vo³{åbş—‹’pñ)‡'ä®¬ràÍ™Û°b­ÿ,†˜ĞcGÎG’êæ3îÏW²¦' àÿŞ}é*v[TAàÌÍ~]LÚp4% ÅşØ…WèItE‹İ“•éfƒn9;7L<ü@é˜¼®&K~+Æ[oƒ^p~oæSÇtÄäÓ»˜M§:ŞRz5ds.;-73™†µu:ùõ_7ÖâÏ¯{•)£%Û¦íxùİÍÊbôé;¯î0Ğ¾'&?\€ı:´lİ:˜ğÆéÊoLĞØñbcnkÌ5%€Ÿ&tó Äp*Ë¿æ—ã…OËuE1ÀùoW&ëéÚ§6¯´‹—{Öoëí¼cº÷\×ï0‹(	`ÂƒùØ]èù–âXôÇyëîtå}©øĞ-àå¹úğÊ>¹<	çxøğÅ÷û0ë«]^kÃZšg´EÃ]×öC÷´dzÖ×Zæ*ºø±Â&	ÏZjOUçs7¥‚r€.rì˜ ›·«¾}SX:á¸Ä, º¯iZîşş~©®ltÈzå¶4å¿o4Pµ÷À?WlQ@/Ô»¯í]š²mtä:åî|åÉ¨®9#wLf`~`Î¤İ¯b«õÀ½$ªW¦1ğ‚zõƒÍÈ[Y¢§]mø2^zvŸ“¦«½·~\YƒëŸ)Òu¡RçÏ•Y$tB94y9ï›æ	 wÂ£€¸Æ/âÛ_«qÿ% `è	¿ù¯ÛSUP¹Ñ@Ã×c/¯ó[Ğ;t^LèŠ“íĞä3Bë¸Ûöê22¸äÉkS”óŸ7À°Û_Ú¯rúèë'$€,fc'¶*›½²û
+õÉhzÆajÇ®:¿§Şæ^µ£àÑwõÉ+çŸ«|ËZ’©šØ	ÈÇDÎ¼# •ğ*«š.ĞÇx3c¦3¼õÅıºBúûÓÖ½ƒñNVKW+UŸ>K×?&;—ŸÛT!Fß¨SîÖgg`Æ³ÿ)MÅ:xŒşzìıRey×c´e`ş}&6áÍwóRxejj=_NŞÌr¾ª/,ã/²'>,Å¾ò¬Z'ëB¯bZ¾½ô\ı›­Ç×'Ğj`ä¯úÂ!ò ô³?Dã¯V„:øaú£S:¤Wová¶_ı°ÑÀÚùÑSÓOGJÆ5ôj¢_g†;ú«èf–{æÆTİü}Ÿç|ıó
+¼<·B—ÅıôQ1xâêä&ÁC›vTâ‰WÖé™¦WmºvŠÁŸşØ·EC¡W5jÌËë–Šğí2Ï/ãFî:?±YÍW«ãK”Ã,³ÅˆyØî ,=ë2¸\oxÃş°²—<^„»<.èúLöšĞƒP
+zŸ/Ôw+ëé¯¾Íà¾‰¸ş¢^MÜ¥¿]V›Ÿßï±ŞL‰ÁC—${ÔşÚÃüE6<üN‰.ğèÑŠ½¬óQİ-[S‚—¦oö8OoĞ|û}š¬Kı¨»{²Ñ×=³_%Iöñ1^Œßò:j×	Mû£9›Ù@îÄ× \íiàæ6êª§‹T¦OÀÍá3}şIÆ|gövü°Xß­ìiß¯g<n¸¤7âbŠEï~S‰ÿ{Ï3ŸJ=õÕã©ú÷)¬“ş0d/õÂt…xïş•¼~^Z¤l FCzJn¹¼2v‹`ˆ$	`Û>Ï*[O¾OÖüºÈ™{M¨B.çWå²¦¾]‚z6³Óàê3âqÓ¤Ãb>˜¿ßşTàËô[ı¦_¯xÜxqoĞ0F ?şÏexãKÏ.ÖÎîš’ˆ?Œ‹Ó›äµÉ\v9qÕ?ŠTì¬' .œªVFÜÕCŞJ·\d4Ğ"|ëå}ÀŸFÂŠÍvÜü	Ş³z™ë¥“{K ™~ÇÂêºKÎ¡Íà“hÿŸ¯*ğÄ‡eçA–àœ11¸ÿ¢dÃ±ç/ØƒÙ_æìçqNíŸˆë.ÌBTÀGØ»^-ÆWy­ÍL-B¾üÄ£¼Ó ÕÏ‰,Á-/ìÇ’uYf³~şæT•n¼Vo(Ã3où”6¿U´dv°âö+û %ÑXèó%6üõ­0îÂô©sşK>˜ÎÓ'¿Ò5QŒš¿² &AhoéMw~èHŒ—½î™"]jA&:}úºUAÄH ¿Ëûs©œÙdZ£†¦(•_}Tóö\òxÖîğ|+Sèù¶TUÂ`ÌÅ_Ş(ÆœŸm?WòÕ•I8ydL_»uW%e½ß~Q‡ÎÈ¹?]Õq1>Ü¾-¬„2½‹§}R®ò9y‚1C¢ñêíiŞj€ê»-†—‹ìys…r^2áFñ >]Uôd<ó|•¸ÉĞ	ì­»ÒÑ5C·©ÁS—ê÷ôuyéİM†Gj~R'œû»ÎsØ¼Û«§érS ›î+·§)¯O_áÍ/+ğÔG_W&¯ºsJ".$»U7\~Q5şşò:m$ôï€;®ìë[×Ò<gAèÇõ©}¯ü}¼ÒùÕòÏ5ï%¡’ŞÚl£¿|Ú)ŞTÈW‰<“Z½vGšJ‡b$0Øı‘Ö ¦ÆX7ÙŸì!İ7¾[^ûş]¢Ë
+|ê+º6Ñ-8¿éYÿÏ«k”šÙSÙK:Ãıù¼Ä†ˆ°êZ'şñÚlßíY>Ó3—ú6t‰>çw]¼ùÄc[zÃ’µdÂ_OÀµ>~uŠÒ°ù,÷711÷ùËøD˜Í/¸ĞŸ< ÷ş»s~òüTS¾ïÂ$•QÙH`ğã¯¬ÃÖÆmv|¬	÷^? AØ£ üá‚J<5£L—ëµ?·œíó-¥ĞÃdRç?Z¨+Å	C£ñä5)M‚b>œ¿ß¨`¾ë/î…áõé¢÷çOªÄY€6€HÇ€n¾±–uÁñïÃá¸AÈ_&u„YÎ0ÆÓÀ­ıOõÓ3ÊtY-ÇÆ‹·ïKÂX€¯~Üg˜5¸W×8åùX/ “ÅûÛ»î xOÀ[Šzùã‡øÄU6tÏˆ»+,ÂòÍán&År5ÖŒäşVŒ7?ŞªË˜æiMü}B¼İ<P¥O1k}í´ıº"©ıöı-°÷?8Äd!—Ñ.í@ôögAyë)ïWIR=½÷æÿ­è#o$¬ßR—ßÛúÀûÌ…9e|WŒ;ö ï;¨—g3OÀMúèÁøâ/ğbù÷Õ®LøØÕ)8ãèƒ¬YCÃè+å/Pcr\3®!şöËï_œS—æ”ëº¼¸¾\ço|²ÜÍuŠ¹ âkıîÙïT^|z"yQÇğÈÑ‡GVT:ğï[±jƒg¡ÑÓ¦QÇ}Ó¥½›{~ZU[_*Vœ=eœß™ÖÄ2ëé›–~ÏÒGäõ¹cÒ1ª^ëµVôb&ˆŸ–é:\­Í‘/!ƒ„÷ó­knŒ‹+T†<Yh¦Ö¹`¬¿,´(ä1B.›4vùß–à=M¨ş÷t‰xàÍ|½´ZW$ëlİwA’¯j¬f§eTøÏ‰G§ã¼ßwAT]>fÄøëÛ%˜ùƒ>öçº3pë9º½Ê[E3}äo|n¿®(©ÄXÈ@n%Õ‹Ë×”âíYÛPáÇËH–nPŸD\5¥§á>@k¶ÛAĞbJˆ·ïNWùdıÊ[ÄiB.x)\ À/~„ºÛWæVàÕÏ¨Çõ<5–Ää+è?‹Ğx4€3(~óÏ…-Í25É‚«ÿĞŒ~ª–!ºöŸEªP…'`\jõÂQCÂ”,n­@/Éú¬ÚTƒ¾?o-óì¿ÔRÿ´„_<©r†¦ziq¼çf•á_ó*t]œ,@òâ­©`ê|?ÁWº‡x ;â  RIDAT>Ò0`YßüZ¿èŒ`•ğG¯HÆï²}Ve5»~R¸ºo|¼µ>¸+¶“;ãô;ªŠòÆ©>şA)>Xàùög{z»>wcªJ?np|FİQÑàIÊñºw0)dyÑzØµ×†gÿ³Q¥BôFNÆåçôhp	ñ¥æ¾a½&V`´'p{Äªü?ş§tW	2ï2oÂóâfOƒëù=UYŒbÒãÊÅ°ÀU¢1˜ñø³ïöªÜ@Õ^Øô=jXŠºéê“åM‹×Öàî×‹Q £ä+Óh2ğıÏS½	Ôhuù”8¾YjÃo–ê
+<²˜„JÈW >X„ë wèôO·£¼R¿’€ûÄğGæJI2ÖvÃE/X^ûuÚU¸–{ÿˆ)'Åp]Sé/_rÉÄ™8¬p€/’I©ş6½êpŒcÿ’İş+Œ3*mN|±p/..ĞEÌ:|`Î;½+˜®
+Ëœ*	#ßô¦ıùëeÉ?*Æ˜Mª›5P7=¿_×MÉO¨}zèÒ$•‰¯şzaZ”ï—*¼è	’§Î¿W÷8LßYİü:ßá
+›Ä#ÓK”Û·@&®‰çÅW×’Ãf ñ		`!N4ê ş´ºF	lzr¼scNeÅ×¤îÊõıZ„¹ö ²ªeÁ„¬Î±#Ó0a\&’,—¬Ç³³ÊğŞ7UºôÓ3+Ó-Û°¬“‘@!üµÏËñì'åººåÍM{À´RĞ·ËAVˆD°vS9¦ÏŞŞ*;T/ô7¾:w0–˜ë@+7ÕÊL¦xV»*ÅÍšOâ{Ê Ë¥gzÚP¦=€‹ÓTkİıf4ˆ5œRk”ÛvVaÁ¢B¬ÛR®Â—Ê Íİ:Çâäc20°CëÜw%o#f'~í‹rüçËJ]|7¿s‡éÅãÆIMÔ³zïÚì,p¨à£üZ†º®éôĞ%Ì™Õ0'®~Bß-*ÄÊu¥ê¢`*®ŸZ¯iÑ8ndš²ö29®ÑÀ—”™ÆéúÌRTz€ı·¤â„!†º`¯2oâHßÜ [š8½~»Dw*uÉ3uú”“bUÊ@c%÷,yğó‹jPVaGy¥LHw^êû™¿X-eı.;¦]‰/rmºüê¿¥ƒß›Ö§FÏ¾7iCøõÏÊ•ÑH¦S&ØÃ‚KO‰ÃØáV•A¡>†–—µfÅ¥võğ%+œD!!îàKèõD[ù€)e~^SƒWçUè²n×wÅœ²/İ–jì%)°•/ £HÒ\$o¨»şUŒ%^Tú €ÃJ$fP`Ái/ƒıZoEúİ°øôg‹m*İ£Kı L{øà%É˜| Gg çÍì?½R¬ªÃëÎ‡‘bôaê”ã‡D& ësÉ®Û^‹¾«
+‹+åğÔ“‰=vU2Ni¬Æ@!	€6vC%¦·øçL}Nc@W^V1<óèµQS4U„šš#¹NòÕU.0Ù§?Ù0ï—*]á‡‡nçÅœGäOõ&¿ò´é-ı¸e•ø§?ö·ì“aš£úGãòÓâĞ·«EÕ3º0!/²9ô**s‚†®ÏÛğıo5ºe©úõ·ÇÆã×¤¨BŠC%	€W‰q‘u3dÖ4zˆæzñ
+º8y0Ö•V?
+tüÓù@(\çT“J®ÅÒØŞ7†]¼İ×ìp`ã.;~ÛR«*úSğ‚şş´iœp”ÕPù–6»à€0õR,Xæ9*­¥>ŸÍ÷¨^Q8*Ë¢²+Sp'Î‰SoñJY‹E²¾Iu83hoÚãP‡ßŸªöŒª{ğâ$ü ¹ÊAĞ'‚{Iz*'ıúZÜô|¨îò¸a|
+i3à-Ë¢ÎÌ/ÄüRLJvàKí®o«voHq¹Sùîï`IÎ-vÅ:ğßåUîÊæŞ°9-­áO“pùï||÷/»
+İ±ŞÌÜ-ÃƒNœ’å¤›‰`XVút6#=É„”¸wQmÊG¼@¨µabà‚Rvä;ÕgYÙ}Å.TÖ¸”«8o#p;é¸º¬Ñi
+á´0·Í«ó+¼&}9
+=‡âH6SÇ—Î[ø†¥ˆ”Á¼üÁ*$×x*4ĞıåÍu õèÑ}YzJÁm ÆkÌúP}ûêí©ªÈw  `,Pı„©N|æ“2|ò£M¹´ Ædòñ1¸}rbP«^6Æµ8ÿÍ«V²‹N· ­‘={äòdïc¼‘´d¸|èF0føŸ—aŞ"ÿ}ÒCa“©Z¼ğä8•Ş%yN½Y#Yf`~VoìŞŒì¶L'IÛƒ‰À÷7^‚Wƒ6‡0òtèšùC¥®´ÁFºñxğ)k\uz<.Ûb9U=}İfÓn»JÖµt#ëş†çKË€Şü]š¬äoqñYCXK“!|¹Ä¦|êâ§Ç·ÆÇ…şí´Bòæg¾ÏzWcÃò±CeÇ(p`öÏ6Ìù©JÉá„_ªcÏ£]èN¨3„ê
+áiâÔ$ì-vª¬Ç|òuxXzê3¿çÌdS—§üû“êÔ„ÓŸ¾yûÓ½€qË´Èë­aàÏ˜ş|KíŞIGY•÷*Üüwsöj6+w†Ó;<o§M»ì˜ñCX!¿Ø©\'­]Ğ3?úøXı:›qæ1±ø}µÙò£zúj«6t•Ø°ÓéßTbñºeàÓ[Ò6Ğs¦Q3)^`@W.>5ÇŠn›U9ÃèíâXsxÏ~­­Eîú¥«g|1uÉÁò›4eu2cx²ûEcDï($'hñM
+ÖÚˆG¤˜uvÿˆ_â=˜ÀK…–ÜŞ],Š…$;IVÇèÄ^­I¹CãÕà‡4¦[_ Zd×î¨ÅòMvü¸²Zñ²zİe½ŸBmR¼¦,ÌÇˆV,NÏnƒšÑîŞÎÍèö|XÚ‰,Z¿™€Šrÿ­'×—ùDY B^ûu±à„£¢•`Ë(9ÆL„„¥b‰ôI­}Ã+ì¶å;°z«ëwÖ¢¤Bb¹KYq¹©üCƒ›ò?©se¦™‡›·:o¦8!Â™•.5A(§û¦R?3ÓÌÊGæHåò]åÂ¶}N°ÙÚívUä„ÕK$8 ¯qK‹n½O=nù,Öã–?ÉËó¥Z˜Öä¡YênA·³áy`Ù§úHƒ‚â™TË½!²Û%*kèâàBi…K¥')¯¦ÙİíÒÀM£M‡:xjæÌ¤)ŸY„‡¬LşÖ¹4/úçLv©ÜæRøå«Kš.5718hÈP¯#qLÜŸô4¥ÏÒ"6:¸¼^,³qÓº xƒÒ¢ø8‰Èg´Ò¢”«mV5‚_1PŸË Ôˆ¾N#ò]mƒúÔˆ%Çm›EDF`ÀgÔ%Ç5(=ºÏÓˆ|Á@ğ1@J]zt
+dş‘#ğ
+dP"É¯©D>` ø8X"‰cË¼	!Å|-’üùGFŒ`À/Cº®£æÏ1¤Lª_S‰|Á@ğ1pH™T?eş‘#ğ‡ÊVlPîÄ×Ôd»Ún#ŸF0.x]äÌ½†“mˆõ—KÏº.× 0·°pÙ³È<Â€šöG1röÛM	à×	}áy0¦®A³tÁ€¡(‡Yf‹ó64%€¦˜Uı#€c0ÒY¡…_°Ùz¼8†Ê#Ó$İ‘Ìğ(ËÆDØ ĞÚ±ÈlÃ€“åÀDÎ¼ë{lJ K'œ—˜ÅzÈ†é(‚ĞÁ@94y9ï›æ	à§	]`Á<1<tæ™Ia@Êe°c‚8nŞ®æ	`Õ”xTÙ…Wø[6Õ )·ÚÃõ,nàc@á_"¤„µ‚$x±1·‰Á3˜QAShêTó®†Ä4 ±ÁG©¾ÍÉ:À?å©;"½ºÅEAúünÅ‚ä·U`Ñ²b8¥ÄIGg g—Àñ{Ò@îÀÜì×ÅÔ©Å»:eŞ™Ùb& z0h@ºØº«
+¯¾¿…Åµªk´†‰'gâ˜á©ˆPiŸ€,$Ì:åÅSQiÇâÅ˜óÍØªİ	yÓS¢pıEYªœjè‚Ü!'‹ìùyçx8(6¨z:Î
+ÕÅÌúj>_¸¯ÉôÈê›¨n£A}Y%İğj"¡Š Ì‹EôVo(ÃÂÅ…êç¡iÏÛ	gŸÖ9(sñi‰Ùˆµ^Ò˜ı9ŒâÿPqÿy®€K¼šVáOÿ»[ÂnâãÌ10“NÍDRÂÁò >!-ò‘Â@E•3¿Ø¥
+mWU9yFƒßĞçŞ%41Æ xM^ƒìyo‰CJF4+=ÊÜs3ûÿ ô
+ÅmÙQ‰çßÙ„ŠV*g¤FaÂÉ™Ò7	$Š dETù5'ükKÕeÃ
+›-ñ{Ë¥}Ğ«[È²@[ Ë‘óÉC×Ğ<¨W`â“¸#bµµ.Ìùv7¾ù© NgË)£,úôˆÃñ9éØ;q±AÊ:ì×±kû+m¬İT_–©¢Ú,1Û0éØ©c:¨Ë†øApB`²çŞ}èíß,T¿ ¹dÒ@Î„@Ç\”ªmûâôØ¾ÛsÑØúöˆÇ)ÇuÀ€Ş_KûIíÎšMåøö§|lÚQ©„\OÉŠ»eÆà¦Kz#59 •\|?‚û 1YŒšCæ0hQ.ú}*,–7!ÄÄfªoù>!¿\·¹¯~°å­°B‡‹Ò0l@N®bT±ìkÄ‚‚NlÛU…?çcå†2UO$Ä™qãÅ½Ñ»‡¡Uvõ­·sfÎ…İ~¥8îËıŞÀ‚±f$$\{Àğ¤Ñu„õÎŞS;ŞN?ÿº3>ÛJ›¾Y<ğÜ¸şY	8j@úõŒWÕÑ4B îJËíJŸOá–¬/O7~ığU=o|WŒ™Ê¸«p7ÊË_ã¾k6v«&T©²ÆÉO 1ĞÓal«ß“?ılÁ^ü÷§}îÜ•:ŞeBÇŒhŒŠœ!)GŒÖˆÊ^‹–ïGÁşT×xfu£Õd;:C©=ùª†.È5€8WäÌ]ÛÒ=ÀµÈ=BàîPeƒ¸0Ş\ï|º+Ö”úTˆÄ–œ¡É98iÑŠ=j/.TT×ºP¸¿KV«¿5­Nkš¸"yÉÙİ‘Òjf	‰'!29¯²|³àÑ‰F.?.óç º‡.¥CİdÓ?İÊ¾ÖÆbÆcZ’³ºÆ¢_¯xôîNÖ°•x³ï-¬QìÍ†­Ø±»
+evßñSgl¼pb7d¤F‡òqàÜ¶CsŒ#?_İ*A{Z…tÊüMñR@(¿wØSPwgoW›­——mI02[4ÄZMèÒÑŠ¡ı“0´¢’BTÕ×°
+°¼é×n.ÇÊõeØ¾»
+U6V„iY•ééğ÷¼ù³ºÅáŠÉ=Ğ1İªç“¶lÃÅ>‰ÍÖê_|~ø¡\~æ8´O Ñ·-W¥glÉøìÜkkÖb©§æÚÄÅš™aUÏŸ	HI´€‚ ].ÈTÁ
+óöKTU;PT\‹m;+±lM)vìµ5øé5¯Î­¸xRwôéÊB¯{¹`v+†Í_éiıºvNæNŒÄ£€¼@h3~Øº³Îß‰-;+ız	š}cVzoD‡ôhõ3-9Jı¿˜hÌª€„.ÔzÚŸ†ß«J-q*v¯¨¤ù…5Š—ß_ÂâÃ}ıÍO'·óÏèªŒŠ"ôÕev@<ÈEÎÜ*OÖµKnÿ ‰£|‰n:…ßïÚgÃ»sv`Ó6ÿØ!OkáíO¶ˆ¬Qš"²i©Qè˜­şNµ+-¦$
+UºIc	'Ñp˜¤¬+ñä’`¥—äÍîBE%{5vç×(¶¦ ˜?k•e¶Öî‚İÎÊ8ú5_ÖrèïyÖ{vÃE“º¡{fÈ»;×ßş; œì¹‹š³ü¶F½H‘L¢[]ı$nePãõÿ}oîlİY¥Ø…¶ Ş0–(–g2#6ÆŒ«¦jkEó¥¨cXÚÉápj[5ÿ8•^¯A*ëªçù/˜Ğİ;óæÄ(†÷)!ğ,¬Ö{Äàn_yàÕ²dŞ¤>pÉyèï©ãPø=ùä½Õ˜¿`–®*Q5Ä"àdá†LÆÙ§f†ƒÀ{pAë ‰	"{ÎFÏ«¬0ô¶tW`X:ájHòXy=XıÒÊ+ì˜¿p/¾_Tè3¤¤uD·ŞC±iM.*ËKİã!1q	è7ôXìØôöæø¨k¶déN•†3ÇuFb|X9Ö@È[0rŞëBèß¯^ bP.>£4³j.¬çMzá¢B|¶p/*iò×u6ê;$wıãSÔÖØ°{ë:¬Ì]€ÍkòP°g;ªm¨©®‚½¦Ng`+Pkš	QÖDEÇÀ‡ôÌîè?ô8dÊFÏ~ÃmÁ3÷MÁê_öj…<tk>uLGœ6¦ƒäÃ¸_Ãå¼LıYó"-,ÆëU*»@¯ª)ÚKá–Næê¥˜¿`/¶ì¨RÂ¦^¨'€†ö’%Y¨ª(EQşNäïÚ‚Â};°¿`J‹ö¡¤hŸú­²ÜMµÕz‡RíÌ–(XcâÕ!OJC|R
+’Ó3‘Ö¡2:õP?­c7$$¥B£TİˆI÷– (guÅ„“;c@V‚*fÀtç7bKìOzÿC×å5¨WàÇI	ˆ•¯À…‹ÂQ Æ…š”yvãç_‹uOÿ08äK·&‡ªJ»:ì<ô|-jù*8jQU^¢X§ÊòblZ“‡Eß2ıÒAuâDu‹'$§#1¥¢£c`‰Š†9*Zÿn‰²ÂÁL ­H¥Ş “
+L—‰ôÔèpv›b_Ã{¨×‹ãç”ëŞĞº†>€"
+Äß@†¶‹DK¡Ì’ßŠ1ïÛ=Š <½ÀÄ¯\ò{ğò&ŸÜúè0dÔ)ŞtÓb[=@•,ƒÙÈ2jhJ›óY¬Àv@œâàÛx\ß	À-_©Md’!‹	r'TîØcÃ¹…Ê‚JÕcKĞ >Ö¬ÿÆd§ƒ-Fí‚·¢ÂuFÎ{ËÁ×P¯ kH×³pÉKBİO¨µMaˆ%S­P@¦ãXs6ƒö@ ôní—ÓOè„¬îq!îÊì‘Œ\ĞÄtí61âÓ­[hàóPßŸÌ=c4`š ¯“•ïªl,]]Šoş·Åµ aÔC8 ­ÔôŞ<eLåîM'¿v ç%"ç³Eş¬ÅSLÈ³]	(V(ŞŸÉ„Â·Ôî¯V”¿®.ëèzÀ„ate £ß”
+Hö{¢pİì˜7…p§9÷Á‡Ü0>Å¦' ‰CİYN/¢ÈUV9°~k¾_\ -a n{¼©æFo_‡¶´üüƒçÃU²cG§«”‘Ì†Ñ^‚{hÒK¾„ç=¢ïç-çjÑ¹9†€’ŸÕ&×›Îò@sx«®u¢DËF§ÑèDkëÍM {ME²s‰
+äigà‚À8µ+ÅÑ³éôæ7G ò@bİ¼ÜS!ÅËÈò{f¡ÖAÊ	@Ö]†Ì*Ğ€ÍOÅ?2×êDb3„¼Ù9_q0Á­?s4Œ Ô+«bˆ/Sy@ÈæÊğ	aÉÇ½Y<Ç<<7›ÇÿÉ·]•ÊYd¾İZŒ¯·Ó3” ü+Û‚ìÌ‡A·éÍ•ç-¢?èÿ˜!îO+s¿Ås\Öd
+·şímÉ9Ùëi5ûÁÚ?•ëé+4z©ä³ÈÛóWq]^ËÆæj8("X~NØÌ't!€Mæ%¶,iÀÀg ‹ÿ6¿uË¾ÃÓ÷Òtrî||:úëå¤šiî¬VİØ‹üï+4z _ÿû°˜ïÃfå=¥À ­Ä¹“úAàµî'=é¶éÏô} HÌö{øËâ©{.nÒÏ]O¼‹¾ÃNò»o”æ›şï@D _ÚAÿçaXâH\ƒœ9ë}µö¶6•€@ı€2oÒQò} L¬Ğ±Ãwk¥ŒzŞhş…BŒ \5ÀÖgÚÿO“Ìq¡È³"PûğC)—L!({"°¤ =ï ı«!0([lØõ{¹ê`ùÙ/ÿoò61jŞw~öÕêç' æI8fñ »r1ï[sş·–TŸ‡8J-Ó€²_C2ZÍ;d‰pÈ›a+ŸßRNOïúk¹uÀ	€CKA|Üyb ˜n=(ã…¤&ı0ø$ã óE€É7ÏÃ	ÀYì|(ü€	°‚3ı²ìä>Hy**?ôáç´‚ven¶è<R>!h(ÚØúñ¯³¥0ÉÇÎb{z½ã@¶ÀŞÜ|x¾Œ(Ú!vÏ9Æª;[ÚÙ Bå3TjÈ§ÑIçqÍf|	¢» §i§ &ı&C€êÎ¢@Áç@Í®p?üäöâN$9fáã£÷Ğ• ;Ä—@všaz
+¬ªô9èE®v$„¨nõhÂ@Àœìføÿ[€mërñÖ´{›üöÊ?=…îıF´<$owg%`ßï6r•.jX)S\³®õ¿ó®í‚tŞ±wf°nşúe¶ÉáS2ŒAï²ğ×)l
+@³ ÂìşÓ
+0n¸ª²iøjl|"L¦Ö¾#{ì\v@jş‘?8¢[ÛãÀCÁx›[h›ÀAÁ8şxñâ”‹ƒÚr"c·VCÊ›PQñc0Ş"€úÉ¸e Š”¹GÛ‡ÛD›§°¸‹ ps \z°Ñf/@ãÉÉ%“úCHºZNiWtzvàÈkÃŒÍ3 ÅcbÔœum½üĞ  ú­8'vûí€¸µİ¹R·õ.‡Îø•€|Ë38jVA |{¼]jH@;DWê‘é'|?¨`¿eŞîÀ‘ÑŞ‰­XÜ¿céî·viö…!E J8fPvƒwCâÄöcìÏ&…ù·v|)Ÿ:/02˜Å¼„("`xå’_» Î;¡iWµ‡lFlVøõ!*àrı0=Q#vÆh$B’ X"e96]
+ˆ{ ga‰ŒÜıÀõE‡¤Í€|IÎw‚iÙõvI!M î×€y‡*s ™o„g…kFo7&|Û‹Rh˜—ã%dÇåú›·'Ğxyhx˜†Ñå8ç€Åuj¸&äôf¶yÿ*Q­œ
+Í<ËŸt…Á\GØ€û5`BŞI½!äÃpa<€ä°÷%
+ænf,º3”@Ãçâ¯9gS(¨7õ.5¬ á5`}‚hç™Ú¥)ò/FQ/¶"íÅ 3³}éz5¦ù¾äçok”†%¨×€•jzVfÀ¤M„KÜ	~‘× hÇIBb=4ù4œ®¹ØWàme– ÍÔÃ@aK ¯A=[yÓÏÂÉ`œAHó•Í÷aÔé³×L@¼nìNsë{h wã‘b
+„œ‰Şµ©G¼ùO˜“s¤˜!gÀj]ª·¯a3PGí† [D§üÜ‰1°¸²`×˜x‡5ÌXÙ¾]­3@g¡¹n)à2	í{°¸Ş…]ÛŒœ¹6=Øƒ8G¿†j·CÉ}*úÃi¾BND÷:OÓv»f¿NÂÁyè™Šp;¤˜“ãmlŒ_®<¾'œ´ûÃàö-ÚCvèdHù{@Œ†@:€v—;ÜÓf{ø½…€\!¾< ]ûÈÜj¾;~®ñ°ÏÛ=4ÈÃŒN„%z 4y6¤˜»Cá„ áX3áŸÂ^³55em¡eô÷ÔßC á–ÎíQ{:\â,9ü€V#€õœé§SÈH±šœõr>ÙÛx{O¿ş÷G$4¼
+$„USâP]ÕĞ²áRa™#!Y&æ9i/l3åVAÊM –B‹ W¬±ë0xFå‘xğ#pÈ!§NÕ0eU,JmI°b \ˆS!1",‰<}I_CÃw¨ÆZ$Å”bÆà*1Õ˜
++zoÚPmwD¿ 6Ei’úÚ² MÇÂå:Ã AV‰Ebê‚ø‰Ã¶Â#56üÃú6 ¥(€ÄrhÚÎŸ±!fs{ÕàxÚ?=¿o«Ó3·k£
+ƒ;ìLğ›ˆnèˆL = Ù	ĞÒ!e<	B
+@„_I±…îB•--²Û ¹[ I}ıf˜-;ÃÅ36Ø 
+…¥wJ^5Å‚ò
++`‰A”Ã
+—)f‘	—ì
+:Cğ§è ÉH„3êòõ _}&, :–Ù P‰2H°úy!4¹Rì„†İĞTÖä=Ğœ6Ôš«»	ñÕ<Ã~$óñşìüÿ„ùß‘¡O    IEND®B`‚=== ./public/apple-touch-icon.png ===
+‰PNG
+
+   IHDR   ´   ´   =Í2   sRGB ®Îé    IDATx^í]xÕöÿİÙİìnzB•&ÍÅ®¨ô¦‚]AıØPyöŠõ=ëSŸÂÃ‚Å'*EEA° BBé5BzÏÖ¹Ï]6H2³»³Én’ó}| ;sçÜsÏœ9ı0´‚*
+ğ]ÃŒ¨–Bac ç‘Ğ±È¼=’ÁY
+8Á 
+àÇ®ƒtâ!2œ`°¼
+`å JÁQ†<0Hìœ<Œ•‰ëBx9Ìrë¶Ìª
+Ñ~káû¯wû|ëøpX¬]à”ûB’z€ÉİÀY"k™ÇÓ" ÑP+:r ôÇRH¬œç‚ñ<pidytÒ˜Œ{Yïù­gw*´:ˆ ¦-çãuØŸo@qh 1à8 æfÚ@Ø#¸òÁğßSuìŒÍw’M‰C‹eh¾f¼†ª®Xpd€!œu@ß”‡âÁ³ JÀøNp¬Ã:È|ì¡{ØÙó«=X§Ù\Ú¢š“j°vx$i$ÀÆ¼ÀbÀ` ‡Ô§Ê ƒÃğb€mø|Èò\z”¹Ô˜Í¡yæmè¶ƒCŸ	ÃÀ1`íc†Zó=f'Àad,ƒŞ‘	g‡Ã,}¶½ùnY;c&àhÄ?¯CWKd\† t¦¡p{®!’Î• ö‚c5$|Š=¦ulBóÔ·›•„æü)	k7Å€Y3 énçCÀXd°p^£àÉyû²ó}pã:ì_ÌØSr£<»Òlš¯‡s$i€t 1@¿`~D1€LÈòèu‹Ø€Å9Á¼7îAÏĞü»ËÂ2œ=ğî ú=5.cq²•w‚ñgP`[È†,'õ$h!(Ÿs0l— ›}(›Ï† =…À@œŒÅ_Àù1|‹~ò>ïHĞ1´‚l¨¾ğo'Õ“ #ÕÂüĞl°¨x&$Ì@ªyU°k‚†¡…×¢³µ¦ü: ¡Í†…s#”oò	8fbŸqs°xE‚‚¡yæ¨x€Mä› Öò H`2p]XÉ ßH|&Kÿº ĞQh†æ™ièRzCv¾óZ 9Pø‡¬–Ÿ!é¦Á™½•¥glp&`šo¦‚óÉ ÚÊÉ¶p<rÁØ‚™¬ïâ£H‹€dh5¢döØBÔÈáäçk!ñ[XÚ7Ûù€bh9*à7ìaptĞ,Ë8Ğ¨ìøP0á À_ ØG,ıëª@ÙRÀ04ß8²ìì cÁ(jÅ£
+pPÕÍBøÃìŒ%‡VMÎĞ"ÿ"+ó0é_à|p«áláŒ­ —DZúÆ¦ÎiR†æ[Ç‡Àj½2 %×wN²G|Ğ¬.¦ä¦Ø_±ŞómMµ»&chá’cÉ“À…F…¥­ôàE`dÿäÌi*×^“0´+P‚éà|*£bÓVh.à¼ŒÍğJSb¡]µ|–ƒaRkBQsáâSöaÇØM÷4vmc£1´ÈÛ0¼œú§ÁpÀ[³ãš-?ÓÆ1õ<èO uéÁÆÊÜk<†¦|'”€ßjü5kf®Ùî.€İİX~gh—dİNùu0FÌìê"Ô
+-…Y\ 4©‹ø[RûŸ¡×ï§î0Œmeæ–ÂÃ§ìÓ	…Ğ9§³Kø“
+~eh—hÆ¯oU3üyŒA±¶ÎæÂnœâOCÑo-\sÏ±I­`P0\# I†"Ÿ†GıåÒóC‹ 	’Ÿ¾æÖZ¿F`” zåR¿ä<áà‹æ-ÂÙËDÈüÅÖ IP1Zã!KÁ‰= “é­Ãäš2´H4Ú°~dù­ÖpvãñGp>‰A’î@ê€ÏµLhÒ–¡3G…•@Ïà$r+ÖLíTğÌÒ—¬×ê¹š1´ÈgvJ€ó‹[=ZO³_Gc+¡“'j•O­	C‹JY` ÷œ&k6û£lİ ›sÁ0E‹ÊM˜gœÎ^l­4iåR¯(@•/Œ?ÀÒ—Ìòêşnò™¡EA+—¾ĞÁWdZïoÑ8&õµğÖ'†­,ò€jU4Z43ú¾y1c€ÿ“4Î—	^3´«â¤İ£àü±ÖßÏ³uA'{üğsŞ]¼gècÏ€Ó¹L«&0ÔÔ•ş8œv'`³sTZdTZ8Êªd”TÈ(,“Q\)£°ÔÕŸ›^j«2¢Â"Í’ø;"LBJ‚&Cx¨„0ƒQÏ`Ğ3è¤–Óp×MS»“Ãjç°Ø8*ªeTTù¥Nä—8ÅWÙ8J+9,V“‘Õ|lÍF†„Hâ¢b#tˆ0K33„›%˜Ct: DÇÀ$@òš“Ny•s¡Óc©7zó’{…†ÈÓ`øç{óP77VÛ8
+ÊdìÏµãp9ENÎw"¯Ä‰â
+3‚[¹`vO€×Â*!"”!!Z‡”ÚÇëÑ1IÓ’õh«ƒÑà	<A¥Q¯uÊ@i¥ŒÙvdç;ïÄ¡c—W¹èY^-Ãáá 8êºmĞA0316	èIĞ31Ú%@Ú'èĞ!Q0“½/IÂ?ã
+oò=<>MÑ´‹õ€ÏğÔEGLIÌ¹e¯«·Xğó+9qe™C>&¥ıÉ’èIk k[=†4ã‚~&tLÔA§ó˜şDUõÚô®—VÈøu««7[ñÇ6«¸ÎÆ¢)]%úRJèßÅ€³N7bHšYú2zÔ„ıIì5>ïi×SÏŸ´nt*˜<`]•$&I»ëî·cÃn6ï³¡à˜Ê tcıNRºwG=ÎïgÂ ÓèÚÖ€P“Ç¤i,tÅsdÈ)r`ı.›l·]é+yzGÒº‡ _—tog\ôæ{À¥ñ,cñOëÑ©‰fãYÖ™ ¿¥¡h 1òŸûmXü[5Ön·"¯Dz°§jƒ'ÑâZ’2±º´ÕãÚ‹Âpqª	ú ”ÚÛ³íxÿÛ
+lÚc´%ı8ĞÔ?7mG2ãÒfCd?`ï!Í8Õ“¦ëªÚUJ5òbÈlq]ÍÆ‰YËedí´bÉïÕøy‹6šs¤@:ã€ÓB0ih¸ø›>¥M9½ÅæàØ“ãÀg?VbášjØÏÄõ=íâõ¸â¼PN5	Û&¤n[¦
+Ô%+Õ–n©gèMãa·0êÓ\öuà‡,Vn´`ÛA{PHµïYúı:0ş‚0\–Ö4{ç!;Şû¶¿o³¡ „ª™šJ’­Ã™=~¦ƒz…ÔaÇğŸa0\Éú/ÈS³ëzú´ÓN3†††ê?Â7½su¸Qz‹fšñFbÓ^Vm²bÁ¯U¨¶62×M¶=ÃØsÌ¸mDÚÆêEZ“Tşa½ÿœW*¼AÍHµ#}{Â¡8«Wb"tÂÈ€ê*»|{êUŸ9¬V[Y)………É¿ıö›•L‰“iR'C÷HMMÖÉì.†òpJº¶1´‹’’2PQÍk|˜ä3nIĞ¹.ÅÅıÍh'Á ±MÆ^i©n6,ZS…Õ›-»Ø‚ù<È	52Ä„ëÁ„[µ L>´7×yË<‚12§?´sÃŠƒÔ‚:ºgÿCØü¿KeZÛÚÖÁ$Mâ"%s§u3 k²íâé t5~o5LE2–Éåv´TÆ\6î¶a[¶9…N¡ºº!­fŸ~¸†Üzs¶mÊ$ç„2C÷ê—6/5E= ; Bn3ràG~(Ct(ı›	wZ¨Q‚^èOOQ4Ìá€`‚*+(ˆÀE¡êX€†ş›‚9Ve,j„†ÁÀDd’üÛ$UèYöuIR%Èow ôoRßˆ¹)(¢%{ÌâŠ”Òw¤/Âì
+8~$ÉÛpâ—Æ­R
+<-±uÑ±¸üxä–ş?áli2Û¸mSfª*†îÙ?í	šèÿGÄQáº´Ñ£GŠ=SB«Cb…Y%Apb
+³ÒµôI’;E‡a^
+‡s—T#æ Ï71:ˆ$!E!÷å:ğ×;ş:hGNStš½:µÕc@×ôéd@\¤NĞ“˜7Œ˜×ÀA\) nZìÁq‡Íeî
+x-)B…ÅEK
+ŸïÏu`Ë~;öq ·È)~o$Ø¿mSMDS!¡û§=Èç˜º‘qE’61F‡ÔÓBp^º·§ğ©N¥Ã]rÑQˆ˜>«6UcÍVr‹‚ùƒ	è‹*	æ=¯¯	çö1
+õ‡èÜ˜@_?
+±¯İaÅš¿lØ›cA5bpzü »¶mÊ¢âÊİ³ï€‰Lb”lmÔ
+"|FI7£O§´Ó	ß.ıÿ¦§“#·ØåCÿò—*Ñô4×¡)ö%aÄ@3.K7£{{ƒøš5¥¯ÜM
+$½ÉoşËŸV,][-’Ë´şíöMë‡©bèîgœ‘¡ã:
+ h6N˜ùß·Ç"&¼ñ8¸ÚâDq™Å%v˜L:DGah0gƒ²ıŞXP¨hzïNüëÖhti[Wú
+U[()s ¨Ô&ö®Gd¸¡ÑŸpX¶®½[¬¥p€óG¶m^Ov²„îÔéBÓ9iÖ§K*åûæ9|F„$ÇœûãĞ·sˆ–/ik‘ÎwèH52·”`ÓöäYápp¡›Íztí†Œ¾1èÓ=
+a¡u§„‘Oı««ğúWeÉÔgŸnÄ7D‰¼ˆº€½öfWbí¦büµ«Ee6$†Èp=zt@jïhôé‰ƒÿ¹v§½U„U›,>?}}¢Ã„‘ûõ¡"û]Û6l8¥O^ŠÏ¼Í`·ç¼š_&ßùCV5æ,¯Æ”·.¤^)Ì2AËœÙ:	Cá¶İå˜÷u6òŠ¬õâK‡˜zz4&o/$V]@şÛ‹ËñÎÒ
+¯÷íÓéÕss‡DfN‹Eç6uKfbæ_³
+ñÕw9¨² «{!“QÂyñ=¸-Œ!¾äzªÛåüŸªğÌÜR‘ïîM0x€7‰@ûiÖá£aÓzO8u–Kİ½ah'8‹ ô£‡Sí?Wá«Ÿ«„‡ÀS÷Eº1Ú›}¨¾‡R%×m.Æ'‹Š¤% ·½_¯h\7*E¨"u9S^/ÂŞ#‘”B‡:ã¦(Œ9;´N|‰?¯+Ìl±*G¼ˆé}cpõÈD„Õıb+ÑQíïdŸ-Éè	D‡K8¿¯Q$‹õéâŠ›¡³a©ßîW¥rğu#¯cs „»o K•Æ?_]…y++=ò?Ş>:wñoŒfçş
+Ì™¿…%ê0Ñì+4Ì|ª”"iòòeøhy¥'gà·k{´7éL…	'IâÌ?]/tUµ23»ï§\åKÏMÂ˜K’ıªWS>Ê-¯Šª#5@’–TÔéã#Aö©­' }6'±Œ%_(24…`5ò]pêzj\Àéæ,¯À›ËUe|ÓÜ{E$nVón¨ÙG×ã½>g7vì£9©×ŒJÁ9iquŞH	Ww¾YäÙ¢~ºzÄ™f<wst.¹¼B+Şøp7èoOÁ`p÷]Ñ£‹ÿ„Îîny¹ ù*sáÉ‰ğÒm1Â[p0>iKnı;^RKäŸ¢rğµÃÛ@’~ÿ;´Ø±>ÂKëexwY…"íˆ¡§]Û†ûX+Öäá‹e‡E…†7Ğ±](îtBÍ§~v©¢fğı^Îig@›ÚDëD0ƒÂÜ‡
+¼÷u“´ºyHx’tÉÊ#øfU.Èété†Û¯ë"< ş€]‡]ZMqGRŒ„î¥rõ? Y>‹\š{â5§2tæÈ[áƒnĞR8ZìÄµÏˆ*%¸mx8î¹"Ré2¯~/(¶á¥wv¢¸T½ªQ×ƒF\ÔF|vO
+œ{O®GÙ„ôSĞèá«£Ğ1Éä ÿG‰]e•2æşP)şX=Ìi&é<îœSõçÒr;{;ŠË¨S­w@ågô¥:?ƒ&îiÛÚ1éåBÌR‚§oŠÂ•ç‡)]æø–¾äİzZtÜ±,p™ÒjäÚºoV‘¨aS…l,Â‡·”/Ğ6Ñ„ÜÚıãˆÂ½ÃÍÉBj€Õ¯†É#"DJ]@*eÓÍø¸”K®Şº+aªu9éÎ?üzó—ù>j›Ä[ÆwòKme&…ÿ.)å•,x*”Î5+,‡Í4öÄ‰ µ(Î×èÆ¾ÿ[B+TH—~öÓüoU•âyP8vö½uë¨Š77p©}u ¿mğ]Ç%]úÿ®îŒş=kÏ%÷İåOå«òt&=÷™‰ÑŠÕä"à°¶O}T"r#ÔÀ;÷ÅáœŞµƒ·•U¼ôî.ä­V³Dƒ×·çÉ»z!,T{Çë«qÿìE¿>1òÇÅ‹lFeà¹àüR–ñÍŸîkk3tÖÈëÀÙ{jCŞä§}kq¹¢Ÿ–Z,z:Qs+Úf—ñÂÌ8¬Áa2Æ0ò¢6qq‘°ã’Ğ#Ëm”€\L¯ß+Büj€,ş;ÿSˆM{Ô©
+oß‹û×–Ğ@yíı]ª\•J8Qà…$tF¿¥K=ş}Ş•x~^)H6¤ªÍš+òST€ŒßÂÒ–Pg5'ç*€­~Œİ®.Ëœå3>*QÌV£Œ¯eÏ'ˆTP-¢€Ïüg,Ve½LÍsé ']Ñ	ú{(/áüûrE*ªP>Å¬{b…!¨ÈŸÿê—e˜ó­²qMë½<9Ãšk--T®¯x°8OòöÜty½ş 5ÛªóšWæ—‰22%¸4Í„İ#²*¯ßDšyº»ö8Cï»Ğ„¢ğàìlÅ…]@Õwı§H14N>ÄÏÇií´µ ×o-ÁìÏöj–ÍÕ¾ÜÖ&ãq†$FxçU$–aÆó·(«'.¶j³w¼Q¤ø•£{¼!
+.«ùÒQTğë•G°t}yU¡¨xQl´/ü£¯æ_Ó{fay¦rè›ì­Ç®‹VŸyÉøÄVfW‰Å34Í”u™ T›¹[÷Ûqı?õ"Ê¨›9-N¤6j	‹W¹«´‚˜H»³W-ÃŒÁKPç¶»{\¦ŒôÌ=IÁª«-P•6ıÊHÜ<ô¸Û\tŸ,>ˆ_2µ"($şÂ?úh®G_1#_P7ÄŒS=Â@r¦»çÀĞ£¯†Ì? Ú"8ZâÄ¨GóQaQşä?v]®½XÑãÑÁ|ğÕ~¬Éòİ t?”Â¿Mé„Øã/Ş¶v\ñt¾*¼Èğõô¥¥
+›k/ ¹µ”àVr‹>mò–Ìùb¿ùkdÏ˜v:âbÔÙjKÕ.ÃÉSŒR%]ÑWÈp@b7°‹?«-¡³FÏçW{°ˆ^úàQÑìD	¨YÿZÂ>ŞƒÍÛK5[2Ô¬®;R=ÜğëV+şïUe	H.ºù'Ô›×’Í)ÁW¿({‹ˆ†OŞpüsl·Ëxû“½Øº«L3P½ä#S{¢}ÛÚºº/ >{×¾P èË§/ùwœêšT|6cŸ±´Å×Ô04ß:>ÕÖm o¯xóIL|© k·+5¨4}Ö´¸úŠxúXqıëîÆÖÚ¦Ù¤Ãô[º¡CòñàÅÂ_«ğÈû%Šø‘»éóÇÉğUaÌœ´y [ªXçHMY(ì6˜ì³>İ‹-;´£1ôÃS{ ¥mİ	PŠ„¨ãJ [KIÏ§ò°¹Ç£wGOm-vfc/Ö{~… >Ïİ\^0•Ü>+ÅÇß+'ïôh¯Ç;Óã©Î †pô¹ÕÂí~Vx¨Lî6ñ.2P$}ö7å"á_	.ìoÄÛw{çkÿi‹÷¼]¬Xş•Ş#oŞ+*}(˜ôŞüıÈúS;•Ã —ğÄİ½ç1+ÔK¢·¹Ü»J@­z¿y6±¾ünçV0i K[¼ÙÅĞkG^‰‘şì±xùæj<øN±¢ë\Yÿ½7İÚ©VÑ•ö/ò7–ÿ¢Î`S\i¤İÑK$ÁÑõÌ'¥"ÃP	¦ŠÀ]c=3İkR©Ò¤—
+›ÉPÏ=ÒÓ“ã\BğûxáA¬Y¯¬)áïşİ"áÙûz#*ÂS)Y÷(Kó®·ŠğãFe,,y6Q½‡ãø#©’÷6pÉ'.†Îı4ÀW»é¯£ĞíØ'òE9~C@eô¯L‰Áù}k¼y¦ûUä‹d~¥O™Úg$'™ñĞäãn;Ê¿wf1Hn¨uÁ+“cqÉ ïöVPêÄ­¯R,Š½{_z¤¸˜Üv_|{”œ¥ÂÃôxù¡¾¢ºE(*—që«…ªŒŞaÍxe²·AöK_üã»†Q¦û œydº7KáçKîÏy<jCğè5Q¸ú",Ø×Ü—]‰—ßİÒ%µ€~=£0ùšÎ Ï.%^M~­”úØP„ZYyäëşß"Ñ·AJÀkScpÉ —ÁFL¼zm>ş·ä×™†'?ò9n»ú”î ŞlKÜCYv·½VJfk(8ûÈµQ¸Î[OãŸ!Ò9‘ñÍ#b`“(QšfzäP’b„0¹í½¶v®„W<vUe<óŸí¢nĞW ü†œ›„±—%×H'ò›ÒŞHÊ4]“õxozœºŸkUò=ÿi©¨cTòCÿcüñÌÅİ*ğïvÃ¦¢JGim¢Áõc:ˆÒ,­à§ÍÜ7«X1)‰ŒÑOGßÎŞ	 +"_ÉxæÈ`Ò2p~º·›xîÓR|º²Rñ³G½#È 9û³}Øğ—²Bé™DĞÆuÀ Ôã†íéÙO”İ‚ç÷3
+•ƒÔ*o€$íÜ•xaò³Nï` ·§ƒRG_œ½S“—šŠ†Ò‰„s¾«À+_”)Fsc"$¬z9É›nÿ.’3ö¸<ŒñÌQ=Á±
+IŞİóÅO•xZ@6¼ø7ÏycÅÖ½.1Â¿ç‰ÔIoÛİ+ÇÇ„`ú­İí
+(*5í­bÑ"X	®¿$÷Oˆô©q#õ¹î…¥G‰9's‰GßN.<©0øËïr°ügßcª¿ıº®µrYR¸`ú‹EV¡œ×Ç(œ^ÇQ0\Èøº‘ÁØj ŞY4€hÌBeJÔ)§! ;ã¹IÑSG’º·ÉÉ«ÆkïïI*oäêEƒ0aDJMeú;®|¦@ôÁS‚7ºÒ}iòBYF?¯*~òˆpÜ5öxÄğPn5^š½Õ*
+cëÛ—_–,ê}ÙÇ‰ë“*5ìå\râ‹ÿiã|*±€ó_?ê
+ÈøÜ—>vÔBë¶W•'Úì€n!øğxÍ:&Qø÷+²ôóŞÒ'é|ïÍİjBŞ”G¾ÓYK”}§¤ªÌ<¾Æó ÄüõıNûxğÑ”E	Èø¤TRw½y;æ.ÊÆ¯YŠj_}k'Åq×§iªn|ŸU-ôg¥.¤>ıó–hÑÊ!aéĞÓ öš7>h÷ÃIÕ Heß)!ÿÙcñb€ŒVPYíyÑŞˆR^ÄØK’1ô‚ã5”û<ùß…ª’ú)ªõÑƒñ Nÿ¾57¿û-åÜÊ^¤/İŒã°ÿPŞşdJ¼(Ã¢üïëÆ¤hj-&¾X€µ;”£È4roö=±¾
+j×y/ãY#ÿÎğõ0ÿæ
++5æE³ã"pëğMÏü¾¡ÿ[šÊ*åDü÷zúi¸q\GÄÓé·¹+È)WT7„«éš(\7XW$Nx6_tñT‚³{ñúí1b& }ŞIşæÇ#åF“ª‘Ş77ëªşÖ
+È§N5§J%Wî¯6µg v¿>ã/’Qø) ‘ØáşLÒ•€\3ñr‡p•®Wó;U¯|ÿKÈ¦O° kşÎº")ŞT£7.t`â‹…ª*T¨Y"ymÔ&ô+áDh?0»X47T2ï‰‰CÂkÔ7¢Á‚å9øñ÷|Õ4èœ&ªT´ôlĞ>f~].:O©	øÜw…KÀi ó_7ê0Ö`1<ñA‰èŞ©´	úÌÏ¸1—Ÿª™BøSÇ¤~ÍÃÊßóP^Q0„$+•í_5"ÚOÂ¡—‘2ß”nZÍ0ãåÛbjÒ9µ !%CQñ¬šQmÔøò_ÿsz!©ÉÌ×+sğóºBƒ×¤ûwë.hœèµ? Îå)‡œü÷ÔeK	((Eşgš†à3p¬ 	½À)Ğ½Y|Í_VaP©¾Ğ8İ7ï¤ÚéÒôLŠR»Õ`û¾rPŠ¥ˆ‘ãcŒ”‹3Ïˆÿv[ô­ûçÿJ°xMµ¢û‘Ö£Ì0ª «¡Ç†Ö%ıúWP“L% ­½[{½HË¥Åî½PIÚÆm%¢-ØŞƒ•µ¢ˆ$LbŒ8;-ƒÄ‰¤Z•¬‘—æÃ(	6z.	µ§'Fk¥~n †Ş ‹›¢¢O2jÈ§ÈZ§Ã Wî¤u5÷©¹†ˆ¹köªÄ¡#UÕi|úi‘µoHç?RìF—şQ­˜då~v§6zÌùG’TÖªÁ™®!|Şÿ®¯}©îsM÷¤¦Ò¯³zkU›“„Ş¹¯ûU\{±QtN	G¿‘µÊÌÔâÖĞu¤ä‘ #Uã#Ù—´éÌ¯ß+¦şüN  nIDAT^i{ÉË‘0MÂwtŸ¬¨Ä??SÎí¥„¡î8#Ï2ƒS¨³&Í‹n \s‹Xe}æ•ƒNÄ‰ô×7EcôÙ¡ZI–Z[.,sŠü¥’¥o¢)­ô7êi±YM‘©„&F.)—Åhæ/®Âº6ÅD5÷c©%åw“Ú¡ğ|’ĞTŠ«™×lï«ŸÍGv¾²qèŞ„˜³&‰‘
+Ô¤¥{ŠŞo#HrÓP!jcFUë4+DÉOz2±/I5áÕ©±Ş¤9ª>·ï×[ğĞ;ÅÏ,!Uh`ücB¤ĞKı5Ú™BA™ßeZ0u¥h˜£)>qó$¶şùÑu–v… *É(´ƒ©¯#Ts"ôé~ò£[§ÒÚ4‰’}èPH%IIÔ‹y,4DÈ}8j#YîÁ7%•2uˆ?¿ıeÅ¯YQ¤²æÉû¥\äW§Äˆaìşj™EMhˆa¼j?Ö·‹AÌ°!;…è)	•D-ıè¹nÒìÄÜB§èNÙ‡÷Ø¹Ó¦*²y2şô|ª½¤¶>»êN\œÃÁxÖ(4Ç[C pñƒúM­^iõóˆ‹Ğ±^´ˆ¢ÙĞ4Í5.J¡?™£²š‹ÑcD|òXĞ¤«-ûìbH(}9Êª¸G>Úºğ¢bß«.Ó,ÒÙÙÉ[@ùJ©—­AÌCô‰
+c  ®m‚ÁÛ'è‘@“ÆL±‘:õÕVVÄóHúfç9q¨ÀÙPÎ6Ñ¯Ò"ß²ƒ¯>¼H(P(M<µÅ>÷CÓ3hdÚ}3‹p0O½êáé;%ŞÂ_Åcîgu^hÏF’zF<xåPhúş7ˆÈæ½6Ü?»Ø#NíÎjvqÒv|aV¥g©½2©–Z;ÀÀı¢r¸?UÔ üºèÓJiŠßIÊİti˜d¨êè£!’¤«RJÁŒKTU×køhÍ—¢ªnêÄ÷å‘^§Ú6ˆ”P946
+O~ Æ“–
+İ+tQJ½çò¿XJt!‰I^˜;Ş,U4ş” J¸xû;©W]H_¸(ªk•šºíêÚ,yh¾ÆëÊAŸOO=
+ŞP‹ûÈ8¥ÉäVl,wbCxSòóRc5‘D-h Å¤«_;8LHg•M½|¬Ëm§Y`¥>,H¢PÓ§++0{i…bJ/w£Ùm$•GeÍ†¡À‰æº—˜Š¹ƒ6ïÖUãÍEåª’˜¼|”f·‘Oü¡«"Ñ#%Ä¯nÎcS`E»Ğ·ÈOIîÏ~¬øÂr§bvÒšZı.Ââ‘:œÑÕ€ñ„a`Ï¿ùÂ}Å™›< ~­¥œîËµÃ®)÷õ±ªï§ôVr¹RZ uÕÔ5×04MNR»cíµ—Æænµ€úzPKSé…$}ÛÅépqª	CÓÍèvlÄ°Ú½4åuÔk™²É·NşjJ9hJU„Ô‰K˜Ä”êóL!yO|Ş>ÓòXr’&é£Ş ã OÒzyV56í±	_'»°{9üF	½Î•XDÄî™bÀ¥ifœÓÇ
+3PRùÜ©Êú·mV!Á«,.:úCXÇ‚ÆoD†J"e¦ÛRúB»x½?>¥#š§Y‚¿Ò“”~§Nùe²˜…¸ë{8@ƒ/ièe•pæÃc&ãL$ÁÓd¥nÉtn«İ›(‡„æıs7' 7‘ˆÑ#úQ}ä£NÕ£Àˆ'!j¢IYÊ	51$Eë@İ)¸Õ%Y®mõHŠÑ7\£JãºÍ•àï{	–?‚>¡4ÛîpûsÂ:R$ı›^2’¨Çµ°2]Q1J¼§¶Rõh§ŒK’¤%u¶¢Š‡B‚Óˆ¹ÒJ§ˆ°–WÉ ±Ô_N/1‘[C´#A@ÑY*b ÿ`:+ÁÒ H¶%3JëŞ†ÇŠd5hc0[jE¤%SàXÍ´d*¶î=@(PÓhFƒV`²¥V4Z2jZiĞ¬±%Ó±uïCcÍ}l§0ÛiE¤eSÀİN—¨àKÃó–MÅÖİ5<íÃHŠÀÙP+&-˜'¤ğahP&bëÖ†'òa¬[Àì©‘L“Æº	µÃ‹Á›-˜‚­[$
+œ<xS0ôzÏG#ÒZqi±¨g4²Ãë[,	[7H¨gxı¾M(
+_ÎÎ$l[qi¥@ƒ`|b+³Î«DGšd`ÎÇëUı
+»-;×²•‡‚ƒ28iæéŒÍmje·ó¬‘×³÷¨[lpì¨ËN+¿…¥-ùÄM‡Ú½nD0ö=À	0Š¹Ë‰š¼:"Àè¢5:ÁAgÎ/eßüY7C¯oFˆe!€Ë´&ëÛ°ñØMcœgÔ¶)ŸH6ƒ5X°eGdÎ‘Ö'¦fvc nm9l¦±ììù53<N)¨ã™#oı[BÏ ¤PWú—fï@v®÷ğP=¦\Û];„C§k^uMEw^Jâg~º·f¤GJ[3¼­BBÎ¬r|
+K_òî‰ô:•¡×oIú`›Š°u=÷§u˜»ğ`­Ÿ¨½.V<(mÏ	$¼ƒR/äU‹aC¿fÒ¡õÆË;àÜ4íækC~ ²|¸4·a†&C1kä»àl’/³µAúø*?gàãµZXµˆŒ0`è¹I8ÿÌxô'I´&…¦ëÑÀÏÕäcéª\TTÕİåšQ)¸è,M†<h…;ãs¶äVÔj6[ç·š¯y%›C_v­0ğuš?øÂ¬íõ×¤Şs½»E`ğ9‰èÜ>Ló"¾âh÷ÓÄ°ı‡*±ü—£bÈ1v]@#ïšÜ4Ø>€ œObK¾8§ºzÃĞNpè@›£ç-9›­ş)[¡fútÂsÑ¾­¶cã‰ŞâBêúş—£øsg™Êõµ†¸vt
+¥ú0TŞ[D¾o3tö1,õÛıê:ó6ø‘WÀp—ğñnUÑöŞüıX¿µDq:Œó3âÅPúèHjØ²G‡Cy‰ÜzrC3İÄĞ;“®ì$zp¼	Öv:KŸmWÅĞtÏudş‹¤Í[ñŞüØs€f54Ã:6Æ€ş=¢ÅøßNíÃZœG„Ë{³+ñÇ¦"lŞ^†â2›ªÖ`4avòÕkŒV¢w£üÎy$6„¥}ı{]Ï«WlñÏÇëĞÅ2ÀøFAÔƒ‡Ì©Æ>Ú’òS^ĞzW	1HbFáğ“c· :-[}D¨¤3«…¨îº±+:$k:¡Jíã•®›½¦kØW¨[µ„Rzíğ¡tÔÌ1Fé)ù;Íòş}cæ}íÑAf“=»F Ï(tï˜Èf#µ‰.¤VDÎÚRŒûÊAş{O€Ô‹+‡µÇ¹éqÑäı$Ü‹!;¯e—~[ßT,ùãâ s”¾Ô¢4ÆµXõG>¾úî0ìÏÇ’˜¬Ú£K„•L‘Æ¤%È¶8S…µ›Šñ×î2””Ùœó]ß³õz†q—µ.º µ9¾‡S;sA¡wÍŸ’°nİdHì-—Ç7°€/¿Ë~ÔúÜNj0&©DÃìûõˆÂiÂE¨—$y Œ¡¨z™-V'ŠKíØ“]‰µ›Š°ÿpU­¹æjö}â5m½xP®Ò.@_lN…°w #ã¿Œ=UïgG‘IùúÑÉùJ =<%Rc\On§…ËsğKfê9İõáE‡¦GR¼)mÌèŞ%]RÂJc)Iå×írÎQ^éÀÁÃUØº»ÙGª„Oş1¸/@¢ê¬3b…ªAûPØ‰]Ì,Îi?U§t,­”-†@Ü,éŸ.ÎÆ¯ë}>Ü÷GM.?zß¿W:$›"òè“Lígµşn¹&·ºZ[lN”•;[…õ[K±ç`**µ=A_¡ıcpÃ¸ĞSóÀ;Ÿtbš¨W*‡û&şİeaˆ3~à¢ÀÜ/„¤ZôCÈEğUbÕµGb\“Q'ôîØh#âcB„K‹Ô“ˆp½0.)aŠôPæLb"î#Æ' F%YÊe×¿e¡&TV;…;­´Ì.Ô2ì
+J¬(,¶	}˜Ô 1ó™©±wi2È³Àğ#
+­£Øå•J8ª’Ğâ0Ö¼Ldá™•mªßI§şjy~ü-Nâ?Cã2€|Şb”s¸A|¶ÃÃô0è “I2@	ˆyív—şKL\Vá@i¹]¼€”ªIŒ.şö?êÂ>¸ğ¬xŒ½4Æ€
+kŸ|jÕà|
+ËXò‘šãTÏĞ›Æ%Ânÿ`ç©Y¸©®±Zøş×<,ûé¨OFRSáßÏ%#øÒs“0ôü$>°ÿƒáJÖA<Õ34¸ß0òbÈl1€€ô¸»7Laİ?w”bîâl¯tÎ“]{¥áHön”¥ï“Z6Ê5ÑqèĞµ/vo]«¥ÊãgR’Ñc: o¨š/‡Ç‹4ŞUøh¤.YÉ˜ºCPÍĞ.
+i­3~ø…´;÷•cŞ×‡“G_-õ§›€{_øIíº /g?ş\÷#ölËDŞá}¨ª(CuU9¬–JÈ4WÍÀ$	&SLa0‡E ©]gôèwNëv{"?g^{øÔJnRã“Í¸jD{X
+öÒŒSİ°jpöˆ¡]ºôèT0y>Àºªy@S^CLœ_d¹¾tPë«v3trÇãJYvÂRU’Â£(.8‚¢¼C(ÈÍFş‘(<zå¥…¨ª,…¥²t­ŒkCxd,"¢âÄö]”Ü±	m“Œ¨Ø$„†G‚±ãªAnö.š<2g‹µF¬Ö5{õü¾\Ï2oğä^ÏZäxXøŒ@* hhÓd,®X“‡Å+raw(‡‚ëbè†Öw:p:È¸sÀf©ByiÊK
+½çO|ñîsµn{ÓèØ½Ÿ`Ôè¸$ètèôÇşèÔg04<ŒÜƒÏN„>xŠ8ÀÄ^ãóõålÔw3´Ò™£âÁğ%8Î÷äíiÊkÉWMÑ´e«s±y{iƒ*ˆ§]ß¾òìÇ£“Î­õóss~ABÛN>‘BCS¨O÷H» ğ£7u`È£3ü+Xú×İç‹„åÆ§s€€myP1ª-NlÙQŠßç?o]ìM>å+†´Eÿ^1"„dnK]¸Ñ¼½’Ğ.)f k÷(8,Ğ*ÄÕ‚JõW¬ÉÌ]TZ;G8šôâØ¨ôí…‹ÎL@ÛD“2Ú5N0ö,øáçXz–úÜàvá5C¦Ş2:	yÀcƒÒ§Éòóºdm)Á‚`ch’Âi}¢qÁ™	Â“A á…â¿Á$c}“¯Ô+ğyç<kD/p‰òS;x…A ÜDaè#y¡+zsî~vNôrxƒ¦?uè7»êB¡'S‡ä$jãàóqz³M­î9&eißlóeAM(À3GNg/‚!(œõLHì£ÕØŸŠ3Æ¼¨øÎ¾Ğşbè²‚ıX¿èntMªFÛc0y/ê¦'G9€¥/¡Ô
+Ÿ@#†
+Y`¸ŞCÓ§hy³±-Ğm`ôÍŞõCÃšìz°Ñr×MµelÍÃ–şµç¡Ï“°Ö„¡…ö³qd;8¥ÀùÅÁElğôˆ‘C·õéıÇĞG€]O5†–ÁØJèä‰ìŒ%‡}"ö±›5chÁÔ™# ŒZ›öÔ¹&[Ãt0¥ø„‚ßÚrØù`/ò	¿ ¸y;À¯céKÖk…‹¶M%[ÖO€,SÉV¬VH6ú::3Ğõ1 ¢¯O.É?ˆn¨=áÅ× :ÁGû¹b›KBË5M7}Â³inæE¤;:àó†Jª<ÅMS†RzëøX,!óÁX”§ÆõĞî Í>¡SQt÷]{V­5^ıôw„Ç¶÷i]ä~	ş€rß·ùénÎK!±`2}ÀzÏ¯;ºåå£5gh—ê‘f ’Ÿ0=PË¶éeî ô|	¼¯gğC“TŞ~?P}jãJÅ=Æ0yÈyÂÛàICÛğC»˜zT<8£.¦< ë{ê$e·µ›$ñÚq£=Csàè"àğ®:® fçsÀğ¨7yj¶ë7†LMÖY`œÜy^q*½ô1@×ğÓÕĞò”k4gèÊÀîçG±Wø4ñM28›»qÊ‰÷µÆÉ¯-˜šæ:uÔøqlğå|03w˜˜©ÿ»gäÒ”¡«÷Şˆ©ÕohÍ+¾¬çÇBèœÓÙ€¥|YHé^ÏNHiµ:~ç¢tkt[8å×ÁØ¸ dêD åV :Ã£6-¥€ìY€•Êê<(½ñâ¼üp‹œ/€Nš†ÔÅGÔ–Ry‹‡ßÚ˜hXãäo€˜:øÔÉÄÄ]“ ](ÀôÔ¯ ^ÚWÆôëÕúı•OÈË‘\ÿy‰ÀY,\	­d1W2Ø@ÇèØİJb´ÚXã1´ÔÃ;À©×¥¡H*‡.ÌA4&ºşMŒ^Ø-åøéÛÿÕúõüa×Â`l Æ˜×QØ
+\‘@'µ¢:©Lê™ó s<Ô¥ı-™İDn4†®‘ÔÂP´ü4Ã%ø¼Z‰’æ½1óØM÷øÓ ¬‹„ÎĞÂP$—ù¨9Ÿ¼Á—æÍ‘^ï‚&ŒÍ$_³¿\sáÖ$íbjªxIÎ_ê0¹×'ßoäE`ìağœ9şš¨¡X“1´`j
+“[­—ÿİÿêI İƒÒXTCåæEyvşİmŒÆ¯´g{B¾&ehÁÔ”Ğ”•y˜ô/p>Øcg¯'»m½Öà`l¸ü ÒÒ7j™hä²MÎĞ5Æ"åSÛÙ Æ{å‹7”÷P¥	°ş°VùÌ¾Ò!`ú˜±
+ğÒÃĞÁÃÀœ¯´h½_-È‹ÈpöÏGZTš¨}´ÒuÅĞ5Òš
+oeö|‘E%’ıïù[‰ßâkA«?(-¤5µH°a*8ŸlÍlüqP²f.û/B0Ó—VşÜKÀ2tkO—Ò²óupP_ê€Æ×ŸÕÄkSœ÷gHºipfom*—œƒ¸1l* ß0ê-|¹ jN#ğ®¡Ä’}€ô!Àg6E ÄS’CiM]O;[ûa*VzÓuO" ¯¯Ï3±Ï¸ÙÓ. MµŸ aèƒ‘š®o¨¾2Xz Ï|iªCõñ¹ÕÇ…„H5¯ò¤Ù¸ÏÕäö ch!­I£Û<.6ûP06 õ¬mMtò%¨ÖïpşBß¢ß‚üÆÊóíÚw%CŸ¸1r.>d,8{àİqâ­–¦ıZ4ç€íãÏ À¶PÍè4íqĞnÅ gèU„
+Î1$*  U$F;25Ë•¨01²¼ zİ¢ÆJÀ÷7%›C»T‘§$¬İfÍ€¤»œc‘ş&bP­Ïyû²ó}pã:ì_ÜÔùZÒ¯Y1t-U„¼"]-q-. Ğ@XôeS šÊ^ö‚c5$|Š=¦uÁâµğ”Ù›-C×¨"™· ;Ø}:$Ç`€Që¢ ›Õàáá:~+ côL8;fé³½êŒïá³›ìòfÏĞµ¤6E×O‚$Øx€÷XàA¬a;29ì /Øf€Ï‡,/ÁÀ¥GYp%zõR´(†®ÅÜ¢¶±ª+$Ö`È gTd@ï5ÿ&€0¾ëÀ°2ß{èÆ®åkü­×ıÄËĞµ˜›‚5ûó(MôƒÀ1œ|ÛrÀBHïæ ·R>~Ã"Àñbª¢S‚=Ø‚ şx	Zºªò­ãÃa±vSîIê&wg‰`¬dê¬êfv­èHı±ƒ:t‚ó\0.í‚,ï€NÚ“q/ë=¿ÂìkjuÁNEüù®aFTK¡°±€…‚óHèX
+dŞÉà,‰` ¾ØQ ?vŒ 2œ`°œò$¨Ú£E`ÈãÙàÈÄÁÉ³ÁX™¸.„—Ã,W±nË¬ŠH¶^€ÿ;õ|›HÍ     IEND®B`‚=== ./public/android-chrome-512x512.png ===
+‰PNG
+
+   IHDR         ôxÔú   sRGB ®Îé    IDATx^ì}˜UÅùş;ç¶í¶ôŞûRDQ°!+¨X¢‰%‰1QcÔ˜øKbÄ˜bbôc¢QKŒRD©Kï½³À²½ŞvæÏ7wWÁ½õÜsïı¾ç¹ÏİrÎœ™wæÌ¼óÍWXFÀ´ÈEc¬ğZ2‘îÈ´\hÈV¾E& 3 ‹LH¤ÃŠTx‘TH¤ "	B&p4~¬ l ,ÑØp	ÀÛøqğ pª€l€@$jaA<¨…@54Y	ˆ*è²Ê¡7~ —¢ÚY
+‹·RŒ]Le±0Œ€	hš LX5®#ßÈ-SÓĞàl|HÑºŞ­ ´†”-Ñò E6 i§÷µé¾¥ïw	Ñøßïê__^Û¤¿ï;‚¯D@â«¿ø~¦¿ù$éAêi>¡o	'„$Rp' Ä	 Ç qšV!‹!qIc¢ïôšøîin#`NüÌY{®#`rä¶)¹¨ñv€Ùí!e{´U?™»rZR5hjiÕN[ì›~6yKÏZ="ú—¤@@‡®hIÓßHÛP	ÈC8!©Ÿ!BŠH³½?(Å†sX@€	@,ô×ÑÔÈiÓ4\±¶„ŞV­$:Cê!D' ôÉ@êwR½Ó‚~úw¢¿ƒMÇD
+è¢é›* ì‡”û!´}Ø¾RÛ‹‡”ˆiÓèZF€DŸ|‚„oKTä–©vT×w„İ!Ğ]ú–ôs,j±÷}|¿Ó¢Ï(¤)Šğ@Àãû]–b7€İ€Ü‰İğbÒ“ˆ¾Ó]>†¯g& ‰ÚóÜîfP‹½ÓÛº«'¤ÖBö€DOµØ‘Ö¨º'£º¦/ôÍ¢–hçOÇ_}¤¬Q¤@`¤Ø	¡ï„fß‡¥˜IAX0çBâ& qØ©Ü¤àÛÓQ­vó½ 	Zè{C= Ép¨€P~w‚ƒ9RwÑQ‚.8ÕG%ĞäN@lƒ.w b;Ò±[ôšY©Jp¹Œ@,!À“X,õ×5¬ÈÏ'd#It‡Ğz«Åè!» "R&+7:ß¢Ogö,±† PnŒ¢Ub/€ÍŠH}ä.1zNy¬5ëË„& á@‘Ëˆ	äŠñĞDh–>è]€´à“?}
+¤LMîv1Ñ&®d@HHé„u }d%¤ÜMl„ÄVèŞ­Ğå^1rnU@¥òÅŒ@Œ"À F;«İ<RJu×t€ÛÓúB“ı:Ã©ôÓ e/øÍãÇW4‚P,‚ ; ‹MĞ±6ëf~ï ë€…ˆ?˜ Ä_Ÿ&t‹äÒÂt$éİ¡‰¾²¤( Èçé 2 $7ºá%4NÜø³"@õ H@vG d„Ø]nAƒ¶K\Àö<vâ& ñÓ—	Û¹v|xl½Õ._ÊAĞD?H½•Oµÿe „Å‡4MŠ*!´ãĞåf±^i¬îmbÈ\Ò°01‹ €˜íºÄ®¸\uekX,}Ô._ˆŸ{Z 2P.zl¸—ØC$Ü­§øäjX¦
+”»a£vÀëİ*†t,ÜäòH#À ÒsùaC@®(l!ûÂB;}‡†h	 Bûá‡m.èœ¡CÊ: ¥8; °
+^l[ÄÈ™Ç=F `½” u”5~ıäLx=´Ëï]PÖû”0§@ïØ?A‡‡YšM‚DJ y\yhb%¤Ü‹u3Í¨_&N2K•¹Œ€& <L‡€Ü5ŞZ[¸%YïòµV_ª[·¦ë5®JãD)“)ë!}Š c-lb3Rİ[E÷¹”b™…0<‘š¦+»"²èp¢¤»/„ ˆä7~²n}Œ"@†ú>r	¤ÜaÛ´<(
+^ CF ª0ˆ*ü‰ıp)§iØ´:NKXĞ:Îƒ½!e;@´Ilt¸õñ…€,†‡!Å6hX/6ÁíÜ†óÎ«‚³ÆW_ÇNk˜ ÄN_ÅMMå¢1IHIé ¬ø!†BÊó ¡t´ƒP~ú,Œ@|" Q‡¡ã „XÈ5ğz·¢®î »¸!>Í­2+L ÌÚ3qX/Yti&Úº>#¡¡$:5ôÅa‹¹IŒÀ·"@î„û¡c3$V@Ó6 µÛEÁ‚JÆ0& F œÀÏïLµ£“«zBx 1R¥Óm×hÅŸÀèpÓ…@¤<!vòsHK$v`¿ı¸¸nº‹1b"… €H!›àåÊy—§"×Ñ}Õn_`¤ìÁgû	>0¸ùÍ  lvBbµÒ
+lA©ó7Ÿ¼X°"À ¬pra²hj&twgX¼ƒ Å(H9]°%?FÀÊ!±B¬ƒËàµ¬‡fÛ'
+¦óñ€ÿò•Í À€‡HX+§äBxº@Ã0  ¨ó}
+ÖÃÂ0Á!@A†öØ `)tÒX÷Š”WßÅ|…  !! ¿˜ÒI.r”ï|¡¡-$ì!Ì73ŒÀé3µ:e'$" ?‡ËĞ`İ+ÎÿàÃÄ‹ €`‘KàûTˆŞÕW¶‚ÅÒ	RQ?0¨1ZÇãOà±ÁM8zc¤ÁõD`1¼ŞıöÑq9qìãîL â®K#× /~«ÖRŒ…BH
+ÕKqùYFÀHJ ÅZ¹B.‚GßÇDÀÈˆıg1ˆı>4¤*ŸEïM\
+‰‹ I.}9†<œÂ0ß‚€,¹.ä'ğj8#!`àJ	|\;¾¼¶vú8@È ²n:#`V* ±ĞCjó`qCæ–˜µ²\¯è#À ú}`ÊÈeãr`³æŸ26º‚ÔıÊ²Ÿ~SöWŠøX
+)2Î·ç¨5¯Œ1bÎD€	 ‰¯! WŒÏ€Hj‹÷bHy.„9’ûx¬0±‚€:¤,SÇB|¯e!dÃ11rnU¬4ëy˜ Dã˜x‚\65Âİ
+6ï(H1ş”aÑÅ Z°ÄD¸’Œ #p6¼ Ÿ2Ø]!çÂmYi;.FM¯g¸& 	>ä¢1V¤;Z@ÚAˆB@¿Xn>#Ox y Ğ>”3!\ëQí,c{â©‘Ü–À`^qsµréÛ:.nGGxäõ€¼}yá›.æ†0gC€ˆÀ@|«x6çô™WÎ1s°0H°~Wÿâ©©ÈrçÁí½šœ ˆğ‚nnB# r	t16Ë»¨°Ä˜éµLkL0Hş– ¼bSm¨÷æBz.‚À5r	7“`ÎD@Â	!fAâ=ëgH¶”¢ït· $ƒÿ0ˆÿ>†”Ó4lZ‰koXäú¤Æsşh=7‘`šG@€ĞfÁ…·êİŠşÃ*…˜Fa‡Yâ& qÜ¹Jİ¿ŒÇ²ZÃª_MNÄÈ8n27`BB@®„ÔŞ‡G{­+¡Ób'„¨©of`êî	¾rRNµ`™'v%êùÎ©ô= V÷(ßÉ$NHÌğ\ÖÏ1ÊZ*Ätr'd‰3˜ ÄY‡ª]ÿò©I°Õu,ßƒS t‹³frsF òì† ŞÿÂ²çMo`m@äA7ò	L ŒD;ÂÏ’ïLµ KUKHÇxhò¦SQÀ(˜#À0Á# °ºxÂ9{3NˆëX<˜æº“	€¹ú#¨Ú|µë¯ï¡İÈÉ ZUßÄ0ŒÀ78ˆúËp'obm@|& qĞ²èê6€g2¤ü.Î‹ƒ&qFÀŒH,‡¯Ö¢àıb3V‘ëä?L üÇÊtWÊEc’™6·CG!€ F€`"ƒ Å(†™€|	•5ëÄØÅ‘y—ix±ˆ4Â*_®ŸØ­7Ñ˜´‡û3Bxs±Œ #ğ%DÈ+`% ^‡UŸ)Í>ÂøÄ¼`ÄXŸÉ¢¡6èùƒ ÉÛ 1ùœ±/Æº‘«ËÄ>^älèâehG×‹‚5îØoXâ´€	@õµ,×º}4|PgıÆ—cøÇPrU8C€¢:,‡× ¹æ‰‚yl#Ì F:J®ĞB»Pgı]Øc¤ê\MF€ˆ\ ö ˜	›ş?1pÎæøorì·	€ÉûP®›œ~!©üAYû28e¯É;«Ç$& U –@Š—aÕ–ˆÁ3*ŠØh5 ÷“,šÜš~t9À  Élåoâãª1Œ ÖØML‡®}(
+ff€Å„00a§ÈiÓ4L\7Bÿ¤ˆö¬ò7aGq•Fà\¸ yBÌƒÔş‹ÙƒW‹iœ]ĞlÃ…	€ÉzD®œ’x/VVşFBG[ù›¬“¸:Œ #Ğ<ä% ¡
+:V(/XŠ”6#_aL ŒBÚçÈu»Ã+®‚”×Bˆş Rü¸/aFÀÌÔAÊMâ]Xä‡bğì]f®l"Õ	€Iz[®8B•ÿå :qê^“tWƒ`Â ¹
+î0RşO›½*…r¡!À 4üB¾[.-LG’²îÿ> GÈe+ÿaåFÀ|—@) –ø°D\0³Ú|ÕLœ1ˆb_ËW·ƒÍ5”ºw€4¶òb‡ğ£F Ò—@Öòu¸ísÅÈ÷Gú¡\şÙ`¥‘!×^ÕıZLdo‘¥ªğcF€0) ±3`ÕŞC>Üjløi„ €(Œ¹fÒHHù=@\ »øE¡ø‘Œ #m(zàA@~!ş+†ÎZí
+%Úó™ ØãrÙÔdØëGCŠAà| yYü¬?Š`Ó @YOBâù<\ÉŸ‹QÓ)‹00 dz„,š”M\
+) ©Ò÷¦²Æ ğù1Œ #`fÈ. +!Ä¿¡Ë¢`ÖI3W8^êÆÀ€”k¯ì¯6	BÜ`0»ø :?‚`br\)_‡EŸ%†|t Ökõeá“E“zAÊë!p z°Eø‘\<#À0±Š€Û!ñ„x[ÌÚ«‰…z3ˆ`/ÉÕ…ƒ!p O„8¤oÁæ¢F > ÂBî´ÙxU›¹.>f¾V0ˆPŸø,ıqç© —² -BâbF€ˆ7t@?m>şÅ‘é^& aÆUµAk{ty? Ç "ƒıÂ2Ç0‰€€d COA?²\¬q'BÃj#€0!-%¶NME]ÃèSƒö~hâBHØÃT<Ã0Œ@b" à‚.—œÚL=…”¤ÏÑgz­ Ï–`"€t{ãâŸgıÅğŠ{ TlF€`p! ±ùÉÑgz9“€Ğe"†RNÓ°zUKhÖq€¼ÀÈ‹äÛF€`ÎÀ
+@üºg†?!Ä4
+& ÁcùÎTzzÛÀí™È Bq|+#À0Œ@ó¬Ä¿a³ÎÆK±¸n:Ed	& A€F·H9Õ‚õîöğz®Äí YßÆ0Œ #ù,Ö1ÈvH&Áç»š	@¨ÉEc¬HÏê¡_)oĞ'ˆbøF€`àØ
+!^…ÔŞCuÅ1v±'ø¢óN& ö»ró³´é¸ßĞ3À"ørF€`ğ °¯Á*ß·x?»	*€ ğR‹¿lÛB\è´øwàv¾”`F üì´× åÛGö2	ğ`& ~b%‹î°Å]Üàf ]ü¼•/cF€ˆ,{OmÈşwJ#û&Ğf(xù7 ?@R‹¿ûH7ØÄ€ Å¿³·ñ%Œ #À0Æ!°ÿƒ[¾	[ÛİLš	@3)µ?ò»ò;¼ø7? ø
+F€`¢ˆ€@¼İÃÇßŞL ¾Ÿ¯ÎüiñW¼óâ›ÍfFÀöxR¼Á6L ü/ß¼D¹úe¥u†×r# “«Ÿù…$ßÄ0Œ€áì´Wañ¾‰Šš}ì"xvüYp\TŸ5îNŞ p+[ûşòòF€İxÂò†Úös° oÂÉàLTxßîîöĞõë %Eøc?ÿP_C¾Ÿ`è °B¼M{»l‡8lğ×;	Àix¨Ä>7æÃíºwp„¿è¼±üTF€`ÂˆÀV@¾ ›ı=p”}…,€F,TJßÕW¶‚fÈslÿ0¾~\#À0ÑE`# ƒî™açTÂ¾Î` û@`ëÔlÔ;'òÎêİ7•ŸÎ0Œ@ ,‚Ï Ù1}¦—3	` Æ˜Ü25Îú+ ‹ ŒŒÀÀã"F€`¢À
+hòI8’?}§×D¿:Ñ­AÂk |¾şù—xF·;øéŒ #À0E@b	€Ç!.Hô@AL Ö^¯ş0„ ÀÂ0Œ #ïH¹ í11d&‘„•„& rÍ¤‘jç?ö„ÜpF€`	$æBàq1tÖŠDjúémMX W†÷r2 2u p»F€HLd% f@Š§Å°™ëƒ„$ ²hR/@Ü	à:@¶foˆDúÜfF€Hpä©uàØ©x/ïœZş%
+fmO4< ÈµWv„W»‚’ûJî£%Z§s{F€`: ÷Aâ5XôWÄ$.	E dÑ¤<HIñıï€} `I¤Îæ¶2Œ #Àœ€„Bn…Äâ-Q0ëd¢`”0@¾35WùÎı1€-Q:™ÛÉ0Œ #ğ­¸¬&FƒãC1jz}"à•8 hâåâ¸ €#:—ÛÈ0Œ #à7N,…”³çû}W_˜@¹ûéx—H‹áşâª3Œ #ÀDHÌ‡†'Á=0î	€\{UèŞ»q5€–lñ¹7‡KfF Æ N ò}h–ˆ!nñö|kõãš ÈW·ƒæ¾Yüƒ,şÙè/G3·`ĞğØ¯A·½$F¾8ô"ÍYBÜ ¹´0ÉúĞÅ!ĞàHæ‚\+F€`L‡ E
+ÜM>‡zí-qÁÌjÓÕ0Š_PT8B>]€IaÀŠ‹`F€H¤l€&VBŠ'DÁÌ9ñØì¸$ rõÄáÚC€¤?éñØqÜ&F€`ˆ#PˆúãbØìUšÁˆ; ×Mì¯¸Çæ—şOü8F€`â	F£@¼‹|F½+W@®œ’‹ç6 ? Ğ€5:‹ÛÂ0Œ #`8 { ü^ëËbÄ¥†× BŒ §MÓ0~í5Ğô Ä ö¡ÃÅ2Œ #x8!åzèÚ“˜;ä=1mšÄ(ºj¤ş.Ãm`F€0uøB{T|¸Ò4µ
+¡"qA dÑä®ŞûÜ‰ìğà[F€`³# PàMHËS¢`Ä´Ä<ë&gAê·C×):q†¿˜\yF€`Ì‹€/sà~hÚ³ÚKbğŒ
+óV¶ùšÅ>X]X!ÿÀöÓ|‡óŒ #À0!!à°RüI›93¤’¢|sL ¹aB?¸µÇ •ä‡Ïı£<˜øñŒ #À$u æCê‹as6Çj›c– È¢qm û½ ~¨sÿ˜mK¬®7#À0	Š Å {€×Ó¢`^q,â“‹¦,jƒ4ü@wö÷Å¡ÇufF ¦ ø » ã/Ğ¾.
+Ö¸c­5±I VM¸€ÏıcmÈq}F€ˆÈ`)t<$†ÏZk­Š9 ×Ol~ˆ[$Çà\_F€`¸B ¯ÀŠ?ˆA³ÄRËbŠ ÈEc’q ¬şÛĞb	l®+#À0Œ@Ü!@Q âO¨®zYŒ]Ü+-Œ-°vâyĞÅÉşş±2Ä¸Œ #ÀÄ9*> V@“Š!³—ÇJkc‚ H	5W·†æştêŸ“üÄÊãz2Œ #x áè¶ßbèûÇ„ y
+˜Zbƒ ,›š»óV@NĞ‚]şšSºœn	yÚwƒK‚>MRÆïç*Õå– òšÄf,š }[5ß²Zè#Ô·Íâû›…~¶
+8l)˜jÍËW0 àöHxtÀã‘ ÷ÔëÜ^	÷«‡{u	· oÙ£ĞOûY¨w¯9I²åCM×&;¦¿ÑıV¡ù¾5>pmJš%KNy¤OƒËñŠ5½¾¹¢ıÿæGG”k(ß™jAçú¡€øFòâ54¸}‹9-ò4YĞDP]¯«¿¹hòğ•µºº¶¢Ö]Êªu”Wû’XÑH-­ÖQVåm–¦VÕRy_1€ôd6@ßM-ğÉvßBO“I’Ã÷{fª†ü\«"D6Àn%² "ÔÏD¨<F Şh"Ôôªw˜ˆ¸hpépªo‰ª:ß»\× QZíEƒS¢Ş)Qçüê=¤9 ¶Á7Ğ»O¢æ:ßÏô~e¤6?Åç¦[ÔbŸ¦!7CqúÌ4ÈLµ(ROï0½ËDˆÔ'Ùˆ8ĞûOßM?Óµ	.+ ù3ìK^#®›~e32Í(ÖÙ§ú×püwF±*†?šğšz]½ğô‚Ó‡&µğ;%NVéjb(«ÔÕË_S/±ï˜G-êUµæËTé°¤'û{šdÒS4¤::·±ªÉ…şß¹•UM$öÆI%#Y¨¿g¤010| òÃ‚€ZœÕbî#èônÒ;ê#æ>^Jïr•“M?WëŠ˜M2R5Ø­>¢Nïpn†¥ñû«ßé§w–ˆº>5ÉGš6fkWdê#ş8‡¡óL}`n@ª›óFù ­#ÓQÑ-•vï¤¾«mĞÃ§]±zÚ©8îÁá“^œ¬ôM‡NxPRi¾Å=\’ ¯qRi™eAvV´È² '›z‘E"lD&4µkaa¢ ³Ñ{Kß¤e#¡E¿º^âd¥»xp¢‚¾İØqÈ£È|¼Jj’àÓ{œ’¤!'] c++:´´¢}Ò&øˆ i
+ˆáÓãÁcâ×p;Ş4óQ€i§P)§ZPT×šö4$.‡†û&•íìi‡O-ê{zp¤”{/ö{Ôî€j‘ÏËôi zµ·£w)èÕÎ¦&’”$´$Ùé>•%#iš|ßî^âx…¥•º:f[ºÅç¶í Û¹ÕßX z:î#m^Û<+Ò’ºæ[Ñ6Ï‚nù6õî¦&û´‚Dğ‰HÄ¼,„®ß‹‚”mB˜ó(À”(+Õÿ²)-`÷şB>«üÊZZô}ª|ÚÉï8ìÆ±R/vqcë÷×ÎôbµÑª7í4z¶·¡O.èç@Vš¦HM2iÉL¢Õ/ñø\ZôéL¾²Î§Æ?xÂ‹cå^lÜãÂì•¦·õ2m—=AvšÏ† w;z¶·¢u};ÚÔq!ü‡»„@Š'à²ü£>(1£W€9	À¾1I8™>B…ûífÚÑ{ZÅ”!J_ïÔ•åî‰
+K66`Ó>¶ğ(c=–È!“®¡G;Îïç@A»2j¢‰…HA²]SjGFÀ”Ëg\Gï4ÙØì?îÁÒÍNlÙïÂî£f÷şÆ×„ iHË×*KCßNvôídS„€È7‘ü9Ü‰‡W=Gt6_€ Ó )§iX±¾¬Ş'!pu@#ÇÀ‹iG@n9µõ>ËÜƒ'<J¸y¯›ö»°y¿[	²DZü[dièÑÖ†~mØÕVÙ¥bLv0ˆN¯˜û©§/úd”Gg÷_lnÀ¦ınì?Æ~´{¯e¶†~ìÊ&hÌ $e;@Æ†¤í#¢ßè‘íj~óùïÃcy #bš©…LE $¥ôİ8!NË!äïÈ5Õ,½Ù´àÓn ÉBŸÔ€‹Ö7`ã>—Rç³˜ò4èÖÖŠóû:0ªCCÒn‚ÎY3`Ş~‹tÍhÑ'·<"ñdxKÄ}öŠ:|±ÅéGsù!"Ğ"SCŸNvŒèÀ°uL@ÚŠCBïµ‰Rüï‹0§Bø¼°M!æ" [¦ÚQå›ş$ FD!ZôÉÿÔùdì³ûˆ[© ÷÷`OÑî ŸOÆHƒ»ÙÔÍ-­j7A*F–Ä@€}§Ç·è¯İåÂü5ê›üïYb2³_Tœ    IDATn•eQ¶@]ò­èÛÑ®Œ‡É€>QbDa‚½ÚHµ‰¾Ó)ƒ )Ä43Ş—á~…çWòîh¡Ó´è“k¹òl?èÆÇEõXºÅ‰²*¢Õ/‘znZ²À¨¾\waª:* É‚ˆ {D
+ñè•«´x|Ç-±b«Ë¶º°~;³ö.z½™'“=½×#z90¤ûWd€Şí¨i„ø¤õf
+l°hjÒœ!ôÇÑ12Ãâì¥ÒÄà¥°›^_®ÍûÜ˜»ªË¶9¿Œœgd}øYÆ#@êÃ®ù6uD0v]ÛÑ‘/šKì"ĞDèéØ\nWnwâ­EµJÕÏ’=P¯6ŒèÀı’Ğ:ÛİĞb1šÈÚC¨qÌc§×˜}SÌnj÷¿~rGxõ' y­ÀĞ!ŒÔ}q´«ê$ÖívaÎÊ:¬ÜîBEïôè³>ƒÈòøÚÑ©7,I…/¦]CŒX›VCëE?ï—TxÕ±½ÛdÌGÑ4Y²êÕŞ†‹:0f@’ŠC@ï7å;0f1ïÂ¢=ˆA3˜Á-Ğ˜673Şä–q9¨µßßCDŞğ&Š“¿j‡³–×aõN—)Ãç&îkj–“‘`ï6LQVÇdtÄ$À}ómµ ÷›‚k}¶±¯Î¯ÁŞb¶à7¯_CŠ2´‡…#“1¼—/±€ˆ.ŠNHü©®—DßyeÆ·úëOŒh[ıiœ\4ÆŠìŒşğèObŒ?÷„ríîIø¿Ok±n—K™c²»^(ˆÆ÷½ô‚PR#Ú5L™ŒK'+÷Bs"@?yæ¼2¯F¹æÅÒœ5æZE"ôVœÂôpàÂêjp•äbXµûQ^µIŒ]Uv}P4®`¿ Eü‹ÈÌJ–¾Ë¶’°÷ºTŒn¯÷ë)n#Üã\|Œ#@G D:·¶bt¿$Ü06-™˜¦WK*t,\WWæ×ªÚt´ÇÄŞ4İcúŠĞûMS`@&HQF„dL¡3æ' ×Ó¢`^qÊ÷»È¨ ©’ı4ŒÄ@¿kíç…dôCîz´Û'K_² ¦ØÜ|
+è'€|Ù7 I‚‚tmcÅy}’pãØ`ˆ%:P´ÍO×ÖãÕOjq¼ÜûeRèÔ†ŸëĞ‚Hï8PÜóú8pÉà$toëKH>‘ ÅÿÁ´8šÉ‚¢K –Oî›şK@ş€ÒW‡\ŠâõÅf'ŞXX‹=ÅnÃ›¬üYp!@n‚Šä[1¼§7]’ÊD \àúQ-öŸ®£3şZ”VyÕ;Îê~?€ãKüB€è§ BùyL‘Œ‹%©Pãa ş·ögqŞŒıa*3àb¢F äŠñ°Z'ñOt¸æg¹ş—ÕaÖòz—yU^øÃ,—q.(…1Òaü°dÜ|i*ƒaŞ\X‹Wæ× ¼FWVı¼ğGğ/4ô“­ yÑñ¹‡.r ~g¶9·*ôò/!z`å”Ğ¼CÈBÙıS†=J¸³`]ƒ²öõM
+¼ğ>øPhÊoNÆD÷]›íì1
+ g¹—vı{¿
+Ÿorª÷œÏøÃ0÷­VÀ—½²Zqéàd\4Ğç¤x Å[Ğ-‰ì²Œn‹
+ËÆåÀî¸È¦díK?©ùib¨iêŒŸ'…`Ğä{Â… M}:Zqå°ÜpqŠR!²„† Ùí¼¹¨¯-¨EI¥NÉv<¡AÊw‡€€"¦ü"Vœ‚‡Qøá ä( ƒËùe¼[`Tf'¹zB?@{WhÖ‚Šõ^,ŞĞ€ã)v))¥ê$Vó1ìø–ˆ!@“å ècõOÂµ¥("K`Ğ{½a¯ÏÍ¬ÆöCnĞ#`èV)Š>2Ğ©•E%'j©’ÙĞ¯£İŸ^H|x*lÕ#bØœÍF·-,³R—¡C3^ïpHËhÙê«FˆHQ%¡×y…<¦IQÑ³ƒÍqÛ¸ô]Z[nÓ4äŞ`
+×y²BGiµ]—*˜-üÛ’¿/xË#Õ7ïô*ü¼@ É!3U¨óÂŒOG§ÖVÎ1àˆ´ğ—ú2m¾¾°VÙóv…03”G$%É—K„ÒwleBRXñîùV•¥0;ıëéÈu¥{y_şYíÇk÷x„ôz“¥@¦Ğ‘¢	‘6€Lkj»j°¢Nèó÷¯__
+&a! }¹wJ Ç×Sø
+Ï)5?1/œğX-BËJi)ZE`<½ò´¨ÓO‹=½îô3eíªåğ¡ô1ße(Ï@ÿÎ”¶4	WŸ¬\ŒXÎ iöÈºÿ¥kTì~Ú °0±ˆ zÿéØ€È&(]ñ×ÃŠSÈŠª:ıdE­,÷Ñ°@Â*:@$9Yî%G/ÅQ	ü¯Axÿ
+	™ ôPĞOjò!1éë‹,v×™ˆ4óïÓÑ†óz;”[ıÎâC€"tR ®Ûœ*fÇ¡^øyl0çB€ò×	` ß¶aíÁ"2è3`èÏ¥ÀÏ ´¶|#(ÈÍğ²èÑÖ†‚veYœHBÚ½ce^ì+ö`ÿqÚõ9éUÇ¤õcaf(…ÀsÛ6¬!cú $dĞ{àĞç „5OP-á›B€Î3R|ÆC-2-ÈËÔĞ±•U¦§hHMèĞÂêKPãBAzH´Ô«}2Ü%ã>òŞ¡ôÛ5õRó³0Œ@@P0¡™Â*ïÛºfÍÁ€îl¼8$Ğwğà>º…ãƒy8ßÃ0>H3‘*Ô‚O?“!QëlM²2ÎI·¨oÒYH²ù6ßÿÒ’Cz•îZ´;õ:§®ø²*]Eä£s|õ{µW}Sºmú;æ"{úùdïôo`¾‰À*	ùÛíÖÎœfŞ
+n€¿Ğ?˜‡ó=Œ #pnˆP€!r+¤ÅŸ~&wÂ‡€ÅB$°j¾ÿùHvš¡µ1¦y¨Ó.İÓèWS§+#]Rá7¹ßÒÏ´èÓÂNÖúäÍSßHè›-øCí¾Ÿ8' åß¶m\û·`0
+‰ ôí?ä‡º&(‹_÷`Î÷DZ(HL±¬iÇ˜fQ»KÊzE»Ì&Õ2ıïtÉLóYªú#´£s¹¿º²ŞåÛ’4íi—¨¢3:¿òè şF»H–ğ!@ıM&¡¦§ÿì“¨)	ıÌq7‚EòÜ÷‘§É},+ŞYíË¾#ÒGy'èCdú4Åá;²ÛÈÊÜÿc")%*j¾şŞ•×z•ÛUe®Â*WÖRxe©47”U±ºNWïkEµ7ŸÔ„¿óC(Q ø÷ÖõkhXü›éÏQlŸCï—÷B CÀOæ‚FÀ7¥öÍÏõg¥ùÔÇY©å{N“-öÉIä“ª}ˆFøÜRh"!¡‰äôA@÷sı÷-§MÊ…Óë›\h—Ø´TDÁx¼>@‚šz	 cE­WY‚ÓäTQKßô»/æ#ËĞ1½‹ªCK«ÒÖ´Éµ¨…¼uE½›» ilÈ6„Şmú4E‘$b@Ú/¿->	å¢„ä‘«5ikN—Z§ï£¿7ı_}7&X"2OÇ<”w¡²„ï]¥wœB±¯ğıNïjÓ –û+Æê^# ^Ùº¡è`ê4ôRŠ2'˜‡ó=ß@S„©ÖÙ•ivún™eQMäJFA'è<˜v´¸ÓâBDÀ—©QªÉ…Î‡‰,9 Ÿ‰ —QĞ'‰ƒ'<8pœBJøB:ááh,tr‚Ô‘HsVªÏfƒŒ9I:´´¨Ÿ‰¨S@z_É~ÃjñÙrĞ¢Şdó+0ùl9|„€ˆ;iˆ°ÓûK‘«ë¥Ò$¡¯ª•(.÷¢¤ÂËQ#×ÁnH¼±mãš[ƒyDH+EïOò‡ ¾ŒRL%øß®œrÌÓ’“¡©¹‹Ñ¢N‹<M4‘Ğ„AY©AhÒŠ,Æi§A€HÂî£¾ÄOUµ:Ÿôbë_ÚgFÀèx…ŞÏŞííÈiŒï@iI-³-J«Ö"ËGÜi÷ŸBÚ=ÒôÑûIš½&ãĞå>-½ËDÜÉããdÖî…g\ˆ··m(¢¤zKHC“	@Àx«h!§hpmr,h×Â‚ö-¬jo×Â·[ @ªAR²œ&M4-2A6¹š.ñ`Ça7Ûğà	dWCîš=ÛÛÔ;›ŸK9[[‘™¢¡s›Óµ…í±qQ:İt¤ +7P:6 ­ r	=tÒ£B?¡§ÿ³Š@ÔÀĞÇ ñcˆ¯Çô´úñ~}z2ùY•Š°[[+Ú·ğM¤Ê§³@šL9Ç‹w¼‚m©!i§A;ŒÍûÜê¨€È š9RêUjJFÀè¼½e–†öyVd¦ùòÀÓŸ´tôÎ`	²""@ï+iøˆìQ)İ½ØyØ£Ş_",Í!%ĞgÀ_I!î(YËéÁEyËÏ³ g;Úæùınù6¥Ò'‹m–È!@vdtHÑå÷(ÁCnì8ìQ»2XdaÎD€öîm­ê}ÔÕşå{K;–È"@&ärJ¤`×²% M‘ "ğ"š“À}£\âõíŠn¦wBÒ1÷0äg‚Â wæáñr ‘J¿[c7š@èw
+õJêÂvyœ.Ú}MÎNx°í€[E¡Û²ß­~gWÄh÷LôŸOõ­r4ôí`ÇĞvôjoC+:Ëã]~4{‡{Ò‰?|Ò£²ÂV×Iì>êş2ª$»¤ŠãBâ¹­‹¦¯B" ”PB< o0å{È°‡Tƒ]Z[Ñ:×·ËïÓÁ¦vù¤.d1/¤r$@†ƒ;¸±ı oBaI,È“¦CßN@W;†t³£Ÿå›zÑïÖƒnå´ãG½·ûùŞ_òJH4{$ğä¶k($Àè5¨`Œò1 üä¾Üìv±cT_úv´¡C+ß.Ÿ%¶ ¯šH–oubÑ'¶t©K|#Ğ´ğèbÇˆ^vôt(ƒ\–ØB€—x±å€ó‹°v·ë1b«EAÕv ÿ°mÃÚ·ƒ¹;$ĞsÀ€Îšfû¸*˜‡ÇÚ=äú“—aQÿäQÉŞ‹Ò4³Ä:D6ïwãÓu”Ö¥lXâZèIÍA?Fôr(7=–ØG h‡óŠê±ì|¹¿tı–5×ù©nÁı;Ö®İØÜ•gûh gÏt-)õQ@Bf0ˆ¥{ÈßwÊ)¸aL
+Úò?l]GaGİjë=HrXj¼F…vŸmtâÍ…µê¼±)ÙMØÊEÚõ“ÿåC“påğd´oiüør©PÙ^eÈ––bUùXÂ‡ iïÖîvâ™ÕŠ$€}@• ^õ6ÔüzÇÕÁ òì5pèåò@Œ
+¦±rùäîïÀS3Xİb§58½(-w)+ıªZ7jj<¨kğÂã‘(­p!=ÍŠV¹Øí8ìšú!h‘y-ú´›xû³Ze#À¶!v¶	n§Ådo;®‚á=ÊN'ÒRUãFu­Õ58]:œ./jë¼¨®ó@×%ò²íHI¶~9¾SS¬ÈÉ´«ßY‚G€">?§3¾¨SqAâ\ÖBà±më×Ì¶!€={¦‹äÔ„whlEÌ|©ş{··áçS30¢wä!3clİhÒ£	°¤Ì‰}‡k±û@-\./–4(2p¦g-úi©V¤§ÚĞ¦eúõÈ@^–­[$A‹`x5"OxñÉšz¼÷yçª¶ÓMpiíw³ã‡W¦Îü#)´³/>Ñ€Ò
+'©S?Óø®®q£¦Ö£íœ.)É¥	Pä6×ÒĞ®u2r²HM±ÀÁ1I¢]ööCn<ñNŠvºâ8¥,—Àë:ïÜ°üH°˜‡L èÁ=ôLKÂRˆë].=ß«-¿L°u3Í}¥ïêÑ)xàÚÓÔ)V*¢âü×yQ\Ò€]ûk°ygö¬	ªú4Qöèœó†ä E¶Ù™68ì¿“úPŠğşÒ:¼»¤ÇÊĞÄ8PÀLv=…×82·\–ŠN­#£ò§EŸvøå•.5Æ‹6•cÇ¾jµóT’“,èŸ‚¾İ2Ğ©]
+òrÈL³Âfc­@ X¾¶ ¯Î¯; uT—r®í¥ŠVŠÍé×‡… PË^?xÁúÚGvq<á¥Uñã–Ñ»ƒß”‰Aİ"»ƒ¥#Íxo]½G×c×¾lÜQ‰½‡jÃRÍ&"0 g:¶MEË<‡J°	¡eo/®M(My	"ñ.3¼oÿØAü¤0İÛFÆ-W¥Ì­ö`ÓJlİ]5›ËÃÒˆ¤$Zæ8ĞµC*ú÷Ì@—öi m‹ÿì;æÁÃ¯T`í®ojı/Å<WR(j:ºÊJÕJ!_ŞuÔùÜÎ‚Şù7µ,,³¦”Ó4¬YSXU'uô¤gØ’Møb‹S%i¡ğ±¤…ÎŸ¾+Û³Có¹ĞjBg ·WâóÕ¥Jå	¡ãÓ1ntK´k“1°ç¨û 
+K6:ãX¥‰Š^™ı;ÛğëïdFLíïõJ;éÛñÏYt,bíØ6£†äb`ïLe#Àâ/à7¯T`ñ††˜@?•£ø=ÙÛ±zx/û1tèL!¦…lä°l\ìû ù#J‚E1×–x°n·+¶’µ'«b“ĞNâ’!IxòGÙş¼¿ŠÎú«j<X¶¶‹W– ¢*ò.uƒûdaô°<tiŸ
+R£’ı@8…ÂoØãÆÓTÅÍ"œø˜­,Š¾y×Ué¸dPÒ"9ÓíÑ•6kñò¬ÙRñæ'94\P‡KFµDv†-¢ö/oŒø×ìj¼¹¨6&³ÒÂOGÏ”ljHw;.š¬"Ë(Äó°{Ÿæ„¬r
+ËT)WÈG!pÉ™ıK–˜Ë¶4`ÁÚ•à¡¤Ò—2V„ÂŞvEn›+UZ=ib<VâÄòu¥jgdÄâßÔXÒ^ÒCûf+ÃÁp“ Êh¶|›¿x¡\Å+g1'é)~y}†r÷÷âï;ï÷bÏÁZ¼óÑaeäg”	Ö?£‡ç)"º,ßÀ§ë”K åˆ¡…?7Ã‚­,İ/	ã
+’T–Ø¯‰Ä§€xD›ùE¨í
+™ È¢;lĞ}RŞ‰îçªlÚçÆ‡Ëë°f§5ºŠólvéÓÑ†_\—ÁAšé(ráÛw¤v›vTE¥[›HÀ ŞYÈH³†}§D.ÿø°Z¹±˜ñÃ“qï”tt³Ÿ?-şdÉ¿~[,;aèâß„´Ã¡¡C›¥Ò7‹]›‚” ìw¯U`ÕóÛP6Ø¼LMe†42Ny°œUvAˆ§ ·ş(x!$v0¹+ ÿRN…@rsÓ‚ÓEÉ<˜»º^}ÊªtS\!¢GoÉTYüXÎ ©ı÷®ÃìEÅÊÊ?šB$àâóZ¨sÓì{X5¤Xµİ…Ÿ=WSZ¬hö‡‘Ï¦Iôá›31® äN©oğbÕ†r¼>ó`8‹ª¬nÓ0~L+ôîš1»— *f²›J«tüê?åø|³Ód5ûª:”–²ÃöëdÃw.NCA;(Ôü·ŠD=„˜h¿3ö„Ò¸ß¹zB!4í7HEÈ×zã^7^ú¸öR–'İ”‘›Fövà/wd#/ƒ]qÎÕ¿'Ë]xŞ¥ö7ƒ	˜|i>
+úg‡İzš	=ı~5f.g-€úúô:ïeÇooÎ
+{B:ÚÚ¹¯Æpµÿ¹ğ¥`Aızfàòó[Œ#Ãl}H}HËüë—*°xcƒéÒÓÂŸâĞ”ªÿ¦KS1v`’2öó[VC×/†Í™é÷=g¹0$ ww Òò €Ÿœ2LhLEÊkt|´ÒpåP‰Çt;«óú8ğ×;²Kcù&´3"•èg«N¢ª:$mTXá¥`A×]Ù½º¦‡u—DZ€Õ;]øñÓeìÖ­0›U`Ú÷2•±T8wÿdíOñ+Şœ}(*jÿo#t0ñâ6†DÈ­w¢w÷ï_¯ÄŒeu Ãt³Õ®ùV\ÔßëÆ¤™ˆJx™Ş'D÷¹A«8B# ëÃ#ÿà²PÀ¥Iuß1/f¯¨SV›f1$C²±ƒ’ğ»sBi^ÜŞK;£yK+k²ü7›tï”†«.ÍG×©aªFî­¿~©«càlÑl}©úÛßã?ÈVVÓá:÷§8³c­ÖşÖ›4#çbêø¶°s° ³Â÷ÌŒ*¼ıY:j6ƒ$Û…ŠLIGU[…<V?UüRš¹.Ø¶M ¤„@Ñ¤›!ğK }ƒ­Àé÷ÕÔë˜ñE=ş>£uú7Bg†ã”Auåˆd<vkV ·%Äµtî_´©s—Ã‘cõ¦m3¹NÛíÛ¤„Í Î)±`m=úwä]ÀL¬É*vyA2¼.msÃg_YíÆ¢•%ø(‚~ş¡Â˜›mÇ%çµÄØ‘-8¹ĞYÀ4 ¨ÎI.JU^e¹á9RŞ‰?£`Öÿ„@P*à	ÀºÉYĞ½@â as’÷xíİøÅ‹å8pÂÕ³& ç«Wg¢Û÷•„*ÔyÏïûÉà’Q-pş<de„Ç“4VaìûO•B7ÇÆÂo<âõÂ?ÜVõ?Ü5›+ğâÛûLÙL¹,}ºs¨ò3;Ë, CKî¿6£û'Ö•0I9^…fyTÔn$èšÈ¢‰ âO .Sc¾,†Ò8R:Çû+SÑIapvÔ©?f-,Æg«J‚Šynt_6ÙP2¡p	¹>ğ|™
+Ä]hwõŞ#-Ğ³}xµfïÁZ¼?ÿˆ2ş3»ØíFÌÁÍWu›–Ëìmö·~f  äÛO†äc$5oáïoÃ¾ºn) ÿOÌ^ø­>i\3éGø9€nÁ<¸¹{ˆì>âÁ]Ï”F-¡€³÷Òö½ÕÊêŸ\ÿbE®¸¨.>¯%²ÒÃ³HPˆëçfUãŸF&Ìq¬àj†zR¤Î_İ˜¤1Õ7[àtêøbM)ŞšsÈÍó«Dr'ŒiƒØ^étÀ¢M h‡ı·»²qaÿ$›jd7ş*†Îz>˜²ƒª‘\QØ
+ıOb*€´`ìÏ=>àÆ”i%ş\ök˜ œRò…^±®LeA‹IO³â†‰í1¬xN«ê]>;€_¾”æ-V`‹‰zşìêt\?&5l¹:¶îªÂ;sãèqã"ı…
+4iõÎÄuW¶WA°X|D› P™.şÔÄH9^íÿÄÈ™Çí÷àÀÊIÃ"ÿ!†ƒŒ#(A’:« ÑÂà›ˆ“¯?YE50j¸úı‚‚\Œİ
+­ò’B.Òí•X·Ë[Ÿ8rY\@hÜwuºr§¢li¡Š2ü[Q‚¹Ÿ‹ÚÑc°mÈÍ²«|—ß2Ø"âî¾h€A]mø×½¹ÈÃ¸<gÇñŸ”«à¿#f-´ƒZ¼eÑ¤{ Ü S ôz]»{0eÚ‰@oùzG¹ŞÃjµ&0Ÿ{}/6l«¥B5ÉL·)—©áCïO2V¥dW·üÅü€Î Éåˆ‚PÚä§&¦ÖÙV´Éñ-˜Åe¤Éñõ'…ë^·Ç…Ã%lŞçi:Ì./Ü—
+D‰»BŠdùŞ¼#¦öl9WIĞ»[ºr}m×ªÙ ¬¡B÷?ö¿J|Hq œÆcÚı˜[„R•ŸÖû<%
+f=h§üÆÈUW¶†°<) ÉãrK<ôŸ
+Ì+ª7œ•S>ûÓĞŒ@;ÆŒ×“¿ÿ¼Ï£´Üü±µÏ†ÅuèÑ9/n­Ò‡*{0şWÆSêMÁF(…è„É˜r~
+(ò˜İ&”ºÎj,B@kÜ0ŸîÉ@š"7^]¢¸Ô‹ÍûİX¸®^?ª©7~õ§­ÿy W…P¥6‡"'Jødéq|^DŞælksí££®ó‡äâêqm›»4!şO¹ >\^zƒ	 …£&÷ñ´äĞÆ¤ŸT‰ ½Šá”›:àÚÉ5“.ğ8$
+‚¡ŸS—Ñ»¸dSîy¦ÌğpÁ	ğ«úÇk{T¬ÿX©%t>J“#å
+U—{q×3eØzÀ< ´ÈwmcÅÄÉ(•‚d‡@Š#à×\AC68äòHÇpK77àÍEuª­ÆÛLòáïZ¢[[kÈg‘·WâƒùGUğŸX"¹Ú¦à{WwD[Öà¾çÊ1ñÇßÜ”‰ë.J	kÒo“**€‡ÄĞÀdÑÄŸ‚Ôÿ|Ih~w±Ú)œÀ‡6¹C½5ûÈÿ?–…&H:'½|t«=NTxqï³æq¤T¸”>ô®Ât¤%iHãîƒŞ?Òx|¾É‰éK|a»Í ”Aíµ‡òĞ1Ùÿ–¬:©BşRøßX–¼l
+/mƒ‘ì ŞÏOÖoÌùÁ´èŞÎ&Æ²Ã    IDATrQ5H ò)Q0ûï</ êÉµã[@ZŸ„TêÿˆYÿŸ­tä|ÓŸJT!#µsœĞ×|rKWŸDu­9&ş@ù™×¶kŒÂKÚ`PŸĞ"<š‰ ´È²àêóSpó¥©áŠ2öˆI#@:g-¯ÇkjU ®hK«l^ıEnÈéw¨ÁœEÇ°eWt³Y†O
+<¸on¿6â&Zá¨nÄÊ d@­“´ÇFKÑ?Û %Ì)›iC>€ğ< †ÌõÛm.0°ªğBhò	Q )C7¹°Wœ^…W?©1T0¨«|/=Û…Ç<À&›æò§_Ùm{ªcZıßf:e¼,£‡å…„/¥öß
+|ºÎø	æôŠ“õ;…¬¾»0İ¤U”¹“H Å@Ø<º$ OG¾+'äÀË×•©ØäëBZ.
+}}ûÔÈo™¸Æ€{‹=xôµ
+Csvöd7öôO²Rÿû†«:¤,‚.Ãg.ñwF Š
+HÊş×Ùß„óºw—Ô²;¹<Æ©è(kÓO'§ã²¡‰û"ÑîèõÅôÙèéãÒ§^|^åHÁJYµ²2&ãÔh	å¿dp~>5´6J•xñÊ¼Ì]]ÚiEKt±á©;sB€’2§2n]ÃÆgâOãúŠ[©ã®D•¢N<ñN•òl1JHåÿıñiøé”exk°ìÄ¢`æsş>×o —¦Ã!ÿ
+!¯D¦¿çu_liÀİÏ”j„Ô©•?”Iç%. À?«6”ƒRÿÆ‹tÈOV©TõşÀ``W;î’²U1RÈgÏQ7|·
+K74ä*‡ƒ f‹b[PÚßxÊ8°w&~x}Töj¦€qÅ6§Ÿ[öH 4àá›21õÂÔ/½lŒCVBŠ·á?Ìô+I‹ÿ hâíH9€q[ÓĞÛwÌƒk-QVÉF	İ0&?)İmÌ¨:‡ó9ÇO6àßïìÇÁ£u†»`†³g–e³j3"O«ˆ6 ÿcRğ½ËÒ”µ¿ÑB$àƒ¥uxe~èİŒ†„ƒ Pà²şopÆÁ%U4Ùºüğ†Îh†ÀWÑèÛPŸ9¿¨ÿœY]GŒ›´ëçáèÕŞ¼^±R¿GÌ^ë~~Ïrí¤ïŠşò ºúSp$®qº$Fİ{ÌĞà$Yi®¾ E©XQ¶î®Â›³áøÉèíò"…{Aÿl•*8Xw©h€Ñıxpj¦r‹–<áÁ_ß©Â‚(ÙA„J HıOQÿHıoBÄvüE­ÕqW"Ê›‹jñò¼ZÔÊ(¡ [ı¡ÚæY¢A ( ×hâQ1dÖkş´Ù/ ¥X;éqHq;€Ğ,§ü©Õ·\sıïK°å€Û°4¬dÉ9ax2½%xUqˆMêí¾8¡ÎGãÁ8êL ûtËÀÄ±­Ñ­Sp-%•^<øB9Vm7>0íşoº$·\–r œPÅ	x~NŞXX[ J³úâı¹hß"8Dn­dı¿fsy(0˜ò^:Ğ;w$è1 íşß^\‹“•ÆÙ¨XùL›¨häáIù†ÌzHÑ¬ªÜ?°öêĞİ/ x«©0¼&wü¿RĞÙQñ H¥sÑ€ÄüÒ»û±nKEL%şñw˜åfÛ1al\04¸ @Ñt$ï:–º Ÿ±gÿgÃ–Œ­şñauÔˆP(n€tş?ga1vÆÑùSQØç]Òqï­IØêïkµëÈ@wæò:Ô64»†¥d Ø½ï?Ò2J»Õ2xøšív1äıÍ5Ì?°²p,òI =›+0ÒÿüÍJ¼µ¸ÎPO€á½xæ®¤§øW¤!0´ü¿¼°{RÂ)CkÈÃR’-êà²ó[õ¼ce^Üşd)öGáüû²¡IJıß®ETÌq¾†!2¶"×@£%Ô8 ”öwæ§Å(¯4^‹i¬È€·î¼©ZæDŸ(Fº½g–OQ )c'Å¯0Bh³xyA2şú£ì£R†XßğŠÄˆ™sš+Ç¯M®.ü„¼@~sFúÿ/Ì®Æs³kõ Kë?Ş…Î­ƒS3F“H•O†/¾½dB;¤‹F´À•cZƒb*GK½¸ùñ“ "`´\;:n”BÿF[È-÷Åjğ¿µ¨¬5h¶ml4eì|÷‘A¿›/9™ÂãÑÿÎ5²2(V;4ØÑkş>ŸòVÜ÷\¾Øbœí’ÅL•‚ßİšmpR<-†ÍüKsx5;{Èã3`³ş“şw¶Ê\T_¿Tahr²èüÕw2PĞ#±Xôòµ¥˜ñÉQ”WçFÓÜ€÷ÿû÷$;€6èÜ>ğ¼V‡OzqÕoO:©ı-2-¸åòTÜ~Ep¶áÆÊ£x /Ì©ÁCÆ•7~•‡şíû]—U¸0gñ1|¾Úüƒí³ä$‹:âšze»`‹ˆÉûÈõbÆlØkœf‡’QQÌŠe¡¨€3àöÜ%FÎıÖĞ–Í€UW‚Åò$†DËıït0É¥ƒB™™ŒvşÔ±ã†%V,€¹ŸÇ‚/ÇEøßs½m[%áÊ1m‚Ú!Q<üqŸÎÿ)6y˜EhÂ%;€Ï6¯-
+6à5˜'áÏ5hQêİ-w7jÎ[Q¢Ë¶8ñ×éUØn !¥tÔ¿»%S%áŠ²x!°^ïbøGë¿­.Í€¢IßÀ aŠÀÒ¤vü ãTgı¦‹SpÇ„ÄŠğò»û±6N ›^
+JŸJ®R—1RèÒäríïü»¶9RŞwMzÈñïÃV! dğ·÷«1ã‹ºpëWYûI6.ìŸŠŠˆlÚQ©< öªä¶˜ºV…ÎOÁo~Ò+¦êje)Ğ33ª°û¨q.€›ÀKäbpw{¨Õı~ıøµ(˜õFh`Í¤ßCâGÑvÿkjíü§L;"F¦Q¬õ«F%ã¡¢ 1ôÁd	?¿û×ÅEüÿsA`µ
+\qak•(!/”u»]¸å/Æ«¯“Š‡®Ï€#À/öz-¥ş÷Ü¼öI-ªêŒ#çTÏ?~?—M8í1ùşÏY\ŒÒrãÔÄâëórøùº#'ÓS8äGo-ªÅK×€éŒ²Gùì©ÖHcÎê~Ï‹¡³~4ŸOÈF’xÀe")„Ê„õÖïıù$Öïqæ
+˜š$0~x2~—@± (*ÚŸşµÅ'ŒWé†u°øQÅK¿úò|Ølşï¦oùV'~ò÷2?¾Kr34Ü6.ÍTçÿM­£İÿÕîñëïd*‚–ìÿQ?Z|sƒbÄ³dgÚñ£;£Kv.±ŠËÓ«T”J#óTP4Î5Ï¶‘ˆ¾RÒÄı	ä-bôœs¹øV™\=q8„ ÿÿ>”o(b•°àŸü½_lvÁmå.wİ/	ÿüiN€5İË•4à¯íÁ‰Rã¬h£…ÖEÃó0ù²¶HMñß¥|‹g¯¨Ã£¯UZíîmmøá•i˜8Ò|ö(×7àùÙÕ†&_!ğ	[/O8â‡ª#€xò¸õš ÀW‰"ÿ÷ŸrÌ+j0,l<Å èÔÚŠÙ¿7Mò%bµ[!åíbØìUçê÷o' E…· ø= MeBJ)g|Qo¨+ ^=sw6r3ü_$bùe£ )ÿ}ÿ J+â[=J}4jH®JL¥¿B)q§V‡¿¾klşx‡wNJSgŞf“Mû\xvfá†€ß›Š;'¥ƒòv"‰B ($ğÛah¿ÄqüÙ³e BjTÀ8r)¾tHºÓL‹Ã ~#
+f’ÿ¬Ò˜ô8l ¦Úú¾¹°O½WeX„'B®w»-}:ø¿H2™íÚu[+ğÖìC(¯4Ş­Ëh,ÈGúªËò
+–Bşîÿı¤ÏÍò+éVØštÅ°då‘B»³Éñr¯òxïscÉ÷úg×¤£e–ÿäœÔşäÿOa®ã](ÆÅ5W´UD7„rtP€Õ;ŒÛ¼ …æ~ğ:SiYè|òEQ0ë¡€	€Ü^˜ù&¤¼ÄLçÿÔEğĞ¿+@»0£¤k¾Uß×<®W‘l{"€!}³Pxiä·ô_­^Z¥ãoïUá½¥Æ.v7]œŠû¯Íˆf¬ñs»z—ÄKskTv@£Â¯*N_ı^–JÀâ¯Pn‹YŸcIÇ hÂ"-Åª"^’­K"Ù‡QàmÛ¼Êı×dàæK'±>!; !>Eš¸Qô:{zàsj äêÂÁĞô×!ù˜æüŸÀÚvÈÛŸ(54êí.¾{iª‚<Dl¼œ^ğŠõexÿã#¨¨6î%2¤agyštqtjçÿËKnox£
+Ÿ¬1.ümŠC¨ñG1 Ì*ï~^§ì h}İ-ßŠ¿ßƒN­ü×Š—4`ÖÂbmŒ¿$@gÔd.» •Šx™²`mşö~öçHïæŸ˜K›êhNBÈíĞµ›Ä°™ëÎÖ÷ßB &İO@¢­ÙYvNüÍ	ªÇ(IOÑ0id²
+¿š2oÉqÌ[z5µÆ½DÑÂµw·tLÛ& ¬€Åe^üòÅrí4NÍØ¡¥wLHSé©Í*sWÕã_³ÍÁNù (P—6ş€Gê0{Q16l3Öˆ3ı–äĞ0rP.¾SØ>7ü™”\R$¡ä)öê/òĞ§£Éˆ@ÇƒbØ¬7# k
+§Aê÷ ÂTçÿM(|øöó–˜:˜Î_»51Ò0ÿ(>[U‚ºzãühŸ)Ø­c&Œi¾=ü?¿;xÂƒ[şR
+:÷6J('ÅÓTvJ³ÊÆ½.<7ËXC@ŠÓñÚCy M€¿’H€Òì‰&HZ`²#;”rƒ7ˆÿ±eÀ(ş×à¯“eÚ3bèÌi~ ¹eª¯Ab" Sn7îùg>ßè4,+ ÍŒìãÀßïÊE|Šwağí=|à¸7şñ¤¡~Æc&á®Âtôíd²]ÆiP+÷*ÃHò0R^ùE.†ts€\vı& ş ›×üôŸeøl£Ó°øm‘òs,~2¸¬¢F¹³‘”ô]Ñwú7Ô•g]ÉäÚ«;Âë™Èşğó•Šp3Î(ş7/Wà£Uõ†ùyÒãÉàé»rĞ. c#cQ	ßÓè|táòÔÖÅÿ@  Š@Ia€¯yÔØ0À¤"@©f•:§Ä³3«U6#å±[3qÅ°¦Î9|¬³«P×ñ.»¦\ )@"È­O”bÕvãâ—éÒİWÌ3¼^@l‚Å:YyÿÀ™<;(šx¹
+ dÂóÿ¦¼üq›]mlR 6VüöæLŒèÿ ‹–—`öâbT×Ä?èÑ9MeìÕÕ?ãº—Äç›œ¸÷Yc£ ’êO§dø½ÈEk6úÏÜüsfµ¡äüá›3Up¤t?£–”9•àŠuÆöa4ú„2–‡k¯09WØá µÿİÿ(SaºÒ“]AS
+ÙP@ ‚Ùóı# «ï†˜%şÿÙ@%ã“ïVw¼MwNLÇÔ‹Ly*Ö±G)R?\PŒªö8XŠğÎâZü¿÷‹@“Ì&¦©ñgv¡ÀÏÎªÆáãì#È6âæKÓ“î_0 ²J—rübM©Ùá¹~)IŒÙBÅºˆwY²©yÛX rüŞe©øÙÕşÛÜ'!Å£bØÌøG Š&ı·BÀ´³Íæı.üøé2?¶QB®€·KÅ-—G=ßsÄ›¼qG%Şøğh¢ŒwØ+“.iƒùş;Úe¼úI^˜cœš»CKùœ|¾uŒfŸÑÑé†E:?»&DÒı2nùéQuÌï’Hq æÕ«¬”d£c”¤'üş¶,\6Ôÿ8"FÕM=G¢¯ˆ‚Y?m– (Àº†Y¸€iuİ'«t\ûh‰JCj”Ğù"¥b¥ÎwÙw¸/¾½'ËâŸ Œ”ƒ«.ÍG^¶ÙÒÈğoTâÓuÆ%JĞÅç@†€f
+Äò¯YÕX²É¸sØí­xòG9~»&Hµªl—cF´0ûĞ	¹~´ø¿»¤ÖPqòByá¾ôïìßür#/À	‰Ï’4éLCÀoØ È»Ã‚!Dg³ :³İ~}û{Kl³
+ŒìmÇ?ïÉõÛÚ8ğ¾2Ç‰D MD©¨ùo¾ØlÜwéà$ïŞt~Æg®ÇÊ¼x~N5Ş^lœ'@Ë,Ïß—‹íüóhh @1,;a.‚µH¤\ tş¿t“qŞaÔmÙéf<Ú-ÌEÁ.?³h	)÷AÓÆ‰¡3wŸşÏo€Õ¯„/0}ÜÈ_(W»02Ê2Jz´³áÙŸæ ?×?U£Qõ
+÷s­ÃóoîKÅ»ĞÎhÊåù c)dÏQn}â¤¡ÇOW$ãÇ…i l€f
+üÂœj¼ø‘qG$9şyOúw²CóÏ@Ù P:`İ¸é#*]Gà¦«ÚcPïøÖ\z½ÀwSÅ4¹ R€®¹4ırynCfÍıvP4ñ§§"ÿRĞ€ÿÏŞ—ÀGUí?göì+IØ÷}'aTpC!‰h«V­µj[ÿ¶ÚöÓÖªµŠ­­mm­Ú¯{¥úYë^ î¢,
+$l
+Ê*K€ìëd’Ìzş¼g2“ÌÜ™;ó¾¿_HBîÜsÎsÎ½ç=ïò¼ÑTÖè´óù»—›A¬OZòİèÃ7§cÊ°¨5÷„dí76»ñØS{PY«™;$ïÆM.=/WÎ,BÚç>ŞïÂu¿ªíFKİÿ•»ınq
+’Ksë~K¡ù$¥«VÕØ¨×Ş†Ó`& şIp´jçFºÁİ%3İ‚ÿwİ`ê8Õup-DÇÕÄüG ZÖ H°
+|åÜDÜwm”f |15Ç‚‰‚åOv¡ =àf QéöŸ÷øãR»¦5ˆğêGUÑ‡0<Ív7z/Tµiæb	Ã0º¼¥Ñ(@
+ Å "->¼°Ê¿î´r=Qş?Ñ ëEVlhS•µÆºïºTÏLDjb`& Ê  :àº†Øsé•iÅİß²Ä²¼³¹¾lGyµv€Tàks“ğ£«¢6 cÊÉ·X”üàŒ
+€\´È€ÂM% .Œæ ÀĞIìûÿÛ i `"æÛğË›£Ş@ÒãgıéÿÄæíhwj—iÑãNyƒ~y	Š8|`óIõ'{WÛ2Àä÷ÿnQ
+.ˆ®B#gEzõÇNÅğÉ~í6×+f%â{—§ìûpsV¬ªŒi7™¨ûæ&à;Fùdèïò'—ØñâM)€Ó“øùi¸(Z3 ¾˜Fòå¾‹åùEbÑ¢/ô“ì‰r}q.L¾Õ€ 05:‚ë¤ºÁ‹ë]«iÑ:MeÁß~˜ƒ>¬±İ¡ÿ[reŸ4¢İ»&Òş½U©T*	ˆ”×PÀ&¬şX;×È¸AfÜVœ‚¹:È èÀˆX(`†’ÄÔùÈ-é 8@d÷şåølŸvÖœ@úÊkŒ8š?Æ%Öå»OÖãÃÚ öJ7â…Ÿfœ~Á9ğr/<†óÄŒeUı8YØP8F±,š	€Nğ›¿­Åæ½.M}TuìŸwf!/ÀœãNzš^½±VÑ¥ÆrIàI£ÓPxAà »ÊİøÎãu¨iÔÎ*BÀDh„{&=D¦TÉ®lÁó«!ºc×·ÉNód|»’Ú'V¼_‰ue±KD
+ ¹.Œq ¢ç¾æál? -q) /ŞŸ¼ŒÀˆ»Z“aş{-¼²XL_şÑé€MÅ×òÑ Ø1€»ÿÑ€w7·£MÃL€ş½ŒxôÖLˆŞ¼Ï¬£Gxê¥¨ªİL€fæ¨izQ"ävúÚÃÚ Şri2¾³ )‰ìjBƒkìmD×ı·åvhdÿÓëÓTÙî@â ˆ`åû•xkí‰‘ÈhÛDFš_+ìÉc³piÛ»ĞµFU9o}¼»k« P6Ø;¿Ê"@_W wˆüeÏ^(+¾wÑË xê¨}Ç¡Lœ¥•d§TNöuÄvT-e<q<P+lµn‡Ìÿ Ö7ûğŸUÅr§¥üÏWRUà©ŞäõÒ6<ñßfªÖÎ…Œ@x~´¥NÕˆUÂ«¼lî¼y8ÒÓs‹èmuôwÕÖv<ò|×j·Öˆî«ç%á'×D} `Lv@üV,{øô
+@iáSâZ QÊiøååI¬cwı­uÚM<E~^R`Ã¯â 0–ã ú÷NÀ‚¹½öÿí4™´µT úõ2â…)(šıÀ§>o”-«¶
+ ¥derß +vÆz  >øıØ ¤Œ“çßshz$À[$ã›ót£œSJ×óbêò[Î`(z÷X¤à¹ t£.’¯ñ¦GëpHÃÔ
+œ:Ò¢â b]>ØP£Ì¤ÍÚšÖ´Àuäà h@ZcThä½­Ú dV)€z  >uÎ(ğ/%v¬Õ0ârşp[&	Œ§ƒâ V~P‰µ¥±”`RU ¯œ€uøğS\níNTxêşë©µnÎËô_#
+J(ËOÉ	§¢üìŠ,8<ı  ¯âŸUkZx„Ú¦“½hÆìE£Å†6ö—;@é€ÕÚmzáÇéî9iLºR Xˆ¬M7ş¦n¯v/b üNa2Fõ×N~j¢L&B âëĞJ(3‡âs.˜dUPìJ(àõ*ñæšØ‹ ¼ÿùsòT%ÀX—¯<T£)áI…§ùI6úhmŠøøù;€$Ó41z‰Òx¿P J‹'CÈw dF¼£AvàGoÀª-Ú’öwûå)Š"–¥¡É?=»‡*´ãu×
+ÏÂ¹½•@d@]	ùÿ)ÇXK êÓ·.KÆ-—%ƒÌz{+UMÔÖeBİ{m*.?'0B Š_¿µNÕˆ5B >96Ü~ÃPdgFmM·,é5Ÿ´ã¡g›@
+§–Ò¿—Ÿ8Pêi-ûv–¶ê!ÅEbê²-'+ eE<@7ƒ|æ­Å;N$-Z	ÅÌ+ˆ}B ŸOâß¯Š9>€¾y	("ÿÿ¸À¢£TzğûWš5­ Hk™ÆÈÇ¨GÎ	Ú\)à¯6kœ5y˜E™f‰ ¡ºäæÚ¼£1ËuqÕbP±-7^9=. P&Â)"çjÔ0œ IÉ¤u¦3ip£((YzŠ j ü
+€î´e»¸oq#×h§R@şp3ÿ([gó|wwí·ãùeå8Cn€™S21ÿü<äfV^—Òÿîúkƒ¦¤S#û›ñı…)˜;)°>?³áÿÄºNC›–Œ€¹FüîÖäÌ=çhõàÍ5ÕxcueøÑ¨…¬®¼¤/¦NŒáR£n…¥™Û¬ÇGŸ:5õÿçÄİW§¡p†nüÿØ; y_GM€/\ eEø2 :FDE ˆœe…vĞD4B9 ¼=S—şÙ`Ä†&}ívî³ÃãÑÎÿLƒ¹63Í‚äáœÉY™ÿéŞ¥»œ¸ù÷u ŠcZÉ¬±VÜV”‚)ndZõ+˜vÊk<Xüf^\¥Éh î¹6p> ²TlØV¥oE}£vÔÅÁàìµız'à¶ë†€ê Äº,|°{¸5­YB1`ÿøŸ,Ì5éŞ6 %?>ÙPZø„¸@`js›*ıäŸx[;ÚœÚmPéÉüğÊ\}¾îŒ&AÍ×+ñş†¼½¶õMúAN¦øÿõlŞÈµôò<±DÛüÿùÓT @©mƒšT.nnõ×NĞ:vââ|îX˜Ša}{ASÕË7VWáÃMúÏHJ4aÖ”,EÿH|‹FK!,Í¬ÿÌ‰ûjDeƒ†šù1_ùà<^ûy/˜ˆ
+ËÀ»S¤\"¦.ÿÚÉ
+@Yá@Ì ØÓı„å“ÿz³E1Õ6k`¸lZ¾)0?rX®ÑM+kÚñ¯Wbÿaí"ºÃ5´yçæâ’ss‘’ØR'óÿÏşÕˆ=G´³0ÑØ‰ü‡Ê g¤è/ °cî¨|òkµâ×/4ÁŞªrN‘Ù¿¼9SGv¦l€wÖU«ê€z—œ,«¢ş-°À•Çûç;}Û¡iEX*É½`z¢*?­Cñ r½(XNéşş, ¹ãªd´µo?V.p@çÌ =nãN'x¦I[> #@GOßûq døOI9J?¦ê€ÚjÛ¡\‡]taL“PpTK›TÚöWÏ7Ã­¡ûƒòÙÉºD/2iëYŞİÒß¾Ø*¤¤•˜Àİ×¤¡xfR(LÁ®Ûv6aÙ;ª¶eÈ€$Üñ¡ €X—Høÿ)Œ”ó/ÑPçe@Zø!$ØÆ‰±/·ø€MÅÃ e) İe‰ò{OÖ+_VBq ”ú×fbXŸÀ"µê[8ÚÙøq=–¿[	2—’'»C    IDATêUÎÉÏÂ¥çå‚(R‘Ï+<ª¬íëµİ¨à÷¯HÅìq`K¤®ùì[Õxk“¶ëfæ+îüJ*ˆL)!êë·×Uãm× ÜÿfôÂesò²®¯)ÛåÄ½‹UúÅqh%rLxü¶Œ
+0ËD«~ÑN#„˜*ò—íõ+ ›‹ÏƒO®Ôc@Ç ‰êŞ§ıq J°
+\}~"~r.ÍAA¬ ÅáÁ«oÁæíhÓ¡ wMQÿÒéßl
+ìX]¶Û…ûÿÕ¨©e‰&åÊÙ‰*ÿŸ|z—»O‘‘"¥¥åáo¦ãœ±)QdøxW3–¾uG«µUøB‹É$0zX*¾~ù d¤¦ô„¢İHİƒX&Ÿ~Ëâ›ĞR(&ç¥û³a	€hJË~Ñ–1_LY¶ú¸àòk }‹èp¼Ó¨‰uŒ8jš´[&#0q¨Ïş$öİ õöİMXòÖQ”Wèïyá99¸xV2Ó‹s¥à¿W×´âO¯ÙáÒĞüO8ß}M*®››]~D.¥Ì‰·7·)e-ƒµ,&ë/LR_”±ˆñÕ»Vë²B )¸TØŠòÿãAn{âxúŸ†Ï&åÿSÜ×ÏoÔ5Æ­†›Eşk/ú€Ò¢xÙE£tuQ.èÃÏ5a¥vÁZä ¼ãŞ•…!1pZëjjÛÚ½Ê
+Pº­AWV€¼^6\qqLc€Ä(T[ü±Wš°ş3m3èÔÿ£«S1w¢®Ç“–Ò¶}.<¹Ô®òµµ”a}M¸ïÚ4Ì¸`ß!V¬ªÀ§{µµXô›Õˆüqé¸z~?$ØSvzÒ^¤?Ku&~ü÷P--ÍÿdU"n…³t|V– _Ü½bjÉã~ ¬ˆ6ÿÿD`OI¤gÿíSÎñÿÜ 9'´Íâ?iÜõUİ‘(vk&÷hÁ«oÁçåúÉ Êß¹3rš˜INÿK×µâo+ìšF¯Ó„Ì+HÀ­:åÿ?Ó‚¢²ÎQJ –BfZªØF©ºY©¹}ÈÕµq[½ª —"XıòpùÅ}0qTì»"iıùŸ,¾vÿ †ö6á±ÿ—áıtìbpBâ¢ äŞã.€¢Åøºª î%Òî’Šâ èg­„¢´'±à¹{ãÃàöøTÊÔûjA$AÑ.û&â«—öÅÈ!)w•˜ëÕ>ÓöÄJ¤r¶¤Pºa<¨^H| /}ĞŠÇ^!&Rm…*‰RyÚ¨ÀÎ7^ŸÑ¿¹ºJôÀÉ‰&Ìœœ©êZ$ÆAä¿zF¨ÃGŸº4ÍÌ¡vÇ4ãß÷dƒ}:Š”N”ÜtÜP¸B\¢W€ÎñâûU@ËÂä —õ/oÊÀ¹ã{Éèxñ¨®®hÃ²wbûæ¨f¤¨èËÎÏÃ´‰ e B©Ë7P-{;šÚÅ“Pß:(F©Ä(Å—ÄŠY×;›ÛğÈM¨iÔSª
+H„JÁX(Õ•j; eD³Œ«.ëJÿ‹!åœ,½O¢¥ùŸüÿd‹Ş¤|KL]¾ # “èş•³û°[Y>=¨íCK/ë9lxòvİSìÖ;ÃíöáÓ}vUD…JG£Ø¬ÌÊÏÆ3{E‰ºã [ş‘%Ik™3Ñ†ï§œº¦uÿzÒŞ¾£åRY¾^û Ò	ƒÍøáWR qÖ6¸°ê£j¬)«E»S[¥%Pœ)¶åâÙ9˜>1s`.@ï­×§Äï·jjå%,ú÷2â®«RqI¾îøÿOJ/$¶ˆ©%S…\5Ç„Ô”=¨W Î£#*àûŸnÄª­Úº” Å€çîË•‰Œ!%`mYŞı¨ÕuÚ›Ê»Â˜*ı]zn.ú÷N˜•RÖ–¬kÅ?W¶ QãÓ?‡¸ÿ¯» ¶ÌÿóDn Êªxô%íİ d²¥ÔÊ.J
+˜¿È¯ˆ“Ö7­óh*ó{ş´lÌÊÏ
+ØºmcèNŠ¨ñsË¤–B®¤¿ü Y©º?'KD³}¸ï\˜…ô¤}€Œ™è‘V9ğÏ×µuĞB$^èï,HÂí—ÇG0 ™b Ö”ÖáÃÍuQU'`ÜˆT\<;C$u2Z»İ©üÔ;Ëµµ –äFº÷ki {ª6kâöJ¬ÚÒ_<×„:)»;p¤Â-d]¹$ßp7)å­(y¯ŸìjŠš)¡¨ªôG~*n/òÎ–vüä”¤]ŒaCæÿãKE4¡Ñ1TÈóGÀhÜè;°ó@/ïŸiÄ'ûµ}‰“€ªD=uWúf™@¿ÇƒTÕ:±nS-6nkˆ
+% ï•=jhJP›?*Hq¤èÿHÈù¬¸}a*ÆÔq„qÀí=êÁ_KìX©1³"u‹¬ N¶á¦yÉ*˜+P!K×®ı-*€‚#-´ù‚‹få€üÿñ$×şªÛÕæğj|ú˜cÂ®LÅæÄˆ´Ãë(ä†Â™0ŠUÇx b&zRCHxOc7 -ƒønq
+n]¢{÷`úáÊ6|°¡›w4ÀîĞ‡áÔ>Rš_áÜŞêtDUÑG»ÿ]ÛŠ¿–´ ¡Eã·ËñNÒº!òŸXŠş?r‹å7/hï ¾PÏkÎOÄ5s’@9İ
+ÚúY#Şı°FY"%Äö7fXª¢³60¾6ÿ>nÇşÜ b}ÕZˆìí‰ïf '=ğ5£uƒlÏ	¯œ+diá|±De€Ï6`¢¥
+Gjµ+@Bı¡C?Yˆ¨_vüX\nnUÅ‚ÈT‰²Á”M,h³²‘*±üAùı7í‰LZcï,#îùZæL°Æ¤ù¿ãY¥‚JD¬D\û*"£(ìoÆ'á¢)6$'8×ÚîÅÖOI	¨&üGNVA­¤Ä“P%Éoÿ¡Nş}ïÿ‰V¡Nş1ıßyÉPYà+„ÜTx=¤ à˜r$Q’Ÿÿ»	Ä@	!÷;¦€èHãEH	 `@"QÑÚ0zh
+fNÎÂ„QiHLNK'—ÑßW´àRí£Ó;ÖÆåç$ªTµXàşïj½W7z!¥ëFB¨Œ÷ÔQÅµ0}¤5àx ê+1anßİŒMÛ°cO3œ.m¬EÄí?vD*Î™’w'
+ö{eM+~ñïFÍMÿ4çƒrM¸}a
+æO‹ó?Ë!o&Àíâ1½“ ú"ii“xèÙF¼³¹Î˜ŒÒ’Xü£,ŒìgVnxŠ	 sé–8TÑV «Å òŸÌÉÃàşIùé˜•¼ğ¾%ëÛ@ ‘’nHCÑŒDlëBV€5Ÿ8U¶Nc„Ü-pŞx«Š ón0BEƒHÑ}cM6}Òv%€8ş§Ï@ÁøPÚ_<	åù­÷â[¿¯Ã¡*4>ü«Z³ÆYqÿõiÈËî`åóä†”w
+¹©è§âA@å#ëèŞ+kxêuVEÆÔøµ9‰øŞå© úÑñØ=Y>ÛkW9Ôû;`o	ıôÉMÀÈ!É˜1)ıóAşÑ`ä@•Ï¯r¨¼ôHnşÃûšğàé˜2<¸(˜±FÛµpùä’fÍKwÆ”€Ópó¥Á[^H	¨­wá5ÄƒÑŠ#U¡·Ñz¦²ÕçMËV› DVÑ6×=é)‹Äñçe‘±‘kÜEß¸8Öâ-„B>D.€ß@Š;cğÔ…FLQ¿y¡	ïosFÄ
+@GDëJå‚uNÙ­g˜¢§)8J¬~~¨dèil ø³3¬è“kSæşI£ÓAÿ¬RHq"ÄøÉÍŸúMÅE®
+‚«>Ø±Fãõö6^ßHÌ€dF×ú\÷"ôŒRZ q/P™×`„”€ævï·£ì“FÔÔ;QÛàì±E #Í‚Ül+²3,Ê×OÙ,ñ¸ù{¼«?qâgÿjŒX`îäa,úF†÷nm³"t­B>&diÑ_!pK,* ,½äŸ~³TŒ$B/˜ß~;ÓFYâ* 3Ö¤É”|§D\S¼"@›|VºÃ'cÄ L“Şí`¹ƒÕüçİèØü³ÓŒXtCf·ÆÕú “İÖ}nüáÕflPœNÇ%åœÉ0´)èy 3us‹»÷·¨¸€Šêv­nZ ?'ÓŠ1ÃS0~DšRÌqÂîwê»™6ÿ²İ.üâßÚVwíÜŠ™?=¿ø¦®KÿiÛ#ÊSBn,z×@èŸøt#İqÀß¼Ø¤S¤„´Èo\œ„ó&Ø@‹*^…^ú´ù²»	;÷ÙA'(rP •£Í—Û«â,’ütò!ŠÓ¬FNQ%O–ó=gjŸA2û¯ ³„üÏûõÕóñíù)Šf4Ş„ğ_öa+ş\¢}ÅÅS±&%`ö8+¾~QÆ´t+ƒJ¥ÍŸ‚ë\jmÓw´zNüL×Q *)µT¼ÇhH°1rp2ÆOEmü¦à­Z±²~è9İ²Ï?.iXVaI§şï]î'Š9‘ :à…Ü\´>ÆB€ÓM¥üö¥&¬ÜĞ†¶š3’¸ïº4LiQT’TA0^…6yŠ¦öx}hvxT±¢\µ·¸Ñêô"-Ù¬‚B(Sj’)–ñ=¦µM>UbÅÆV¬ıÄ›?Å†PjÑ¬±±úw¦9¡=ÍÉŸ–ÙAŒ‘RòGXpÕy‰ ¥½×1ëLO„â^šn¥U Éîÿ™ªÒIŸRUs³m°ZıÖ-RâY”ÕæÃ¶Ï)+ÇM<´çÅSl*6'%1&m^°œ\ ï@`.qØÄêâ{{s»ª½ó¶Ì€§âIJÀu&á‚I6UWšj•³„Úd¨2ä›eíX²¶dşùÊ¹‰¸µ0ı²ã÷ÅOY ¯}ØªŠ/µh\Ûıtë€” JÅ$ÆÀ§ØT]Êg	/ÄÅq°Ê‹; *w
+¤—¹„ˆ˜+FÅ‰UB–}`Z,+ dxôå&íİA+ -¤Œ
+†[°pV"†ô6)62J5a	-´ñ×6û@èhƒ¡fSŠûœiTtºüåÍé˜>ÊÒíX†Ğ"™»Ñ<gÇ—Ú±nGä­ (Ğ39aˆY5À¬RÀ(µ—%´¥oƒİªÀùÊêV¼»Eû
+œ§ˆNÿs&Zñã«S™[Œ
+å<o$À602v- 4oojÇ_—ÛÕË&„‚FXpÅ¬DëkBNùYèéÜĞ†RÕàÅ*¯z™ĞWmSd@Ï4zÁÜri²Š<ÏNãM…3RÒ\bG«ÆE^ºZod¥Ñ×„¢™‰˜9ÚŠœtRYè
+¶.ÿNÜ,DUYïUŠßË«[#ÓÑi:ıóÿó³"àƒÛ…,-Ş!‡ÇB)à³Mq?öŠ]½h"At¦¾‘"?Ü¢Nœšh@r‚P•YG€â;hã?ZëÅK8ğá§NT4ÊØAfüæ[ÊÄÒ¶û°YnÇ{Qp<İœÒ6¬I)ìçŒµªšÃÁ8DáKUü(ív×a·
+ -İíŠÔézn2L¶áGWÅôéŸ†.!ÅrĞ?Ö ñ[›Úñ·(²t^€d^$KÀÌ1VLiEßl£R(k Ş˜¥@½<šZı~”î¹³Ü£6”hò1SZÑÜI6ö-wš$Š¶û?ÕGÕ†pê:2ş9&\<%g%(k Åö°œ¢ñ%·kK»õvÿsúfiÖDAĞçéz§ÿÀé%YN
+@%€œxP È
+ğ‡Wíªê[4oôR™<Ô¢‘è´HÕá(‰6¶ ´YPõ>Úü—®kÃÛ›Ûp¨Ú£ş?ÚåÜñV<ğõt¥à±œŒ ÍçÓoµ`ñ-Q?—tRì×‹›"q²™ıÏ'Yïâ]Ô¦ï–hm—¨·{UYv²ÈQ!Ÿòšè}H)3‹ø îüjª
+şŒq! š€ iñ  D»àtRP&±`Æh+&µ V“ÿeOYä¶¡/
+è$Sÿªmí*Z˜J?ëEhsøÓY˜4Ì3»x¾4m¤ÀQŒÎO7`ïÑÈFº¦hÓèiÄø!LbÆ%ù	*¨—ÍD›PÕAc]hÃ§ÔF—ªToİ‡­{]jÓÿøs—ÊÂÑƒÄAäçi g) v ±Ft|ÆõÖìğá_³« “hŠä¡dHo³ŠN¦€$²E€*šMP›J¬¸h3 ù¡Üà•ìÂÇûÜxöİè?n.É‡|Ó%Iøæ¼då?f9=tj\¶¾¿{©9ê»š3"®¢¬	Ç•*!K.<z>Ia•z >=£”¾GÙ6´Éï=âV>åñSpŸ„Ïy6UÁ5NÿSÓB
+ å]Xõ4Y=í+2ş²Ì÷¶µƒ³^…ÜƒòLÊ2@_cúİ¤ä.€RºIœ§),”DôŸæÃı¼·µ]¹j}Ç¡i_Bİá?cŒÜœ^élúï
+_
+Ş|êõ<õ†=ê]gKn†QYï&5cŞÔÅ.¨KÔ3JÏf´+¸GŒ´ÙÓóIßé„Oü®r·¢q¦/"ÚÒ«ĞP ömE)*+ÄI
+ åÅÅ¼ÃãÔI¥8 b›:T­/Mõl‹“ÒÉI9ËsM˜<ÌŒñƒ,ÈÉ0*%€ºb P,{‘`#$»“:Ax¥ŠBñzışBòáoßïFy[öº°ı@t¤k†âe@sñÌİYÈáÍ? 8I$ş†_¿ĞˆõŸEÂ; ÎxQN†A=—½3M?Ø¬\yã[’Ğ¡°ñLFB) KmödÊ§“æ€¾jš¼¨¨÷‚(Õ·ìubË^wTñiÿY/#‹U„üÖeqcïÀÃC
+ ©nñàª:iP@ •˜ü÷»-º¶tõ PÔ2•´$Ó$™¶&6+.}ú¿)Ã,'N ôÒ¡E Ä§µ(ÿG;_NôÒè,êWzøß!ÇÅoÆïøåy“fãNh6ïubW¹>ü½]a}º¿ÀnËÀyãlq³Ñ¬:†6Ÿ=GÜ¸úµêä‹Bä Îy*=8Ïˆ1‰*ÜpüYôÚÿl~ñ v<—ÇÏ“¬§>“ê‘<şüuş›ïø/P:Ñ­÷bÛ^—òåo?àÂæ½.•¶ËBØÎHÀí—Ç•éÿÄË™€Øá³¬^ÚˆˆˆH‚âUúdÕ„N'}²Mè“iDŸ,ƒ*PÒ+İ Xêz¥OTH£—Sasi;„×ÔêUT®v‡ßHÁz$ôGë<htøPßì‹8Å§–óL/ê[.KV%¡) Œ%8È¿¼t]+z¶Imbñ"”VH
+:=›I6R…ú9%Ñ;’lH=Ve”\€}²L'Ò©¬r]óÉ¦x·×ÿüUÔyQÕàÿò7íu)­œøöãÚ/-¡QıÍ¸µ0ó
+âey4Î¸V ( ğµÚğì;-8Åé)Z¬ÌSO'¯’ zĞé-rÚÊIV î—Ğ©î/ßÏ<ñâ!i>Š*§:[Ñ¢yÛ‘nğTWÀiUÈ@ôÊãäIÏåéş/ÒÖ¸}âY¡ÍŸXÿ"ávÑx¸§m.n] hPî1¥“=ó¶#æ|[Ñ°Àâµ´ùÿùû™ŠÌ‰¥ûKúP•¿Ã?V¶(?5#
+.Ÿ•€Û
+S0 'îBà:à“qx	Uö_o¶¨ÈcF 'ĞI‚JÉòæßOş,ù©)Hté‡­Xü†#fcB‡ß©+ˆÒù[ó“U°´²¤ºO7ÿ®‚ ã.ğT°È¿H¥‚é„ñFY[7±äÅ;”ÚE•ÿ{ŸüC½H	 RÎ¯­kUÖ:½qx„¾_÷˜>ÊŠ[$cÚ(kÌğ¦t•WD@gŠò[7ïqâï+Zƒ#tŠ Sâs÷e37|0Àq-e¬òàáçQ¶Û¥k€ †Í—†~ÙF|·8¦'Äuîã*" ¸¢>ÛZ¢¨ãÍ{\ÊMµÉC¸şùVa@€NşƒsMøç]Y ò–ğ!@¼TIîÒ6<¯3*èğ¡Âw¢ú¥ŒœËˆ¡ÑHôd wÕí5'¨€ã¦P SEA”£şòj+ ç×PšäÔ<t#øÑj)µî@¥Ë>jÅï;¢¶ì³Vxp;]#Ğ±ù_ZÀ)¹~¸NŠ›rÀ]/?•¯$NëÅ¯·`ív‚[<^Cµ®9?	×^¤ò´Y´C€” {«ÿ÷v_ÕªH¥XÓ!@5Sˆéï¼ñ6EÇÌrB(²´x„l€g[Dªñé!7şó+6p` ?4'#Ğ+Í€]ŠsÆØsKd r)r	<şßfÅ0©‡’Ğ‘A*>[=gŒß¸8	#­Š8‰åRì²´h	~‹²:(&àH­Ë×·)2F€
+,ëkÆMó’pá$6'FÃŠ ‚QÛö¹±øÍlØéŒyúÚhÀ\}¸fN"®œ¨¨–©#K'|ğa;~`À
+Àé¥U5z±rC^YãÀÁªØ)ÄDpĞIá9‰X0#AÕU`sbpø…ójR¨€Ô;›ÛQ²¾U×ÕéÂ‰S<Ü;-É€â™	øêy‰œgRUY¾„ ùÌ6’àÌeàÌK„”€¦V¶îuáÅ÷[±ú“ø­úìoÂµs“@&EôÎU@;r	+àÕ5­Ø¸ËÉ‚Ñ9UaëÕìqVuêŸ8ÔrÓñæF¨}X%äæ¢¥ğ¡ G1u±,‰|„Ê”Rªà‡;œxÿcVÂö$GÉi³/œ€K
+lê4‘œÀ²(™š3vƒ¢¦ØªõA•îXb*é{ÃEI*Ğoh›ü»n/X.äÆ¢ç p+ ]cæÏp´ù°¯ÂƒWV·â½­í ÔA–ØB %A`êH+Šg&bü3zg²~¬·®lğâ“Ïİ(İåÄªmí*‡%¶ ÒP‹*éKTI‘x9Xº@@Â‰ÉğWÜ n+"tg±PrŠ —ËÚíNlÙëR5Xô ï™6Ê‚‹¦$`D?†ä™`1³Q¯³JÕkš|ØqÀÒİN¬şØ‰ò^‡Ãı> mü“‡Z0z†ô6©/+?§Á¬$rSáo Å¬ ƒÿZª!ĞÒæÃ¡j¯â Î€U[Ù-<’‘ÿÑÆ?g¢£û›Õ…7şÈÏK¨z@Š@u“Û÷»°i·K‘|¨bE TøjyŸ9l*—\rÃûš˜Ò·{à{ äcBn*ú)¤xæîİ‡?¥v²x°şS'¶îs©/²ĞßX¢:Ié‚‡Æ4c(oüÑ;Y!è™R}Ø~À…Ò].løÌ‰Ï+Y´a½™öÉÔşDÆ0cÔ 3(%—¥»7„|HÈÒÂÛ!Äc Xè.–>×Ò&ÕÉbÛ>>=èÆÇû]Š¶”
+™°DÄ>(×„	C,êe2n0oüÑ13Úõ‚«|ød¿¥»]Ê‚·¿ÒÃÚMA—-QiíŒ&±àÒ©	ê™%V¿8.ßÛ%fA\à†”w’àzH±€%ˆó¥] àh“Š?€^*{»UòGŸ:Ñæb“@¤müT´gÖ8+¦·`Ho3rÓlêÔ„DA»ŠÀÎr·Röõ¨¯Ã'±Ù!_>¥ÛÒfß7Û¨Üqãóöâ	qAÈ›É0B,a Äğvº£]âó
+JÜ_éVyÊ«½ s$Kx úOò’yŸ¾:şsN:ÛÃ‹¼¾îNDBõvª¼êYİºÏOº”{ µŸÓpÏ¦Ñ d¥•5nÆ(+&¡83’8 7LØ» åBn(œ	£XÀ¦†ø¶Ç E€^0{º±»ÜƒC5~ë )T€ˆ%4$Ú„ŠŞï•nÄèfŒhÆˆ~fä¤8`(4Çô]H ÌráQ¬À‘:/Ôxq¤ÎƒšFöå…jòÉ‡ŸfÄ¸få#sÿÈ~~—KØpÂ+ç
+¹aşÛ ØÂŞ$7pÊÀ7v–{TjÒÑ:¯"âÊfÁ/¢å%Sa¿^&ëcÂ¨şfÅ60×„”DNQş¥ú6·JÌ{´Ö«Ñ]ånì9BÏªG² 1j¿ôîí·ÊÑ©Ÿtú™ESÚáõNò³´iš6Ï@€LŒDZBD%”TÛìC“Ã§‚U{@ÊËÉP)Şd›AÑòóÕû¦ÓÃ€\úe9'˜LÈğzÚf¯ª>H©¿d½«¨÷*ÅÜ,_F€6}Š³!×Û€ú2"3ÅèWÒğ¦¹5#šĞè*äª9&¤¦ìÄ@.	¹éèh¹Õ)A&È»»¸ñÙAÿK†ü“¤$TÕ{ao‹?…€6|ÚìSÈÉ0¨
+_t’  !2óÓI‚üˆ,Œ€P}²P° ¹ğ(®‡8AÈÅWÙà;ñs<¥SğYâ2SÈÍ4"/Ã¨Je÷Í2bx?3ú÷¢ß9öF‹õÙEÑl®",diQ)&s=€(˜šSº@Yd¨nğªSYÈôèh§/ÿßè¦Ì4‰    IDAT¥C
+B,ÄPŠ½DˆsŸ|ød2¤ÓCz’ısè»Pßé4Á~ô­×xímôD	Nq=ôœ6µø@™ö6ŸŠ ïô¼Ö6yá‰Fb*¯Û±ÙS@mNì B-:ñ«Ó~®I)é,Q‡ Ñ oSK¦W 
+W@ˆK˜0ê&ê´¢¢Dô²QŠA£O‘²®ÙJk¢—Ûõ;)
+dUhsFÕ€6nzyN©Ÿd3€NùD›<ÑK$3Ù€ñC8H+“{Ùz>•RPíUÖ‚Æ/vö€_úİã‘htPœOYüèÿ£I(m¶ãÙô  [2áû7{>Y&Ì5ªX¢ÑfÑHù–˜º|_ØT´_g2 ]LŞi;In"!"‹U?£—É¡¯zéĞË¥ªÁÏJØêô)e€^5{@ÊI›“ªCÒwÿß:YÈäyªÉÏØÉ¢g1
+˜W”0ı/ÚäÍF¨I‚Õ¿Ù+ÿ}‚A)d$6>ú"e _6—¤Ğï*äw… möK@qôŒÒ³ZÓäÅáZ¯z©¾{}.·ÿyõ»·×ï$!+)û$t¿Ó)dM³YON££ßhc'I<ş<BøŸÏ¿uüZ²P–·ç“Nóôsßl“RXt‹€ÿù%7û€²¢G ğ?œ
+¨Û)=KÇ‰…°ÙáS•ZH)ªAC‹ÿ$BBÿO
+ZèºÎbo• ˆèS…^ùò-V‹ÿÅ@›{F²Q½X¬f?£½<èÿH`a/#@n‚»W)môs‹O=§¤„·¹üÊ;	møÊ;)
+dé;UL”¤“Ÿ5R
+ÈLOÿ›‘b<a¢OOB¨S}Çÿ³‹-FW¨€%÷vÄ üğ )œ
+£sÎÃbF€` AëîSK?î¸üHÑ'2<Œ #À0Œ #³´Bnù¯½èW 6ŸŸ\	 )f‡ÌcF€`b¾˜²lõq@ñ0HY
+ ±aF€`˜E BLùËöú€W%£­};€L³“ÎcF€ˆo(ŠôlãÄØ—[N„ˆÊ²Â5€˜Á\ ñ½:xôŒ #À01‹€ëEÁòsi„_( ¥…/@ˆ+¸,pÌN<Œ`F ¾ 2ÀKÄÔå_;Y(+zÀ÷ˆ'"¾ñáÑ3Œ #À01‰@€?‰‚’Ÿ¢ ~¿âL€˜œt#À0Œ #à ä}¢`ù“§Z x@*cÄ0Œ #À01‡@3€EAÉÒ“€ÒâÉò ™17d#À0Œ #ÀÔCŠ‹ÄÔe[NV >»"ÏF‚—uâ…Â0Œ #ÀÄ
+Tñí ’LÓÄè%u') ô‹,+z ¥˜ceÌ<F€`F€€ÀQPra'•Š’¥…OAˆk9€—
+#À0Œ #S´AÊçÅÔå·œ^(+¾wH‰©aó`F€`øFÀˆßŠ‚eŸ^ØT|= ÿ‰ŒøÆ‰GÏ0Œ #ÀÄ€¸Cä/{îô
+À†Â™0Še ²chØ<F€`F Ş¨…W‹éË?:½°¾8&ßj@8 ŞWŸ`F &ğr/<†óÄŒeU§W -2 pSÉ±HAŠ´ÆÄ°yŒ #À0Œ@|#à<–á÷.–ç‰E‹|§U è?eYÑÇÊŞ 9¾ñâÑ3Œ #À01@€Å¢ äGsR _P5ÓÎƒ`F€ˆw ¹¨£À™- ›‹.ƒOÈ‰wÄxüŒ #À0Œ@ P)oS—¯<»`Sñ0ø|oBˆÁ8f
+ˆóF€`xE@BÊığâR1cù³+ ;®² µ½çs `¼®7#À0Œ@Œ à„ÄH´‰±/»Îª ĞeYÑ“ÇŠ|‚cdğ0F€`â	û±"O‹‚’ïŸ:üÓšøeiñíòA&ŠÇÕÂcfF€ˆ!j!ÅCbê²ÿL(+¼B,†Dß‡Â0Œ #ÀÄG åÍ¢`ù[) ›¯¯g) ÇCÀ_hñhF€`@@ÂˆO`4-Sş{00€ÛÛŸ…D!€Ä€‡À0Œ #ÀÄ­X›í†S 	ˆ3¦ùÉMÅ‹ }w "3Şãñ2Œ #À0úG@ÖCş(ò—¹ß—äÌ
+@iÑµ0àQĞÿà0Œ #ÀÄ!äÿ÷áÇbjÉóA* Å“ağ=)F1!P.2#À0Œ€r'|†ëÅÔe[‚S v§ E>)/„6=£À}gF€`â
+)Û!Ä»H×ŠQËìA) t±,+ú5€oà8€¸Z9<XF€`#Pà¢ ä3ã¬\ÿ²¬øF ²ŸÎàî3Œ #À0q„€8à~Q°ì™î) ¥…Ó!0†ã âhİğPF€`ôŒ€ğ©" šº|c÷€52`¤=\Ìq z^ÜwF€`¸A€üÿÀÛh—7ŠsW4tK ÉMECâV®7K‡Ê0Œ # oj!ğ7‘_rÿÙ†qÖ ¥ ”]_Bb¾ñàŞ3Œ #À0q€€ÀHüT”ü§g
+ÀÆù“`4şS ®K‡‡È0Œ # _¼Ø¯÷;bÚÊ­=S Ö_–
+³éOX Y¿˜pÏF€`˜G Káö|OÌx½¹G
+€r”ß!  OÌCÇdF€`ô‹ÀQHñ„˜ºì·]¡Ë ¥ l(^ £ü=€‘]İÿÎ0Œ #À0C`¼â.1}ÙŠ®z˜°ùÊğ¹‰à\ æ®nÊgF€`ÍpXƒùf1å¿»j=0@JÍE¿†7s:`WòßF€`ˆ P!cJÉ=B":«¤ Ğäæ¢à“bhW7å¿3Œ #À0Œ€ÖÈ}0ˆ‡Ä”’gi9p ¬p
+„ár:§-_Ã0Œ #Àh†€Bl€ôİ!
+–o¤ÕÀ€µÅ)°ÊßAÈk ‘ÈÍùF€`F€ĞÙ)^„SüHÌ>}ùßS{° Ü eÅ·òÇ k1nƒ`F€`B`? ËşĞÕÁVø“‹ÏƒA>
+!
+ ¥!ĞFøºèBÀã‘pº½ğzı1"F£€Õl„É”>]ƒâŞ0Œ@@t~ş=^	«Ù «…Ÿÿ€À‹Ö‹„ğAÊ2øÄÅ´e«ífPo|¹ù²^¦ßCâ
+fâè¹NJ ¹ÅÃ•m8x¤MÍ”1¤¥š1¤úäØ˜`bE z¦Œ{Â„ÚømÏc³Mv7ôMÄĞãÏJ²"¨]!dİãõbÿ[á¹KLy½&Ğ[=Õ²¬ğû€¸ÀÀ@áë"€Ï'Q]ïÄÛkª±¦¬öK"%`âÈ4ŒÏ@ŸÜ$'“½<"?Pî#Àœ„ )şmN/ör`óÆ³>ÿœ“ƒ¼l+~öu¶Œò1Q°üÉ`úô,ËME ø5$
+‚u!Ó1¾6tĞæ_QÓ½r‡¶õÆi)fL•†yçå"+ÃÂJ@è¦ïÄh€OJØ[<jã¾¤¼ËöéùÿáMÃĞ»—•€.ÑŠš$Ê Ü#òKŞ¦WÁ+ ççA…Pn€¤`ãkµG€´ÿê:'şñâş.7ÿÎ½›•Ÿ…KÎÍEvº&“Í‚ÚO·Ètzî=j]xkMÖmªø^F¥áº¢şÈH³ğs0j½Ğ‰%Ş‹i++ƒéIĞ
+ İ\–İ€Ü ƒ‚iŒ¯Õòù½¿¾¯½s4èÆé4°`n¦ŒMGJûƒ?ÀD Úüí·:õ¯XU©üüÁÊ7® Ü6‹1ØòõÚ#p Àc¢ äÁ6İ=`CÑ0Ê_Aˆi ãKÔ"ĞĞäÂó%‡±õ³Æn÷qæä,\v~.²3¬*c€Cº%+”ÙC¿7VWá£-ŸúOíÔ¤Ñé¸¶¨Ÿ²°D1Rn„WÜ'¦gş§Qukó–ë‹saô=!®âl€(^ *kÛñØS{@¿=‘Ô&ŒLÃ%³s‘›mc% '`òg#ĞqêÿpKşûFğÖ¾S»“jÆ·G^¶-Ä=åÛ…Hù2¼†{ÅŒeUÁŞ»[
+ 5"7İ
+‰l£|½v„Jèèñèa©¸dV†J†ÅÂTÚÍ$·Äœ—Ë‡í{šQò^T¶…&V B£7Ùß‰ü’¿u§±î+ e…³ñ€Ùİi˜?£5õş À‡ÏıhoÈüO±ã†§âÂsrĞ7/!ĞòuŒ #bhÃ_ùA%6oo<V«¬Á¡i€€Ğà¨Á]Öò^Q°|mwÚê¾°ea:|Ş!q#€Œî4ÎŸ	?DüSò^%>Ø07D—"%€8ˆ;`ÎôlPŒ ),Œ # N§?®ÇŠ÷+¡—×¢ÿx÷ÏŸ–¢{#5™Ÿkmf´[­4@àŒ‰ÉK»äÕ}@e}?0¶[İç…bÿÚõ¹O<³7äm‘"`60l`2ÎŸÑCS`³rÔpÈæ2Çh'BŸòV¬-«ÅÇ»šàrlèáùÁÃ0rH
+³‚†ÚPŞq$~ƒ‚’
+ì†t[ ¶äÖâÉğÈß ¸¸móG4B€2{­\½0Â!”‘jÆ¨¡)8· ƒû3=D8pæ{Æ7ûËx{]5>ÛÛ§ÛRîÃ!ì{ıå~ –¨Fàm˜ÄOÄ¤e[ºÛË) {.³¢ÉHÕ¿ˆŞİí.¼Ğ‹b÷~;şõêÁnåÒ»k@Fš#¥`æ”Le`a!PßäRD>·Õ£¾Ñ·Ç×³åÓäÊûÁ7‡©º L6˜CpcYàÏHó>*†¿îìî{¤ (+@é‚b÷Cbjw;ÁŸ?mí^lø¸ÿy­k:Ğô†‹Ù NùãÓ1;?Yé|’è	¦üÙøD€ÙÒT>Eu»âó‡¹¿3º×]Ş3'eÁÊ>Ñ½èJáó=,¦®XÖ“ö\([8ğ= )¯‚ ‡„÷d6ÂøYzq46»ğìÒıØ¾ÛÆ–ü·&E ÁfÄà~I*HpÜˆT$&p|@Øçt@k›Ûw7cÃÖz<ê€£í‹Òİá=£7,€ôT¦ 'Î=¾·D„x0ü\,İ×“û…@ø†Ê[ åŞ“ÎğgÃ‹ ÕşŞı¹‹_=ˆænĞƒv§w$˜™nÆ ¾	;"Ff°"Ğ ù31 mü{¶¨ÿçå­hqxÂjîïh*bÓ¿>Ö˜Àñ|yO‰‚¿÷ˆá­Ç
+ !&K‹gò!\¨ã·—”>´cO3şúüçš@)ƒf³ Å˜‚I£Ò0t`2’Ù" Ù$pCQ‹€£Õ‹}[@,~åm*N‡¢ûµ”k‹úcvA–Êêa‰r$ŞÄƒbê²u=íih€dÀe¼·èÕÓNñçÃ‹ 4^\^¶Ö‡·¡SîNŠ€Õj@fšEe
+äMWVF p´z°÷ Cø‰Ğ§¡YûŸpŸ9)_¹¬/üÒÇ"¬9pÿ7¸œç¼Ùãxh ¹È€M›Š!pFÿ*òù$ötàùåå8"êĞ`FMñÄaQ–€ñ#Ò0~$+Á`È×êÚø÷p`ıÖ:­nG}£Kózıòğ¯æúzYNü'ñ+äç/bQÍD!Q ”`Ãü0ïÀ5 õ‚g¼öÓéòá³½v<·ìPØR»ÂöEÀŠaƒ’0zHŠJLN2uõQş;# ;È§O>şõ[ëQYÓšz—f>şÓE)×À„Q©œò§ÕÔ
+‰áóşZL_¹;]°jI)ß€wAˆ¡èß#¼P*Lü TF4RÒÙ"0 o"†öOÀ¤Ñ™¬DjB¸İ"Ğyã¯ªu¢º®î0‘øÚq"ïúÊ¥}q§üŠZ„¯“r7¤ø=öÿsßoEoB¦ (+@ÙåÓUJ 0?ã{„R]zeÛ"ªĞHI —">(ƒú&bØ dôîÅ%IÃ¿¸…P#@ÿƒ-*¯ºÎ©Nı”‰i¡Í¿`\®^Ğ)lm‹ôtÓşJêßk‚ùĞÙ®±pQ`»À÷™0TSşû©jÃ+¯ÁÎÏíW¾PŒHM6¡W–SÆ¤³"şeÀ-„Úø·|Öˆ»›AÕ8Vµ‡¼XOw»Jì~ä÷¿é«Ñ7—i[º‹£öŸSÌOíï„ŒÓ=¤
+€²”^~>b<_{¸Åî"ğÉÎ&ügù!E5n¶±`úHVœL«Rˆtè€DL•:Å°0Ñ‚ ¹Ğ>ŞÙ„}åÔ5¸p¸²Uú£íY"VN"û=Œƒn£eíÔà3<,¦¾öN@×xQÈß¢rãåıağ}À-\&8ÀYˆ‚ËüåEë°òƒ*•M/®x(…07ËŠQCS1´†ôOBJŠI•&fa´FÀ'%ìvör`û&:Ú†ªºvĞ³B™7ææaŞ¹¹ÑØ=îÓ™h ğ|†'Å´Ğr¹‡üÍ)_ºÊ‚ÁíE (# €gU?Ğ‹kÃ¶z,yë(m¨í¸Íj@N–C$a`ŸDì›ˆ¼l—.Ú‹­Qms‹G‘÷lı¬	5í8t´5ª™`5bÎÌ^¸`F/Pô?‹(ğkì·•ˆ«_v…²ç!W ¨s²¬h ˆèzN	åt…ÿ^íN–¼um©Õf!E =Å‚¼^VôÉKÀÀŞ‰ª†9×ˆæYÓgß¼>‰¦f7iEyejÉ·_ı?¡M'ÿ“21nÒyó×ÛlÄs€|L”ìuçÃ£ ¼yI²­WA‚J	u§ù~áE€¢•—¿Wm;›@|zräeÙ0zX
+úä& o®M‘›PeBF »o¿ÑîÆçdæßİŒ£Um¨Œb3ÿ©ã¤¬š‰£ÒPxAoäq6Mw—A$?÷)E­óe1ï­Wq‹ ¬ N‚Á{7¾rŒ¹ˆëÁFr	u£í‡XöîQìŞß—;ò©K^xTŠ¸wME;÷ÏK@¿Ş6UáÌdde Pãù:JÕklvãpE«:åS$?ü#ÁšÙ“y0õKÂÕóûªï,:C@À‰Wá3şVL[º5½ŸPvUĞ~=$~Ááè<ß3¼lù´o¬®RJ<&.éÎHI +À°‰è“ âúæ% 9‘™»ƒg,†ÖwC³U5NT×·ãpEU´¡ª¶]7V°Îóc2	ôï¨ş¦ŒMå©‹İ±Iì‡Àï Ûs¢àå¥şu,l
+€ß
+P4Ü  ¿t¶TÛÚ½Ø´½o¯«1˜Qğ“…ŠÈÍ²aèÀ$•ÿLV‚œ,+¡èqBCØç6§M.”mÃ®ı- NòïÛÑÛÕğ)×Ÿ,`…só?.£«ËùïÑ‰ ù^—Á‡_‰i%¥áêbx€WdÁè¾wè®Ağ}Ã‡ )ë6Õáƒ5Š»\¯J@Br¤šÑ+Óª²è””jBv†©É¾•=w&^µéW´©¿ÃÄO±/zÚüs³­¸xv.fçgé}8ñÜÿ£€ü=¼ægÄô%uá"¬
+€²l*š‰Ÿ1=p¸¦0ü÷%%`í¦:¬)­Uä&zWN(fÒÓÌŠ[`@Ÿè“¤¢¤3Ó-œ*şe¥Yn·í.Ÿ:ÕÓ&OD=•µíØõ¹]­çXÚü³2,8· ——+ÃŠ×q¬„À/D~Éúp~`İ9°ºo†wB¢W8Ã÷J	(«Ã{U¡®Ñ¾†"tg³Ùo ˜RõMBZŠI$J°”ÈÖMM·š¥M¿¾É–V*«ÛQÛèD]£{´ ¶!¤©Ôİê_8>D54fdavA62Ó8î:krOHùœæÅbÖ’êp¶và+€XÈyáß;¼ğöÚJ¬)«C“]¿>Ò®P¢ ªŒTâ°!;ÃŒŒ4úæú‚¬t+’8ˆ°+#òwÿ¦ïR&}:å<Ú†º§ŠŞ×³O?0©¨Ï´‰™¸xvoş Õ×ˆ7!ä¢pŸş	m€óó`4Ş)ïDfTcÏ;+~% kËjU~t<Õ 8~y”QªÒÉ2@Ù`ÈY‘Y®ã¾½Å£6x*ÂCé«»Ø••*’%®µD„7-Ñw[²Bü^ïb1mee¸[ÓFØR8>²à’pŠï^:”€5eµhŠ% Q£A -Õ¬
+‘»€hUÉe@J }Q!+áYjÃoô›ï«êœ ïÁuÂ¯¨n÷Å›ğæs3şr&/_/Â¾ 5Q ”à„@±rbªÎ×m<+§ê‘@©…”zE%Œ‰t…“ŒHJ0)—×+
+|ÁS!*2çÓ†O5)­^õ6|*YMÙ¨[v4ÂíÑKeà#îJŞüƒÃKW7BâwŞ§´8ıkæP
+ YÊ
+§B~Î± :XŠtQ)ëªUv@¼YÎ))Éfô#Jâ<b$LT®‚›Q)ôİj6€ã]1èØìnZÛ¼hm÷¨ïTl§ÉîÂ‘ÊvuÂ§t=–/P›ÿ¤L\<‹}ş±³.Ä›¾P°¼T‹Ó¿¦
+€RÖçÂä»	?a+@l,[RŞYW6Ö¢¹%>bº3sôÂ¦”i@–""¢Hm*hd6ÔwRèg
+B¤”®XJ%¶=Úè].¨¸­Úì›ZÜ*/Ÿ6zbà£êz,gF€âO¨¸ÏE¼ùÇÒ2iäoà1üKÌXV¥ÕÀ4ËÈÒâÉ0ÈŸb>¤dv@­f:Œít(@'·Xá	#dêÖäHK6)B^YÇùH1 ‹)f“PŠÅĞïÄïNJB´	Í¹Ïµ±“éŞãñ8õ©˜}oo÷oôOL{mNÊ+Zc*?ÜsBóŸœhTÑş¼ù‡mï/„+áˆ©Ë¶hØ²6Y $7_Ö>ã€¸@¶–ƒå¶Â‡@càûjT5+İÇZ¹
+Èe`5*å€˜İˆ¬Èj5ªJE4 !ü
+&’+¡Ãr@?Óÿuˆú]B"?\ÇÏ_îŸ×ë;uäÿ¬úıxmì^<•D¿Ó‰6wºNò´ÙS	i¢&—Y„*ÿLëƒ¥ûĞæŸ™nÆÌÉY˜•ŸÅ©~İ‡2?YÈG`ğ>+¦¼^£e5· Ğàdé‚q€á¡c¹—ÓûHËs[áC€^òn®Ã{ëkÔI•€ğ`İ9€
+4$Kú9Ñ¤:)’ø”å %ÙJ[:B 5…~ş²4Ûğ©ßÿY{‹ŸõQÂ€–V/ššİ'"íÉWOóh£§tP2ë³„†¿s¦d*€I~Âƒs„îê…Äk€ïA1uÅv­ûàÃy™°X¯$Qs ­g=Œí‘©÷Ã-ÄX£˜×â%;Œ†ñÖt*gı;Œ ÷øÖÄAAu+æÎÈÂÌIY°Ù¸’eA®Ä/àr¾$Îy³^ë®EDPV€WŒ€Áû3ù5 ¼ªµù0¶GfàÍ;Aî€£UíÊ'ÌÂ0Á!@nœ~½°`n&æÌéàĞÓÅÕHñ|Æ_ˆéKvG¢Ç‘S Ö_–
+“©PC#1xn3|°¿¼«KkññÎ¦¸ÏÙÒ|çXD€b;úæ% ğ‚Ş˜8*-‡Èc‚Üˆàñ,3^o S ”à£…ƒ`öıßb+@$¦?¼m¶;}Šš•”€­Ÿ6ª€1F€8;”å1|p2æŸŸ‡ƒ“®ØDÀˆÂmø˜¹ô@¤†YàÃ«`nŸ!ÄÄHÀí†J÷zcu¶ +ºVz<Xi	ïêà»wF€8©šßEçä 'ëôÁšŒX,  ·AŠ{á¶½/Îy9b,WU ” l^oÀò@QG_‚s,¬µ(C³İ…6VcåUğz#¾ìºDÄd2Ãl±ÂãvCJ|ÒIñ’ãº/’"Q2À ÇHGğy½ğù¼ùŒ‘ì[m—Íé9Ó{!5™ËOGñTõ´kôyp=!
+Ş¬èéÍzòùˆ¿‰åª9&d¤‡Ç÷ æôd0üÙèF€òÄ)8ğÕ7ÀŞBkôö75=3.¼³æİ€ÊÃû°gûì5[Eõ    IDATùdÊ÷m÷Ûÿ£‡%zQEÏü”ğH¼©™½0qÆ%3å<7ëŞxï-û?4Ô†µ¬z’šbÆ¼YÙ˜19)É–ßoÍÈ÷a2Ü‰†æOÄÜ÷#ZW=â
+€z—î˜—	‡åf<¶{EóÚíaßH	8x¸«Ëj±q›æY/÷€óæ_âoÜsüô(áv9ÑT_g»C);·­Ã–uo|O¾0´dd÷FfN_S 6{ú²%&Ÿ¤¼ùÒãQ¯ ôÍµáºâ6°£ï¡Å‰ïEH8!q?’\‹ÅXíÓşNE": "(Ûºp ¼¾GùÕ(š.îJ “em;V®ªÄ†(U:+ !è8ñKŸß-àq»PWy{vlÄ¾OËPWu{wlj|ËÌœ>˜6g!Fòg/@NßÁ0©Ò¢ßÜO¦ÿS%Ú€é3qÙœ<ôîe‹ûÂPñ±ÂÅ+0~ŒIKjUğçl¸F… ¬ «®JF²³Â÷k@ŒÅ¿£$%€¨bË>iÀë«+Ñl¨%ìKq&àt3FÊ€×çUşféó¢¶êê«+P_sŸ¶	uU‡ñùÎÍJY`éƒÑˆ¬Üş:j
+2sû©ş°1THTÀh4“µ&£Ymú]I´* ©)&\v^
+Æg(¼W…ìjcãïò ¤á´X—‹¹/·DÃ˜¢G +À¦+ó <÷AÊÛ£îCx %€øv}nGÉ»GP^éoƒAÜ=àÔÛú|0HÁg>x½õs]õaÔ×T ¡æ(îŞ†šÊC8¸çc´·FÅ{ dB{©ÉlA¯Ş1hødåÀĞ1ù8l‚ÚÜ&£:åMİŠ‹F _^¾~ù ôï“ “‘KB‡vEEñİ„ø_HÓ¯ÿßÊh8ıRQ£ (+À«,p¸
+`ôı3¢x*¹k¡B€” —·â£-õøhK]¨îÜ£ûôD8]Ã‰Ş‘îõ¸áõzÑX[·«å{P}ô k*P_[#>ƒ½1:pèˆ>l±%€|ö¹}‡ ß1ÈÈÎC¯ŞƒĞgàHFµÁ«Şle`„J¢M .ÿyçæ ·—í¤‚M¡/ß'Zà6Ü…Tk©ûrÔ˜£K …äãép¿A­Ë9”ı"K Õ°;ÜØ´½/­<ñŒĞP+ gR
+(ÂC
+Áq¥Àçõ(WAKs=ë*ÑP[	g›µê«½Í6‡]"6ÖV¢µ¥)”Sô½“Ó`µ% !)éÙyÈÈÊSx¶„dõ{^¿¡ÈÊí§üôdÚ§ÍNıäÇ§M?”›ıé:=
+€WÏïüqªhøa‰œâX½ÿÀ„"ŠÈE¢nJ¹È€õ[Àäıı1uàÊ¸Y"<P•ØÚæÁîıv¬Xu‡*ÜCEàlƒ#‹×ã9îB W)	?'r1øİÎ¶8ìMÊ’Ğbo„ÇíDKS½R(ëªĞÜPGs=öì(
+Ë¼şC‘Ó{Ò³{«:9-éYy0™­HNIW?›­6e¢§ô;eª7™üAy£?ßh‚Ùlé¶ù>¨ŸáâhP ú+>ÿŒ’†D-†bd|İ  ñ_xŒwaÆ¤CB,Š*"‘¨\ŠrÿjS@à× †éf¢¹£=G@BÕ¨®kÇ;ëj°nsdLá‘V R)|(I!ğŞ¾“àr¶áÀ®Íøû#Á…ÕÜr÷ã:z*,¶DĞÕá‡§Í¾ÃdO§úh—H+ ³¦dá¢Y~V?¢ø.§k´Ï^Lôo/$îA¶}…ü~{´(: 
+üğŠ^°x!‰!%ÎğI ±Ù…å­XñAÊjË–© «eáõ¸°gûz<vÏu]]zÒßïüõ0|ÜMú&¥‰”@~ÎïAı‘j[üƒZ~±s±ÂeüÎYR-ÁJ€:(åUF”µ†Áğ$.ˆÁ#	·Û‡ª:'Şû°ZY´bd€€`ÖiÇµdŞ§Sÿçä —Nıæè·’tgœü™ x>ßPø™/{ø„æ—D­ ” U,Èy-„ü%€<ÍÑá£Úôë]ØØ·ÖVáĞÑ6øÈDFa€€`–õè“€Kfçbp¿$d¦[Ø×€±wm%¤ø)ÜÖç#Yì§+X£[PÜ óò ë€ü]†ÿÛ5 ¢¦l¨Åú­µp‡‘;ˆ V yšÈ´ŸfÁØa©8z¶bôãS ÈÅú5â¯€óçÈ3jrşO‡xT+ Ê
+ğÒUFnËÄãŠ êûëK;Òã«©wâóC-Øùy‹b¤ú¡V XèjM™Œƒû[qùE‘fF¯L.cÒfqğw	‰õ€ü!ö'lWG§éÿ„ËJ¢\ç7¥O.Ğ‹• =ÌZxûHÖ€†f7ör`mY-vÀí	[€ V Î´‚ÉÜß+Ë‚s²1bPõKïbç»ëzÕ;£.‚Ëút4›şõ¥ tĞÜ?‡ß`ÒËŠà~†—Û‡ÃmØ¶³Q•®mp)R¡
++ ¬ œº†ŒFŒ4FMQşz' )‘_E=}Öbèóğ4|æ¢‰î÷løêÊœ.7Î„O<ªh‚Œ1´px(=D ¡É…½øto3¶ílB‹£g¬ °ĞyI&'™0eL:&NCN–¹Ùlîïá#[—ğB`=òÇbÊòô28}) «æØ’z ïĞ7â|±z™å8é'Yê]Ø{ E);ö4«ŠƒİV X uC•úÆOÅ°I18…7şî<L±ÿ
+B:ˆG`oş—˜}„?gš]) 4¹µ°/<ø) Èûk‹G,JhpaÏÁlú¤û·¢İœ[€€øV lVƒJçËŸá“‘•a…súƒ}ãåú6@>~)&-§B&ºİ) J	ØX4E<€¾©Êt³Tô×QRiÁ®ıv|¶Ïò£íhs–1À
+@|* &“@ß+&IÇˆÁ©Ø7‘7~ı=úZö˜*û­…÷ˆi%¥Z6Š¶ô© ”å›áës=¸Àp
+ÅRˆİ{8Zİ(¯hÅ¡Švì;èP™]¹Xˆ/ ÁfÄşI1(ıòl2 	I‰¡+K»OW\ŒöÀ‡ßÂpô9Q°©{şÆB¨K@YÊæõ,?8æ{ù6€NŒà*ÒIÓd¨¨nÇŞƒ-Ø½¿Ÿ—;Ğd?ı3Ë
+@|( Tš—6~ú:0	úğ‰_'s¤»I>Å†c±hÿ \Oˆ‚7+"İ¡î´¯[@)¥Æ«=ú — Hì ü™øC ƒQ”€ıå#PÛà<	V bW ¦¾ìtúå%`0ú'3ƒ_ü½z:âV oÁìû™˜¸b{Oo©ÏëZğ+ÅÅ*+`
+ÇDjé³]Rˆ7€bvnÇ‘ª6Ô6ºàvK°{
+€Úø3,>(Y}è¨~gê^}>¿ì5ùı7CŠGÄÔeË"Ø7­`ËÂtHßÍğù¾)1?@×DÜİÀíñ¡VÑÛ±¯Ü#U.´{‘?÷ã]ãÁå€ÇÚ×ÿƒ§Ã'cØÀµùg¥sì°®v¤:¯òıå†0,“—6Fª+¡hW÷
+€?`áPï ®…Tñ ,Œ@Ğ"ĞdwáhµÕÍ)ÈõULšCÙ¦ú•xW ¶¯{å[_@ºµ#‡¤"37~ı®æ(è¹P~ÿç!‰‚¥û¢ G=êBL( ~%àòé¾!p>ÇôhMğ‡ø¬àË½¦^çéxW <5«a¨z	ç!]Ï#w>*h…Ä†‡DÁk¢¢G=ìDì( ‹pÙæ¯Àà»BLÀ\=\qıñ„@ïk€¢šĞ¯Ä»€†µ@Å‹@ÛAıN"÷<pBÊ­ğ~×§¼*-
+ŒP$z~–>ÄŒ ¬ ®È‚Ñs€oÊü Q¾ú¢¹{¬ `ø¸0štn2g šŸ2½ôòıÉÜÿOxMÿÓ—Ôé¥ã]õ3¦ ¥l)¯¸ÀÕ r˜ «%À?-¬ °À#p¬=€j /Á(ÿ(&/ßK Äœ ”€ÒÂiøÿí	UÕ™Çß}ïõÂ¾¯²»°¨lt¢Ä¥MŒÙ'e’šL¥&3I™ª™¦f¦Æ‰“L¥’ªd¬ŒYÜÚEŒ£‹´€Ê"Šˆ²ˆì[w¿÷î7œû¦»yıŞ]¾[uín¼ïœïû}ç¾ó¿çóñîı4Ğ5N3_JDÀ€	€55«&Ô‚<‹úwËÄù/…ÚÒvKˆ€ú×#ú=|½‘ªv°±$™@ÕX½¦Dš‚Í°9 ‘nÀå4^µO–£rÔÌ}²œ¦tTİñ /ÎèJµÿ9|ùÂ8KÔQM(¦åVö‡~3¡ßõ‘v0ñ`÷³°ãQhŒÔ&m‘ns11¾e-şœ£ŞïäŠ¹câ×InÄV £ Ën>/û5<¾Œ Rq¢ùÔ*úB¿ĞÿÆ(¼tE&^ l{v=¹Hçk)]ƒ±š<°	Ÿûñ3÷É¤ÇŞ‰+–X€@¬¼q,~şÛ 7Û¤À¸6ãğ+İúL…ÁN;F÷H¼ xç×ğş3?İ šå¥$Ğ2éOÃKıL&<±®”•—º®Ø€@¼<}>ßC‚Mƒº”²ÕA^ôœÃş$ºGù\–·Ö-ã¿¾{›‚ğ?|˜Qcİ2Àˆo‰Ûp7ì]Ò&ßíâD8„ò÷ÈÅó–ÅD"@ êo¸‘ï£¸Ì.–$(î-»şuÃ¿™^Å(­,e¨Ÿcë›õüÛwnmSıÿø“GrNâ¥Ûô¹P]¬yhøOØûïñPa°1M/¢úC©™ÿL„ıhµéÉ ³k«Ñt#¢ß."şhÓêÛ…í%Ğy4ù:t>·½%”ÿs~í+ùço»7`­?şåg1päˆ² h~¶ü¼ÒzÇíÊ¤È/ãÉOh¬|B.¯;š‰ …Q€é}PıÂ¨Œµ“ĞÄÏÀÇŠ>Ğw:¸é
+)óG“, Ü»· i{™ƒ`Õ‡š@a‡¿u(÷"ò;©™÷~¨í-¢q‰ Xyİ0òŞW·2@ÜÊ ¯ˆ<­¨8æ\	Ã]bÉˆ6“Ä
+ 6ş;ì_§i¾Ÿ€º	å~Rş¯eÂS‰Ú4"q e$`4È7é‚u€¥.ş]›»^ #ş2}¢éRR@ö}ØôßpğµhÆÍ¬.=ÖìÒü¢¿šy¯—¢Ò0Õ‘Hˆ€3ÆæèLîa
+ŠÙ"•{ÿU4ub"€Âîÿƒíu6ü¢[)|¦è~9¨üD&Î]>û:Ş¢Ä
+€@¸åÊ]ÓP"¾íYÇ7–ÄÖĞeŒü^4W$Q d÷@Ã=phmb›¬9ş.Óß„»“°Üït4- 
+sfL&ïÿ"nã ;ŒÀŸFnkˆ $
+€àé¶=ıG¬©–Ô\ÕgIyÿ*æ..i½!«Ì@ıÅtëüİHÀäÅÇÌ	.c`ä]é‹ZgGÒ@v/¸ä?‡Ö·]•<ŠëôïF¶=+5/»å‰=/ ‚Q€µµ]h:ú|ù{`Rb[ƒ9~zns ·Cï«£E)i`÷s°ıahÚ­8™µ¥"°ODeõÓ2®.ñù¡M 8 ëj{r´i:¨[óåÙaN  Ğe4Œú¤{D‡L’€Ûğç­ÿ€Cn2·Kén‡8‰ÀË ?¥ºrcëöŠX#1ĞÒ>°âºşxé™ ß.´›ÇœDÀ«‚î50ôÎèˆ€¤ ×ù7ü°0ôïR ÛaN&ğ*ÈÏñss˜øÔNëüpL œĞHTgy¼úê ²Í·€Üyl}èX»‹ŒÀ‡RÕàöúhˆ€¤€wîƒ÷Ÿµ]ÿìv=u ÷’©x”/Ü&2Ë7L& NÙtvmŠs²CğıÛPıp5#p’¨èƒîˆÆª€$ ·åïç!»Ï†şíVı(ˆÜ‡çÍæÍÌV¹­Î†‡N d# §¸aTkS¼œæİ¾_Î¶ûÊ|@Àm|<AP¯«Â&îÀuüÛ‚¦÷¬ówK,‡uQ~¤~ÇÅ™Í"Öù4& NÓ,õù)iztA>u;ø_F–£[!%p\¸ºOïë€8€s`×ÓĞ¼ÓŞû‡ô6)£Yàı†TşaöÚ$W-Ê•Ñ–ĞVmàcB£A€Á#ı<¸Íƒp›ÙaZ^ ¥ ¢oab KÆÕq nØïbhŞØ+]»%O"°	¸•‡w’¾ÖÿãÚ†	€¿pç"€A£À‰ ù‚‰ ûª9™€@º+t½0œ«â& Ülÿ·¼óßoÃşv;~”À&Ğ@‚moYçÿñÄ@+n ­¿3Cöİ³ÉÈí&Z,‰—¸%‚FFª‡‡'c`œ€{ß¿ëh|r.‡‹­õOâ­ö1>:ÿ¬>LfğF©¹7ÑYşZÓ6L ´†’ûªq"€í£€Û7`sZÉ.9—	T…ª³ Ï5'2ŞfQ êÃÁÕ°ûpøuhr»·ZÇŸœ{ªÕ6›¬ıÀ±U[ÃÀ·¬óo·2~3µÎÀ0]õáœ ù,ønN€­S€Âb‹W	•ƒ ë8p«*ú@º;ˆWz£* 4^½‚#Ğ´ü¦Òó³£@`#x÷£ú{{çß¶p™ h/8œœÜ†-O@&æòt7¨^5tn[áã¯Ü*‚RQ ~#\‡ÖAãVhŞïZÇ_Švİ:6 ÜOZg“ß¾ÙŞù·-& ÚÆ+¸:X"ØµÇ0Ä¿U·DĞ2¶ƒc¢>âÄ€[1éÕ# Ó2İ@ÒéS	éN ™¢bQ?ËÍ¯pÏ\N«Öwı¨~gyÔÂ=Ùg÷ƒòM…NŞ=Ù»'üÜşÂ&>îßrZo¬]™Tëùê=ÊÁ}[l©_Û›	€¶3+ˆ —,huvùÜ îÛÕöh'ËÄ}Ì­Hu7qĞ½Hu)¯Š=2 >Gíeı+ËÛ„yìÅŸ¢ªºs›>Óª‹]ş|#h3h®0™/øyÀô[Ğ.j!ğ*è}¤ÒOpQf«%ùi_»0Ğ>nàÒŸ—H6wè×mÁ3€i5FÀ´€ÛÕï—dÒóÙÚné}[íTW™ h?»–‘€Y+^ê‡—
+úM`Òi7FÀSXòüÜB&^òmìsfÍÄÀ™ñkëj{Òtôjòò·“‹P¬aŒ€0Ç	(‹IéO©¬~±u{mKß3o& Îœá‰" 3G¯ı.LF©(RñVŒ0F ™„f|]òc:U½ÀØºÃÖù§)˜ (ÇJ	–	zƒ/Ã×ï‚N9Öh»Æ¹Èœ­8#`bO@=L Y„'?Æw©-ó+nÌ­c*.Ï…ÀËÓ'¡|äZĞşÅ_OÕA†[±FÀòğAÜ6Ï üB.·¬ü&ÅÏ S]1c<Â—Á¿•á%ÊşÒNYÑFÀ$ äİŞ|”ßÈÄ¹«:²º$—m ƒ£¯õÓG£úY„[@FÅÍôÒÁö[ñFÀÈ‚¾ò("¿—šy¯—°îÄUe !×•×#ïMGä`<PY‚j­
+#`Œ@”¸ÍV¡ú )LxjK”Œ¢­& J5­ŸŞO>ê×Q.\š5ã_"şV0¡%à¶w<Œ°_~‰è³R3ïıĞZ#Ã¬*a0uIm5G¯DåŸú€Í(a¬*#`ÂE ¼ò'Dÿ‡†êä¶º£á21¾Ö˜ (Cl5X! _¹
+–/ a°*€(/fàmĞ? ò[›é_ú`˜ (=ó F]yãXrş­3AÇ RU&S¬Z#`Œ@i	¨6‚¬G™CÚ{D&<±®´Xm€	€2¶]vóYdš§Ü2èb1)c@¬j#`:š€{ßa%èƒd+È¤ÇŞéèJ­üS0Pæ–¡/ÎèJU°wÀ_Kzq9ĞH—Ù,«Ş#Pl9`÷±ähK€ÿ¥‘ÅrÅÜƒÅ®ÄÊk= ­gÕ¡WêŠ.AäÀµÀp[*Ø¡¸­p#`JKÀ-ñÛ<ƒê2qşK¥­Şj; !jºê†sÈË¨ŞŠÈ@§™g¦#`ÚCàª¯!ò)}BÆÏ³=…ØgŠOÀ@ñ™Q‰ºü¦Ş¿O¿ŠÇ$|ºY
+á3Bj6F \J_ø,Ã—_Aê9¹ôñİå0Åê<5 !l:k–Ç«&"ş—P
+2Ä–
+†0Pf’0§#Ğº‘…¨÷[æ_!³fù†+\L „+'Y£õ3Gáù7âk-p!Pm«B03Í7Ëß%òyOêğ½'¤fÎ[†%œL „3.X¥«fö çOFô«¬èf«B43Ï$“€›å XŒÊ¯H{‹eüœ}ÉD¯M D#Nè+×ŸOÖs«f £ì•@DgfdpYıÜ“ş\Ô@&>¹&nGÛK ŠŸÖOˆ_1/—µ,ô"ä‚™jŒ@¼¸÷ún‰ßR|îÇk^(5·ÇËÅøzc b±Õú‹3øƒ.
+V	 7 ²U¢™kâ@ÀÍò¶Îfù{ÛVKÍËÙ8¸–L D4Òºú†Áä¼ w@°½pÊ&F4˜f¶ˆ7ÑÏíâ·äAÒş\¹hş»ÑrÁ¬uL D¸èóSªèŞe<È×ğƒ¹}-¦¨™nÂOÀuş»ğ˜zû­’«5†ßl³ğTL Ä ]hıÍ!7Õ/"ÁÜ ;Œ€0Å' ,Eä~HÏ‘šÇì]ñ	—´D %Åİ1•©",­­"sôÄû*èL`@ÇÔf¥#@;@æ ş¯ÈV¿Æeu"¸Ñ ;"LÀ@„ƒ÷QÓuvmŠ‘ú¡•ÓğÔm1|uŒÜ3WŒ€(á9|yiZ@C·÷ä¶:÷şß0ƒ èÂ‡£GFAêKˆŞœ37Í#`:ÀFT‡üoÉvzËú;x©k0Pjâ%ªOµ6Å’\o*rWŸG¸Ş¶.|«ÆD›@Ê“ÀC4§_àòôn{êvHOm½	€8FµÅ§`4`ó”Jvô@Ú¿ñoqKí0FÀü9	vî{œœ7›ûv0|Q“½ëoC1ßØ~à™ê,×Vtçpj,|õ§ƒK€ëæ¢0­" [oyy˜ªÜz.˜¸_Ävïkº_d ÂÁk‹éêr>¬­Íp4ßÍ}
+áT§#T¶¥»ÖPš™‡ò(’ş#Õ©İŒ«Ë
+6Ã?FQ>­+& ’å|^,ªíLl²ù[ñôz·Ë í)°¶`î&š€º_$“z„}™÷™RwØ†û“Õ&L $+Ş'¼@X7µ'ÙÊaäô³ Ÿg['´A˜ÛI!]ò4iù=™¦-Œ]¸×:ş¤„ÿd?M $3î
+ç§¤éZÙ­¸‘à_Ó2? p4æ¾ˆ×ñoï¨ÎEšWs°i—\µ(''Í—¶0Ğ6^±½Z—ÔV#Ùşdò—£2Q—D¨Ë&C±õÛ31'à’öìDå9DM-A3;åòº£1÷ÛÜk ­€”¤KtÙ´nHÕ Rù«Q½a2"½Pµ9Ijæk´	ˆø¨î9–t1" ŸzmÜ!“ˆ¶cf}1	˜ (&Í•¥K¦ö"“„Èµˆ\…rĞ#F.š+F ®ö!¼ˆêó¨>C6·M._¸'®Îš_í'` ıìñI]9­/ùÌYˆ?¼) .‘	DDßœŒ} ËÁ_„zIeß‘	vEÌ3·„L ”v”«Òe3ú“ò‡^ 5 ½¢ì“ÙnâA@÷€Ô#ü_Ÿ%ïm‘IswÆÃ7ó¢#	˜ èHº1+;È!°âºş¤½¨{- “€Ò7f®š;F ü„]¨¬<6aw1¢Ï“ó71ñ©¶¤/ü¡‹…& Â‰ÙñH¥†£:Äm8t0À
+E(fj	øÀ`5èˆ,"ŸßlCY~›M ”?‘¶@ÿtS?ªr#M6º<Ê'ğŒRiÇÌx#&B3>ï"¼ÒÒñ/¡1İ Ÿ|ü½0™i¶D‹€	€hÅ+´Öêò›z#¹‘xL„`ÅÀ'€á@§Ğm†ğ8l×ñó">+Ğtƒ\úøîğ›n†€	€°G(böi}mwüìRù‹P¹Õñ£€sÅÌ5å$°å-DV!º„|j5^f“ÔÔí/§QVw¼˜ ˆW<Cã.¼¶3½+‡ ŒC˜„0ÕsA†ÆH3Ä„€nGäÔ=é³ÌíáÉî¦­2õqúõz  tIDAT™Ã¡3ÕŠ< ‘a¸ĞÙµoîp’wK¯DõlDÎ²×áYW2GP}‘Áû}MÕ£l`sÅN¹­®¹dVXE‰#` q!/ŸÃZÿéîĞy4¾ÿ‰`TÀã|4˜'`ËË«¹|v!lÆgMğ´ïy¯Àá×¥æYæ/_LU³	€D…;ÎêóSªèÔi(©ÔX‹Q½¡øœ…P+Í
+#Ğ”£x¼ƒÏÛˆ,}™|~G¼-W-jì€­H#pZ& ¬q”€ê,¥K{©CŠğ¹Ñ1¨esÊ«¸CïößAe=KÉó•ùu\0q¿È,·¶ß#Pr& JÜ*<­¿3ïE³ã¹d20¨å´Öl¢H`/°­pêbT_E2k¡ßÛRso6Š™Íñ"` ^ñŒ…7úæ´JgÆ’Õóñp©†kZ²@èŒKIl‡AQÜl}—©oB=>+ÉÈ:g×É9šÂf²Ù“löEšìø‡Úû åğê™İÉçÎGd¾^Šàæôo™8è’Yucoœ.YÏ.Ğ(ëğd9ªkI¥×pÑœcCü¸kì0¡#`_¡‰t:Á„¢ãH1å<ÎCéôF¤ªÑ3N@ÄGÕuú»ŞÃgÂKäY‹ÊZÛ‰¯Ã#`‰€	€"´bJK@_ºn@°Š@ÕÔ œWĞ^ ]€Ti-²ÚbN zdOğ´/l@µ‘5n¿\ò”ö·ÃDŠ€	€H…ËŒ=]9­/¹Ì<72 áÉù¨ß¤;àÎŒ‘3í à&êíİx;ñu"«ñYK:»^&,ØÕ2í#F 4L „&fH1è‹3ºRåŸƒ'NœŠ›@8è
+tƒ Ï€vüÊÈGÀAp»ïµ<åûº–FïM¹b®ûw;Œ@,˜ ˆEÍ‰S¨
+«nJ6çVŒÃÓ åUÒÕ.ˆTÚDÂÄ¶Eµ	‘C‡
+ùØ€/¯Où™ôÆ?ú¶ˆØ$¾Ä6‘x;n Şñ5ïN  Ë¦uÃ“‘x©±Áj_/DddáUºI„LÄºÉïğ€	†öUğäÕ`ö¾Ÿ_‡¯2i°ÃÄ€	€Ø‡Ø<}áúTÉ9ˆ7tp>¢NtCµ¤
+¥±W‘lEJ¡	´‘£ Pi Ö€¬Gıõ4ê›rå“.aF qL $.äæğiÁë3ºr³AGãÉy(ğå\<í‚¨€à´{'\MÉÓ7£4¾;}Ù…§o½¯@^§+e´½ÇWèÌšr°/±r‘·zCO@×ÖVĞ”ˆß|ê‹è¹…å†ÁvÆn©¡[]pâiyJU—;ßÍĞÿğÔ`‰ŞÆÂò<yñßÀ«Ø@ej»Œ³-uK«%jL D-bfoY	¢ààÑa¤8q£2
+‚Q÷{¯àu’†–³ğ·	ƒöDMğqÃøN!Wø[÷=l}e#yŞ¤kõëìÛÚ>“T& ’yó»htÖ,Ï¬ì‹ø#I{#QF şD†îìÑ"ÜòC'Nü™ô{Ğİ»NŞ=ÕŸøÓuúû€Í¨nF¼M›Èù¨×ÀÓvÉ,ÛE¯hØ
+J$¤ù$2èætéèú›z³/;ŒŒ
+2Õ!ˆËM CNHTä2Æ{x~æ¸óøï¥3ºx5¹Îİuìî§ÛÙÁéİÏÂ¿O´³ukîe+èV·QÙB—ÔÛ2æñİÅ3ÇJ2FàD& ¬=2Ğµµ]hlr;Be ¾?¡púê2öÃ£*=Aç+8~ÏJAháo×­~ûğ¿¾kbkï÷“×½v¹;~~ÿ`ƒ·F>øŸÇ¯(töH¢{ñyô=<qåNÏÛèv”mTUîqun¾FÀ”˜@k¿Jl–UgŒ@Ğ«>?%M>Õ®•½ÁëGÏàôİÏ A7|éÒ•4ÉÓ¥eËäNÁ2FÑ*À‰wº¹	nÒ¢{áÎã÷ÿñax7ïÊİğ»Ûº¶	•ÆÂ2:[İ¦8DÃñt?È|İ‡ëì'şn6í&•ß/W-reÙaŒ@	ü?~}¾±äŠ#¯    IEND®B`‚=== ./public/favicon-32x32.png ===
+‰PNG
+
+   IHDR           szzô   sRGB ®Îé  VIDATXGÅ—pTÕÇgïİÍæA’ÍBÕ@!Á %yÄG#“bR¦ÌTš¾p‹2CQ¦Ú¢ŒãàT˜Jd¤jÇv:¦$H#¥£"è&ø!,y’]v7Ù½÷´÷.ÙÍ†¤ÎÌÎ=÷ûşçşßw¾ó]Á‡t–¦ ã ˜²ÄÍ@ê÷-  ÙğÕŠ¢úK#×2’‡LFµ<‰‹„kÙ_yïEÈ¿Ô_³kO|“Ï°¤³2‹\‡.¬#\x¨Y ‹Ü„.~'Šª½±0bG*&;üŸG»I¢Ê‰Âš/‡â]E@:+f€Ød|+‹G@:@–‰¢šÆÁ¸QÌkâàuX|`ÍY<X‰03æ’¾5Ù‡“Ï‡`Ö@ND4V¼(u±êXk€ƒGı;ä|§†¯OÇnäd¨~×FÙmv2’•˜ğ=ºÎıœmøf¥)ä·2wJÓ&ØŠÜ fÔüÚ 1ˆ¢9E«1?ñ¹ú#}Öæ30¸E€Í*j’ š³
+,M¤rN<Q ç²dŸÓÇë{=øú¤i§Z@U DÓ#|s³TÊ‹ì·ê½kõ ş¢ ¤DÚëéÒ49Ê0—¡°bá(¦O´‘“®`U=½·úğm¼Zíæhk„ä`)&UM_‡=À¤ñvÒSm&ùó]ŸŸ
+ğj›“mAÓEXğû-d	£Âu{âÚ~ûfOÂş#~~~oO<ÆíõX÷Çcôz‚”İ9†Ûge1oµË|ïH² (Ğq)´ÅÏdÒrº“ûÚˆ·+<ıH>™iqa¬­»İ¼´ÃÍì)6^XæğvôgùqåÛ¾ì£j}'?¾+g6Pa¡î=ïì=g‚X­6şæVf®p‘`ìÿıS¡ò5.\=:_Êbİ¦&<—C»,¿k‹ÊrÂ6¾ÓË¶=^~4y…v,ÒYùğĞÅ’U.fçÛxcu¤¼]}†jƒ¬ùÕ-T¬íŠ²[¹¥‹:§Ÿk3Ø°µ)l;ë{º?7üÀîë2™”c×mB:+œ fJ	·¯¼€ñüà¿;1Ğõ\äoµgC	h³pÿ¢|–ÿ¡‹ŸÎOdÍâsŞˆí¦n6>ìàİwOrÉÊ‘ûîÎbaiv˜@™¡T·ÆG/5“dƒ¡@nX­ÜÜE]ƒŸ7V§3;?»ËŞ Ïmn¦³»Ÿ…ó³ÙßÇ}ly<ïO³›6Ÿ|ÕÏÒç;(.ˆã'Å:†jÉI*O­ÈÇ‘b3mŒÓµè™vfåÛx3¢p§AÀ˜y°?ü¢e:›®°ü¾$“Dvº‚Ç«q°ÉË&İ‡}LÊQùûÚLT%$“¡ZÕúOös÷t;å…*s
+âq$«æ	0êÂk»=´¸‚¦Jå·Å¨¢E0f7ïr³¥ÚuvÃyãT6=šÆøLuğ4F=şJŸŠ}DV•&òÄ)ˆÈ`‡` ñl{6úiş:@·G73ı;£Šo‰£¸Àb‰Z;üÇPâpsï7õÑê
+âHR-ä³rÏ;F2Œ„’06äõ%¡y¯÷RÃào¢XšªëÊ•dû_IeØ÷°ş¡BTšñm±ú½†¦nvÕŸgqå8¦LŒ”ç‘işÊÍÛ5gøá=c™9ÕËÅ¾l3eCÅŸâ—C­Œ¤Úºı_ô0ùæ$Jæf2-/›5vöt>k¾ÄCíœhñPXÊÃK&ÎúÈB¾.fÖ,0:_E1jèUÍg ¨³uûi>;ê²ív•ÜœxrÆÄ“<*”Õ½î ç\>NŸóá÷‡îƒèò%¹æıcĞ´©FÇÕ ‹U±¬u]R{àµÿ¾@eÕ“LŸ[F[ëq>ù°Î4Ÿ>÷^²oÊãÓCuìúóz”d™?Ë@=
+j‰nHÌ×#iÉ:ºûp§>HnQ•éóŞíæóÎ,5Ÿ-!©û-2‘+øª×’™$FÒ”f”ÁM˜¸ïï¸£<D€ÖW Ãh¨‡Ã7¥.×nË-0º&pâóC¦Ûä[ç€÷\¬õ_Ñ<®İ–‡IÜÈ“ˆ7ğÓl°r7ìãth]¯Ïóÿ bİ¨ì{†    IEND®B`‚=== ./package.json ===
+{
+	"name": "grpc-vue-frontend",
+	"version": "1.0.0",
+	"description": "Vue.js Frontend for direct gRPC-Web communication",
+	"main": "server.js",
+	"scripts": {
+		"start": "node server.js",
+		"build": "npm run build:vue && echo 'Build completed'",
+		"build:vue": "vue-cli-service build",
+		"dev": "concurrently \"npm run serve\" \"npm run server\"",
+		"serve": "vue-cli-service serve",
+		"server": "node server.js",
+		"postinstall": "npm run lock-check || echo 'Package lock generated'",
+		"lock-check": "test -f package-lock.json",
+		"proto:generate": "npm run proto:js && npm run proto:grpc-web",
+		"proto:js": "npx grpc_tools_node_protoc --js_out=import_style=commonjs,binary:src/proto --proto_path=../proto ../proto/*.proto",
+		"proto:grpc-web": "npx grpc_tools_node_protoc --grpc-web_out=import_style=commonjs,mode=grpcwebtext:src/proto --proto_path=../proto ../proto/*.proto"
+	},
+	"keywords": [
+		"vue",
+		"grpc",
+		"grpc-web",
+		"frontend"
+	],
+	"author": "",
+	"license": "ISC",
+	"dependencies": {
+		"axios": "^1.10.0",
+		"google-protobuf": "^3.21.2",
+		"grpc-web": "^1.4.2",
+		"vue": "^3.3.0",
+		"vue-router": "^4.5.1",
+		"vuex": "^4.1.0"
+	},
+	"devDependencies": {
+		"@vue/cli-plugin-router": "^5.0.8",
+		"@vue/cli-service": "^5.0.8",
+		"autoprefixer": "^10.4.0",
+		"concurrently": "^8.2.0",
+		"grpc-tools": "^1.12.4",
+		"postcss": "^8.4.0",
+		"postcss-import": "^16.1.0",
+		"postcss-loader": "^7.3.0",
+		"tailwindcss": "^3.3.0"
+	},
+	"engines": {
+		"node": ">=16.0.0",
+		"npm": ">=8.0.0"
+	},
+	"browserslist": [
+		"> 1%",
+		"last 2 versions",
+		"not dead"
+	]
+}
+=== ./vue.config.js ===
+const { defineConfig } = require('@vue/cli-service')
+const { DefinePlugin } = require('webpack')
+const path = require('path')
+
+module.exports = defineConfig({
+  transpileDependencies: true,
+  publicPath: process.env.BASE_URL || '/',
+
+  productionSourceMap: process.env.NODE_ENV !== 'production',
+
+  devServer: {
+    host: '0.0.0.0',
+    port: process.env.FRONTEND_PORT,
+    hot: true,
+    liveReload: true,
+
+    watchFiles: {
+      paths: ['src/**/*', 'public/**/*'],
+      options: {
+        usePolling: process.env.CHOKIDAR_USEPOLLING === 'true',
+        interval: 1000,
+        ignored: /node_modules/
+      }
+    },
+
+    client: {
+      webSocketURL: 'auto://0.0.0.0:0/ws',
+      overlay: {
+        errors: true,
+        warnings: false
+      },
+      progress: true,
+      reconnect: 5
+    },
+
+    headers: {
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, PATCH, OPTIONS',
+      'Access-Control-Allow-Headers': 'X-Requested-With, content-type, Authorization'
+    }
+  },
+
+  configureWebpack: config => {
+    config.plugins.push(
+      new DefinePlugin({
+        __VUE_OPTIONS_API__: JSON.stringify(true),
+        __VUE_PROD_DEVTOOLS__: JSON.stringify(false),
+        __VUE_PROD_HYDRATION_MISMATCH_DETAILS__: JSON.stringify(false)
+      })
+    )
+
+    if (process.env.NODE_ENV === 'development') {
+      config.watchOptions = {
+        poll: process.env.WATCHPACK_POLLING === 'true' ? 1000 : false,
+        aggregateTimeout: 300,
+        ignored: /node_modules/
+      }
+
+      config.cache = {
+        type: 'filesystem',
+        cacheDirectory: path.resolve(__dirname, 'node_modules/.cache/webpack')
+      }
+
+      config.devtool = 'eval-cheap-module-source-map'
+    }
+
+    if (process.env.NODE_ENV === 'production') {
+      config.optimization = {
+        ...config.optimization,
+        splitChunks: {
+          chunks: 'all',
+          cacheGroups: {
+            vendor: {
+              test: /[\\/]node_modules[\\/]/,
+              name: 'vendors',
+              chunks: 'all'
+            }
+          }
+        }
+      }
+    }
+  },
+
+  css: {
+    extract: process.env.NODE_ENV === 'production',
+    sourceMap: process.env.NODE_ENV === 'development',
+    loaderOptions: {
+      postcss: {
+        postcssOptions: {
+          plugins: [
+            require('postcss-import'),
+            require('tailwindcss'),
+            require('autoprefixer'),
+          ],
+        },
+      },
+    },
+  },
+
+  chainWebpack: config => {
+    if (process.env.NODE_ENV === 'development') {
+      config.plugin('html').tap(args => {
+        args[0].template = './public/index.html'
+        return args
+      })
+      config.plugins.delete('watch-ignore')
+    }
+  }
+})
+=== ./src/App.vue ===
+<template>
+	<header-component></header-component>
+	<main>
+		<router-view></router-view>
+	</main>
+	<footer-component></footer-component>
+</template>
+
+  <script>
+  export default {
+	data() {
+	  return {
+	  }
+	}
+  }
+  </script>
+=== ./src/proto/user_pb.js ===
+// source: user.proto
+/**
+ * @fileoverview
+ * @enhanceable
+ * @suppress {missingRequire} reports error on implicit type usages.
+ * @suppress {messageConventions} JS Compiler reports an error if a variable or
+ *     field starts with 'MSG_' and isn't a translatable message.
+ * @public
+ */
+// GENERATED CODE -- DO NOT EDIT!
+/* eslint-disable */
+// @ts-nocheck
+
+var jspb = require('google-protobuf');
+var goog = jspb;
+var global = (function() {
+  if (this) { return this; }
+  if (typeof window !== 'undefined') { return window; }
+  if (typeof global !== 'undefined') { return global; }
+  if (typeof self !== 'undefined') { return self; }
+  return Function('return this')();
+}.call(null));
+
+goog.exportSymbol('proto.user.CreateUserRequest', null, global);
+goog.exportSymbol('proto.user.CreateUserResponse', null, global);
+goog.exportSymbol('proto.user.GetUserRequest', null, global);
+goog.exportSymbol('proto.user.GetUserResponse', null, global);
+goog.exportSymbol('proto.user.ListUsersRequest', null, global);
+goog.exportSymbol('proto.user.ListUsersResponse', null, global);
+goog.exportSymbol('proto.user.User', null, global);
+/**
+ * Generated by JsPbCodeGenerator.
+ * @param {Array=} opt_data Optional initial data array, typically from a
+ * server response, or constructed directly in Javascript. The array is used
+ * in place and becomes part of the constructed object. It is not cloned.
+ * If no data is provided, the constructed object will be empty, but still
+ * valid.
+ * @extends {jspb.Message}
+ * @constructor
+ */
+proto.user.User = function(opt_data) {
+  jspb.Message.initialize(this, opt_data, 0, -1, null, null);
+};
+goog.inherits(proto.user.User, jspb.Message);
+if (goog.DEBUG && !COMPILED) {
+  /**
+   * @public
+   * @override
+   */
+  proto.user.User.displayName = 'proto.user.User';
+}
+/**
+ * Generated by JsPbCodeGenerator.
+ * @param {Array=} opt_data Optional initial data array, typically from a
+ * server response, or constructed directly in Javascript. The array is used
+ * in place and becomes part of the constructed object. It is not cloned.
+ * If no data is provided, the constructed object will be empty, but still
+ * valid.
+ * @extends {jspb.Message}
+ * @constructor
+ */
+proto.user.GetUserRequest = function(opt_data) {
+  jspb.Message.initialize(this, opt_data, 0, -1, null, null);
+};
+goog.inherits(proto.user.GetUserRequest, jspb.Message);
+if (goog.DEBUG && !COMPILED) {
+  /**
+   * @public
+   * @override
+   */
+  proto.user.GetUserRequest.displayName = 'proto.user.GetUserRequest';
+}
+/**
+ * Generated by JsPbCodeGenerator.
+ * @param {Array=} opt_data Optional initial data array, typically from a
+ * server response, or constructed directly in Javascript. The array is used
+ * in place and becomes part of the constructed object. It is not cloned.
+ * If no data is provided, the constructed object will be empty, but still
+ * valid.
+ * @extends {jspb.Message}
+ * @constructor
+ */
+proto.user.GetUserResponse = function(opt_data) {
+  jspb.Message.initialize(this, opt_data, 0, -1, null, null);
+};
+goog.inherits(proto.user.GetUserResponse, jspb.Message);
+if (goog.DEBUG && !COMPILED) {
+  /**
+   * @public
+   * @override
+   */
+  proto.user.GetUserResponse.displayName = 'proto.user.GetUserResponse';
+}
+/**
+ * Generated by JsPbCodeGenerator.
+ * @param {Array=} opt_data Optional initial data array, typically from a
+ * server response, or constructed directly in Javascript. The array is used
+ * in place and becomes part of the constructed object. It is not cloned.
+ * If no data is provided, the constructed object will be empty, but still
+ * valid.
+ * @extends {jspb.Message}
+ * @constructor
+ */
+proto.user.CreateUserRequest = function(opt_data) {
+  jspb.Message.initialize(this, opt_data, 0, -1, null, null);
+};
+goog.inherits(proto.user.CreateUserRequest, jspb.Message);
+if (goog.DEBUG && !COMPILED) {
+  /**
+   * @public
+   * @override
+   */
+  proto.user.CreateUserRequest.displayName = 'proto.user.CreateUserRequest';
+}
+/**
+ * Generated by JsPbCodeGenerator.
+ * @param {Array=} opt_data Optional initial data array, typically from a
+ * server response, or constructed directly in Javascript. The array is used
+ * in place and becomes part of the constructed object. It is not cloned.
+ * If no data is provided, the constructed object will be empty, but still
+ * valid.
+ * @extends {jspb.Message}
+ * @constructor
+ */
+proto.user.CreateUserResponse = function(opt_data) {
+  jspb.Message.initialize(this, opt_data, 0, -1, null, null);
+};
+goog.inherits(proto.user.CreateUserResponse, jspb.Message);
+if (goog.DEBUG && !COMPILED) {
+  /**
+   * @public
+   * @override
+   */
+  proto.user.CreateUserResponse.displayName = 'proto.user.CreateUserResponse';
+}
+/**
+ * Generated by JsPbCodeGenerator.
+ * @param {Array=} opt_data Optional initial data array, typically from a
+ * server response, or constructed directly in Javascript. The array is used
+ * in place and becomes part of the constructed object. It is not cloned.
+ * If no data is provided, the constructed object will be empty, but still
+ * valid.
+ * @extends {jspb.Message}
+ * @constructor
+ */
+proto.user.ListUsersRequest = function(opt_data) {
+  jspb.Message.initialize(this, opt_data, 0, -1, null, null);
+};
+goog.inherits(proto.user.ListUsersRequest, jspb.Message);
+if (goog.DEBUG && !COMPILED) {
+  /**
+   * @public
+   * @override
+   */
+  proto.user.ListUsersRequest.displayName = 'proto.user.ListUsersRequest';
+}
+/**
+ * Generated by JsPbCodeGenerator.
+ * @param {Array=} opt_data Optional initial data array, typically from a
+ * server response, or constructed directly in Javascript. The array is used
+ * in place and becomes part of the constructed object. It is not cloned.
+ * If no data is provided, the constructed object will be empty, but still
+ * valid.
+ * @extends {jspb.Message}
+ * @constructor
+ */
+proto.user.ListUsersResponse = function(opt_data) {
+  jspb.Message.initialize(this, opt_data, 0, -1, proto.user.ListUsersResponse.repeatedFields_, null);
+};
+goog.inherits(proto.user.ListUsersResponse, jspb.Message);
+if (goog.DEBUG && !COMPILED) {
+  /**
+   * @public
+   * @override
+   */
+  proto.user.ListUsersResponse.displayName = 'proto.user.ListUsersResponse';
+}
+
+
+
+if (jspb.Message.GENERATE_TO_OBJECT) {
+/**
+ * Creates an object representation of this proto.
+ * Field names that are reserved in JavaScript and will be renamed to pb_name.
+ * Optional fields that are not set will be set to undefined.
+ * To access a reserved field use, foo.pb_<name>, eg, foo.pb_default.
+ * For the list of reserved names please see:
+ *     net/proto2/compiler/js/internal/generator.cc#kKeyword.
+ * @param {boolean=} opt_includeInstance Deprecated. whether to include the
+ *     JSPB instance for transitional soy proto support:
+ *     http://goto/soy-param-migration
+ * @return {!Object}
+ */
+proto.user.User.prototype.toObject = function(opt_includeInstance) {
+  return proto.user.User.toObject(opt_includeInstance, this);
+};
+
+
+/**
+ * Static version of the {@see toObject} method.
+ * @param {boolean|undefined} includeInstance Deprecated. Whether to include
+ *     the JSPB instance for transitional soy proto support:
+ *     http://goto/soy-param-migration
+ * @param {!proto.user.User} msg The msg instance to transform.
+ * @return {!Object}
+ * @suppress {unusedLocalVariables} f is only used for nested messages
+ */
+proto.user.User.toObject = function(includeInstance, msg) {
+  var f, obj = {
+    id: jspb.Message.getFieldWithDefault(msg, 1, 0),
+    name: jspb.Message.getFieldWithDefault(msg, 2, ""),
+    email: jspb.Message.getFieldWithDefault(msg, 3, ""),
+    age: jspb.Message.getFieldWithDefault(msg, 4, 0),
+    role: jspb.Message.getFieldWithDefault(msg, 5, "")
+  };
+
+  if (includeInstance) {
+    obj.$jspbMessageInstance = msg;
+  }
+  return obj;
+};
+}
+
+
+/**
+ * Deserializes binary data (in protobuf wire format).
+ * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @return {!proto.user.User}
+ */
+proto.user.User.deserializeBinary = function(bytes) {
+  var reader = new jspb.BinaryReader(bytes);
+  var msg = new proto.user.User;
+  return proto.user.User.deserializeBinaryFromReader(msg, reader);
+};
+
+
+/**
+ * Deserializes binary data (in protobuf wire format) from the
+ * given reader into the given message object.
+ * @param {!proto.user.User} msg The message object to deserialize into.
+ * @param {!jspb.BinaryReader} reader The BinaryReader to use.
+ * @return {!proto.user.User}
+ */
+proto.user.User.deserializeBinaryFromReader = function(msg, reader) {
+  while (reader.nextField()) {
+    if (reader.isEndGroup()) {
+      break;
+    }
+    var field = reader.getFieldNumber();
+    switch (field) {
+    case 1:
+      var value = /** @type {number} */ (reader.readInt32());
+      msg.setId(value);
+      break;
+    case 2:
+      var value = /** @type {string} */ (reader.readString());
+      msg.setName(value);
+      break;
+    case 3:
+      var value = /** @type {string} */ (reader.readString());
+      msg.setEmail(value);
+      break;
+    case 4:
+      var value = /** @type {number} */ (reader.readInt32());
+      msg.setAge(value);
+      break;
+    case 5:
+      var value = /** @type {string} */ (reader.readString());
+      msg.setRole(value);
+      break;
+    default:
+      reader.skipField();
+      break;
+    }
+  }
+  return msg;
+};
+
+
+/**
+ * Serializes the message to binary data (in protobuf wire format).
+ * @return {!Uint8Array}
+ */
+proto.user.User.prototype.serializeBinary = function() {
+  var writer = new jspb.BinaryWriter();
+  proto.user.User.serializeBinaryToWriter(this, writer);
+  return writer.getResultBuffer();
+};
+
+
+/**
+ * Serializes the given message to binary data (in protobuf wire
+ * format), writing to the given BinaryWriter.
+ * @param {!proto.user.User} message
+ * @param {!jspb.BinaryWriter} writer
+ * @suppress {unusedLocalVariables} f is only used for nested messages
+ */
+proto.user.User.serializeBinaryToWriter = function(message, writer) {
+  var f = undefined;
+  f = message.getId();
+  if (f !== 0) {
+    writer.writeInt32(
+      1,
+      f
+    );
+  }
+  f = message.getName();
+  if (f.length > 0) {
+    writer.writeString(
+      2,
+      f
+    );
+  }
+  f = message.getEmail();
+  if (f.length > 0) {
+    writer.writeString(
+      3,
+      f
+    );
+  }
+  f = message.getAge();
+  if (f !== 0) {
+    writer.writeInt32(
+      4,
+      f
+    );
+  }
+  f = message.getRole();
+  if (f.length > 0) {
+    writer.writeString(
+      5,
+      f
+    );
+  }
+};
+
+
+/**
+ * optional int32 id = 1;
+ * @return {number}
+ */
+proto.user.User.prototype.getId = function() {
+  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 1, 0));
+};
+
+
+/**
+ * @param {number} value
+ * @return {!proto.user.User} returns this
+ */
+proto.user.User.prototype.setId = function(value) {
+  return jspb.Message.setProto3IntField(this, 1, value);
+};
+
+
+/**
+ * optional string name = 2;
+ * @return {string}
+ */
+proto.user.User.prototype.getName = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 2, ""));
+};
+
+
+/**
+ * @param {string} value
+ * @return {!proto.user.User} returns this
+ */
+proto.user.User.prototype.setName = function(value) {
+  return jspb.Message.setProto3StringField(this, 2, value);
+};
+
+
+/**
+ * optional string email = 3;
+ * @return {string}
+ */
+proto.user.User.prototype.getEmail = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 3, ""));
+};
+
+
+/**
+ * @param {string} value
+ * @return {!proto.user.User} returns this
+ */
+proto.user.User.prototype.setEmail = function(value) {
+  return jspb.Message.setProto3StringField(this, 3, value);
+};
+
+
+/**
+ * optional int32 age = 4;
+ * @return {number}
+ */
+proto.user.User.prototype.getAge = function() {
+  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 4, 0));
+};
+
+
+/**
+ * @param {number} value
+ * @return {!proto.user.User} returns this
+ */
+proto.user.User.prototype.setAge = function(value) {
+  return jspb.Message.setProto3IntField(this, 4, value);
+};
+
+
+/**
+ * optional string role = 5;
+ * @return {string}
+ */
+proto.user.User.prototype.getRole = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 5, ""));
+};
+
+
+/**
+ * @param {string} value
+ * @return {!proto.user.User} returns this
+ */
+proto.user.User.prototype.setRole = function(value) {
+  return jspb.Message.setProto3StringField(this, 5, value);
+};
+
+
+
+
+
+if (jspb.Message.GENERATE_TO_OBJECT) {
+/**
+ * Creates an object representation of this proto.
+ * Field names that are reserved in JavaScript and will be renamed to pb_name.
+ * Optional fields that are not set will be set to undefined.
+ * To access a reserved field use, foo.pb_<name>, eg, foo.pb_default.
+ * For the list of reserved names please see:
+ *     net/proto2/compiler/js/internal/generator.cc#kKeyword.
+ * @param {boolean=} opt_includeInstance Deprecated. whether to include the
+ *     JSPB instance for transitional soy proto support:
+ *     http://goto/soy-param-migration
+ * @return {!Object}
+ */
+proto.user.GetUserRequest.prototype.toObject = function(opt_includeInstance) {
+  return proto.user.GetUserRequest.toObject(opt_includeInstance, this);
+};
+
+
+/**
+ * Static version of the {@see toObject} method.
+ * @param {boolean|undefined} includeInstance Deprecated. Whether to include
+ *     the JSPB instance for transitional soy proto support:
+ *     http://goto/soy-param-migration
+ * @param {!proto.user.GetUserRequest} msg The msg instance to transform.
+ * @return {!Object}
+ * @suppress {unusedLocalVariables} f is only used for nested messages
+ */
+proto.user.GetUserRequest.toObject = function(includeInstance, msg) {
+  var f, obj = {
+    id: jspb.Message.getFieldWithDefault(msg, 1, 0)
+  };
+
+  if (includeInstance) {
+    obj.$jspbMessageInstance = msg;
+  }
+  return obj;
+};
+}
+
+
+/**
+ * Deserializes binary data (in protobuf wire format).
+ * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @return {!proto.user.GetUserRequest}
+ */
+proto.user.GetUserRequest.deserializeBinary = function(bytes) {
+  var reader = new jspb.BinaryReader(bytes);
+  var msg = new proto.user.GetUserRequest;
+  return proto.user.GetUserRequest.deserializeBinaryFromReader(msg, reader);
+};
+
+
+/**
+ * Deserializes binary data (in protobuf wire format) from the
+ * given reader into the given message object.
+ * @param {!proto.user.GetUserRequest} msg The message object to deserialize into.
+ * @param {!jspb.BinaryReader} reader The BinaryReader to use.
+ * @return {!proto.user.GetUserRequest}
+ */
+proto.user.GetUserRequest.deserializeBinaryFromReader = function(msg, reader) {
+  while (reader.nextField()) {
+    if (reader.isEndGroup()) {
+      break;
+    }
+    var field = reader.getFieldNumber();
+    switch (field) {
+    case 1:
+      var value = /** @type {number} */ (reader.readInt32());
+      msg.setId(value);
+      break;
+    default:
+      reader.skipField();
+      break;
+    }
+  }
+  return msg;
+};
+
+
+/**
+ * Serializes the message to binary data (in protobuf wire format).
+ * @return {!Uint8Array}
+ */
+proto.user.GetUserRequest.prototype.serializeBinary = function() {
+  var writer = new jspb.BinaryWriter();
+  proto.user.GetUserRequest.serializeBinaryToWriter(this, writer);
+  return writer.getResultBuffer();
+};
+
+
+/**
+ * Serializes the given message to binary data (in protobuf wire
+ * format), writing to the given BinaryWriter.
+ * @param {!proto.user.GetUserRequest} message
+ * @param {!jspb.BinaryWriter} writer
+ * @suppress {unusedLocalVariables} f is only used for nested messages
+ */
+proto.user.GetUserRequest.serializeBinaryToWriter = function(message, writer) {
+  var f = undefined;
+  f = message.getId();
+  if (f !== 0) {
+    writer.writeInt32(
+      1,
+      f
+    );
+  }
+};
+
+
+/**
+ * optional int32 id = 1;
+ * @return {number}
+ */
+proto.user.GetUserRequest.prototype.getId = function() {
+  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 1, 0));
+};
+
+
+/**
+ * @param {number} value
+ * @return {!proto.user.GetUserRequest} returns this
+ */
+proto.user.GetUserRequest.prototype.setId = function(value) {
+  return jspb.Message.setProto3IntField(this, 1, value);
+};
+
+
+
+
+
+if (jspb.Message.GENERATE_TO_OBJECT) {
+/**
+ * Creates an object representation of this proto.
+ * Field names that are reserved in JavaScript and will be renamed to pb_name.
+ * Optional fields that are not set will be set to undefined.
+ * To access a reserved field use, foo.pb_<name>, eg, foo.pb_default.
+ * For the list of reserved names please see:
+ *     net/proto2/compiler/js/internal/generator.cc#kKeyword.
+ * @param {boolean=} opt_includeInstance Deprecated. whether to include the
+ *     JSPB instance for transitional soy proto support:
+ *     http://goto/soy-param-migration
+ * @return {!Object}
+ */
+proto.user.GetUserResponse.prototype.toObject = function(opt_includeInstance) {
+  return proto.user.GetUserResponse.toObject(opt_includeInstance, this);
+};
+
+
+/**
+ * Static version of the {@see toObject} method.
+ * @param {boolean|undefined} includeInstance Deprecated. Whether to include
+ *     the JSPB instance for transitional soy proto support:
+ *     http://goto/soy-param-migration
+ * @param {!proto.user.GetUserResponse} msg The msg instance to transform.
+ * @return {!Object}
+ * @suppress {unusedLocalVariables} f is only used for nested messages
+ */
+proto.user.GetUserResponse.toObject = function(includeInstance, msg) {
+  var f, obj = {
+    user: (f = msg.getUser()) && proto.user.User.toObject(includeInstance, f)
+  };
+
+  if (includeInstance) {
+    obj.$jspbMessageInstance = msg;
+  }
+  return obj;
+};
+}
+
+
+/**
+ * Deserializes binary data (in protobuf wire format).
+ * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @return {!proto.user.GetUserResponse}
+ */
+proto.user.GetUserResponse.deserializeBinary = function(bytes) {
+  var reader = new jspb.BinaryReader(bytes);
+  var msg = new proto.user.GetUserResponse;
+  return proto.user.GetUserResponse.deserializeBinaryFromReader(msg, reader);
+};
+
+
+/**
+ * Deserializes binary data (in protobuf wire format) from the
+ * given reader into the given message object.
+ * @param {!proto.user.GetUserResponse} msg The message object to deserialize into.
+ * @param {!jspb.BinaryReader} reader The BinaryReader to use.
+ * @return {!proto.user.GetUserResponse}
+ */
+proto.user.GetUserResponse.deserializeBinaryFromReader = function(msg, reader) {
+  while (reader.nextField()) {
+    if (reader.isEndGroup()) {
+      break;
+    }
+    var field = reader.getFieldNumber();
+    switch (field) {
+    case 1:
+      var value = new proto.user.User;
+      reader.readMessage(value,proto.user.User.deserializeBinaryFromReader);
+      msg.setUser(value);
+      break;
+    default:
+      reader.skipField();
+      break;
+    }
+  }
+  return msg;
+};
+
+
+/**
+ * Serializes the message to binary data (in protobuf wire format).
+ * @return {!Uint8Array}
+ */
+proto.user.GetUserResponse.prototype.serializeBinary = function() {
+  var writer = new jspb.BinaryWriter();
+  proto.user.GetUserResponse.serializeBinaryToWriter(this, writer);
+  return writer.getResultBuffer();
+};
+
+
+/**
+ * Serializes the given message to binary data (in protobuf wire
+ * format), writing to the given BinaryWriter.
+ * @param {!proto.user.GetUserResponse} message
+ * @param {!jspb.BinaryWriter} writer
+ * @suppress {unusedLocalVariables} f is only used for nested messages
+ */
+proto.user.GetUserResponse.serializeBinaryToWriter = function(message, writer) {
+  var f = undefined;
+  f = message.getUser();
+  if (f != null) {
+    writer.writeMessage(
+      1,
+      f,
+      proto.user.User.serializeBinaryToWriter
+    );
+  }
+};
+
+
+/**
+ * optional User user = 1;
+ * @return {?proto.user.User}
+ */
+proto.user.GetUserResponse.prototype.getUser = function() {
+  return /** @type{?proto.user.User} */ (
+    jspb.Message.getWrapperField(this, proto.user.User, 1));
+};
+
+
+/**
+ * @param {?proto.user.User|undefined} value
+ * @return {!proto.user.GetUserResponse} returns this
+*/
+proto.user.GetUserResponse.prototype.setUser = function(value) {
+  return jspb.Message.setWrapperField(this, 1, value);
+};
+
+
+/**
+ * Clears the message field making it undefined.
+ * @return {!proto.user.GetUserResponse} returns this
+ */
+proto.user.GetUserResponse.prototype.clearUser = function() {
+  return this.setUser(undefined);
+};
+
+
+/**
+ * Returns whether this field is set.
+ * @return {boolean}
+ */
+proto.user.GetUserResponse.prototype.hasUser = function() {
+  return jspb.Message.getField(this, 1) != null;
+};
+
+
+
+
+
+if (jspb.Message.GENERATE_TO_OBJECT) {
+/**
+ * Creates an object representation of this proto.
+ * Field names that are reserved in JavaScript and will be renamed to pb_name.
+ * Optional fields that are not set will be set to undefined.
+ * To access a reserved field use, foo.pb_<name>, eg, foo.pb_default.
+ * For the list of reserved names please see:
+ *     net/proto2/compiler/js/internal/generator.cc#kKeyword.
+ * @param {boolean=} opt_includeInstance Deprecated. whether to include the
+ *     JSPB instance for transitional soy proto support:
+ *     http://goto/soy-param-migration
+ * @return {!Object}
+ */
+proto.user.CreateUserRequest.prototype.toObject = function(opt_includeInstance) {
+  return proto.user.CreateUserRequest.toObject(opt_includeInstance, this);
+};
+
+
+/**
+ * Static version of the {@see toObject} method.
+ * @param {boolean|undefined} includeInstance Deprecated. Whether to include
+ *     the JSPB instance for transitional soy proto support:
+ *     http://goto/soy-param-migration
+ * @param {!proto.user.CreateUserRequest} msg The msg instance to transform.
+ * @return {!Object}
+ * @suppress {unusedLocalVariables} f is only used for nested messages
+ */
+proto.user.CreateUserRequest.toObject = function(includeInstance, msg) {
+  var f, obj = {
+    name: jspb.Message.getFieldWithDefault(msg, 1, ""),
+    email: jspb.Message.getFieldWithDefault(msg, 2, ""),
+    age: jspb.Message.getFieldWithDefault(msg, 3, 0),
+    role: jspb.Message.getFieldWithDefault(msg, 4, "")
+  };
+
+  if (includeInstance) {
+    obj.$jspbMessageInstance = msg;
+  }
+  return obj;
+};
+}
+
+
+/**
+ * Deserializes binary data (in protobuf wire format).
+ * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @return {!proto.user.CreateUserRequest}
+ */
+proto.user.CreateUserRequest.deserializeBinary = function(bytes) {
+  var reader = new jspb.BinaryReader(bytes);
+  var msg = new proto.user.CreateUserRequest;
+  return proto.user.CreateUserRequest.deserializeBinaryFromReader(msg, reader);
+};
+
+
+/**
+ * Deserializes binary data (in protobuf wire format) from the
+ * given reader into the given message object.
+ * @param {!proto.user.CreateUserRequest} msg The message object to deserialize into.
+ * @param {!jspb.BinaryReader} reader The BinaryReader to use.
+ * @return {!proto.user.CreateUserRequest}
+ */
+proto.user.CreateUserRequest.deserializeBinaryFromReader = function(msg, reader) {
+  while (reader.nextField()) {
+    if (reader.isEndGroup()) {
+      break;
+    }
+    var field = reader.getFieldNumber();
+    switch (field) {
+    case 1:
+      var value = /** @type {string} */ (reader.readString());
+      msg.setName(value);
+      break;
+    case 2:
+      var value = /** @type {string} */ (reader.readString());
+      msg.setEmail(value);
+      break;
+    case 3:
+      var value = /** @type {number} */ (reader.readInt32());
+      msg.setAge(value);
+      break;
+    case 4:
+      var value = /** @type {string} */ (reader.readString());
+      msg.setRole(value);
+      break;
+    default:
+      reader.skipField();
+      break;
+    }
+  }
+  return msg;
+};
+
+
+/**
+ * Serializes the message to binary data (in protobuf wire format).
+ * @return {!Uint8Array}
+ */
+proto.user.CreateUserRequest.prototype.serializeBinary = function() {
+  var writer = new jspb.BinaryWriter();
+  proto.user.CreateUserRequest.serializeBinaryToWriter(this, writer);
+  return writer.getResultBuffer();
+};
+
+
+/**
+ * Serializes the given message to binary data (in protobuf wire
+ * format), writing to the given BinaryWriter.
+ * @param {!proto.user.CreateUserRequest} message
+ * @param {!jspb.BinaryWriter} writer
+ * @suppress {unusedLocalVariables} f is only used for nested messages
+ */
+proto.user.CreateUserRequest.serializeBinaryToWriter = function(message, writer) {
+  var f = undefined;
+  f = message.getName();
+  if (f.length > 0) {
+    writer.writeString(
+      1,
+      f
+    );
+  }
+  f = message.getEmail();
+  if (f.length > 0) {
+    writer.writeString(
+      2,
+      f
+    );
+  }
+  f = message.getAge();
+  if (f !== 0) {
+    writer.writeInt32(
+      3,
+      f
+    );
+  }
+  f = message.getRole();
+  if (f.length > 0) {
+    writer.writeString(
+      4,
+      f
+    );
+  }
+};
+
+
+/**
+ * optional string name = 1;
+ * @return {string}
+ */
+proto.user.CreateUserRequest.prototype.getName = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 1, ""));
+};
+
+
+/**
+ * @param {string} value
+ * @return {!proto.user.CreateUserRequest} returns this
+ */
+proto.user.CreateUserRequest.prototype.setName = function(value) {
+  return jspb.Message.setProto3StringField(this, 1, value);
+};
+
+
+/**
+ * optional string email = 2;
+ * @return {string}
+ */
+proto.user.CreateUserRequest.prototype.getEmail = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 2, ""));
+};
+
+
+/**
+ * @param {string} value
+ * @return {!proto.user.CreateUserRequest} returns this
+ */
+proto.user.CreateUserRequest.prototype.setEmail = function(value) {
+  return jspb.Message.setProto3StringField(this, 2, value);
+};
+
+
+/**
+ * optional int32 age = 3;
+ * @return {number}
+ */
+proto.user.CreateUserRequest.prototype.getAge = function() {
+  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 3, 0));
+};
+
+
+/**
+ * @param {number} value
+ * @return {!proto.user.CreateUserRequest} returns this
+ */
+proto.user.CreateUserRequest.prototype.setAge = function(value) {
+  return jspb.Message.setProto3IntField(this, 3, value);
+};
+
+
+/**
+ * optional string role = 4;
+ * @return {string}
+ */
+proto.user.CreateUserRequest.prototype.getRole = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 4, ""));
+};
+
+
+/**
+ * @param {string} value
+ * @return {!proto.user.CreateUserRequest} returns this
+ */
+proto.user.CreateUserRequest.prototype.setRole = function(value) {
+  return jspb.Message.setProto3StringField(this, 4, value);
+};
+
+
+
+
+
+if (jspb.Message.GENERATE_TO_OBJECT) {
+/**
+ * Creates an object representation of this proto.
+ * Field names that are reserved in JavaScript and will be renamed to pb_name.
+ * Optional fields that are not set will be set to undefined.
+ * To access a reserved field use, foo.pb_<name>, eg, foo.pb_default.
+ * For the list of reserved names please see:
+ *     net/proto2/compiler/js/internal/generator.cc#kKeyword.
+ * @param {boolean=} opt_includeInstance Deprecated. whether to include the
+ *     JSPB instance for transitional soy proto support:
+ *     http://goto/soy-param-migration
+ * @return {!Object}
+ */
+proto.user.CreateUserResponse.prototype.toObject = function(opt_includeInstance) {
+  return proto.user.CreateUserResponse.toObject(opt_includeInstance, this);
+};
+
+
+/**
+ * Static version of the {@see toObject} method.
+ * @param {boolean|undefined} includeInstance Deprecated. Whether to include
+ *     the JSPB instance for transitional soy proto support:
+ *     http://goto/soy-param-migration
+ * @param {!proto.user.CreateUserResponse} msg The msg instance to transform.
+ * @return {!Object}
+ * @suppress {unusedLocalVariables} f is only used for nested messages
+ */
+proto.user.CreateUserResponse.toObject = function(includeInstance, msg) {
+  var f, obj = {
+    user: (f = msg.getUser()) && proto.user.User.toObject(includeInstance, f)
+  };
+
+  if (includeInstance) {
+    obj.$jspbMessageInstance = msg;
+  }
+  return obj;
+};
+}
+
+
+/**
+ * Deserializes binary data (in protobuf wire format).
+ * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @return {!proto.user.CreateUserResponse}
+ */
+proto.user.CreateUserResponse.deserializeBinary = function(bytes) {
+  var reader = new jspb.BinaryReader(bytes);
+  var msg = new proto.user.CreateUserResponse;
+  return proto.user.CreateUserResponse.deserializeBinaryFromReader(msg, reader);
+};
+
+
+/**
+ * Deserializes binary data (in protobuf wire format) from the
+ * given reader into the given message object.
+ * @param {!proto.user.CreateUserResponse} msg The message object to deserialize into.
+ * @param {!jspb.BinaryReader} reader The BinaryReader to use.
+ * @return {!proto.user.CreateUserResponse}
+ */
+proto.user.CreateUserResponse.deserializeBinaryFromReader = function(msg, reader) {
+  while (reader.nextField()) {
+    if (reader.isEndGroup()) {
+      break;
+    }
+    var field = reader.getFieldNumber();
+    switch (field) {
+    case 1:
+      var value = new proto.user.User;
+      reader.readMessage(value,proto.user.User.deserializeBinaryFromReader);
+      msg.setUser(value);
+      break;
+    default:
+      reader.skipField();
+      break;
+    }
+  }
+  return msg;
+};
+
+
+/**
+ * Serializes the message to binary data (in protobuf wire format).
+ * @return {!Uint8Array}
+ */
+proto.user.CreateUserResponse.prototype.serializeBinary = function() {
+  var writer = new jspb.BinaryWriter();
+  proto.user.CreateUserResponse.serializeBinaryToWriter(this, writer);
+  return writer.getResultBuffer();
+};
+
+
+/**
+ * Serializes the given message to binary data (in protobuf wire
+ * format), writing to the given BinaryWriter.
+ * @param {!proto.user.CreateUserResponse} message
+ * @param {!jspb.BinaryWriter} writer
+ * @suppress {unusedLocalVariables} f is only used for nested messages
+ */
+proto.user.CreateUserResponse.serializeBinaryToWriter = function(message, writer) {
+  var f = undefined;
+  f = message.getUser();
+  if (f != null) {
+    writer.writeMessage(
+      1,
+      f,
+      proto.user.User.serializeBinaryToWriter
+    );
+  }
+};
+
+
+/**
+ * optional User user = 1;
+ * @return {?proto.user.User}
+ */
+proto.user.CreateUserResponse.prototype.getUser = function() {
+  return /** @type{?proto.user.User} */ (
+    jspb.Message.getWrapperField(this, proto.user.User, 1));
+};
+
+
+/**
+ * @param {?proto.user.User|undefined} value
+ * @return {!proto.user.CreateUserResponse} returns this
+*/
+proto.user.CreateUserResponse.prototype.setUser = function(value) {
+  return jspb.Message.setWrapperField(this, 1, value);
+};
+
+
+/**
+ * Clears the message field making it undefined.
+ * @return {!proto.user.CreateUserResponse} returns this
+ */
+proto.user.CreateUserResponse.prototype.clearUser = function() {
+  return this.setUser(undefined);
+};
+
+
+/**
+ * Returns whether this field is set.
+ * @return {boolean}
+ */
+proto.user.CreateUserResponse.prototype.hasUser = function() {
+  return jspb.Message.getField(this, 1) != null;
+};
+
+
+
+
+
+if (jspb.Message.GENERATE_TO_OBJECT) {
+/**
+ * Creates an object representation of this proto.
+ * Field names that are reserved in JavaScript and will be renamed to pb_name.
+ * Optional fields that are not set will be set to undefined.
+ * To access a reserved field use, foo.pb_<name>, eg, foo.pb_default.
+ * For the list of reserved names please see:
+ *     net/proto2/compiler/js/internal/generator.cc#kKeyword.
+ * @param {boolean=} opt_includeInstance Deprecated. whether to include the
+ *     JSPB instance for transitional soy proto support:
+ *     http://goto/soy-param-migration
+ * @return {!Object}
+ */
+proto.user.ListUsersRequest.prototype.toObject = function(opt_includeInstance) {
+  return proto.user.ListUsersRequest.toObject(opt_includeInstance, this);
+};
+
+
+/**
+ * Static version of the {@see toObject} method.
+ * @param {boolean|undefined} includeInstance Deprecated. Whether to include
+ *     the JSPB instance for transitional soy proto support:
+ *     http://goto/soy-param-migration
+ * @param {!proto.user.ListUsersRequest} msg The msg instance to transform.
+ * @return {!Object}
+ * @suppress {unusedLocalVariables} f is only used for nested messages
+ */
+proto.user.ListUsersRequest.toObject = function(includeInstance, msg) {
+  var f, obj = {
+
+  };
+
+  if (includeInstance) {
+    obj.$jspbMessageInstance = msg;
+  }
+  return obj;
+};
+}
+
+
+/**
+ * Deserializes binary data (in protobuf wire format).
+ * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @return {!proto.user.ListUsersRequest}
+ */
+proto.user.ListUsersRequest.deserializeBinary = function(bytes) {
+  var reader = new jspb.BinaryReader(bytes);
+  var msg = new proto.user.ListUsersRequest;
+  return proto.user.ListUsersRequest.deserializeBinaryFromReader(msg, reader);
+};
+
+
+/**
+ * Deserializes binary data (in protobuf wire format) from the
+ * given reader into the given message object.
+ * @param {!proto.user.ListUsersRequest} msg The message object to deserialize into.
+ * @param {!jspb.BinaryReader} reader The BinaryReader to use.
+ * @return {!proto.user.ListUsersRequest}
+ */
+proto.user.ListUsersRequest.deserializeBinaryFromReader = function(msg, reader) {
+  while (reader.nextField()) {
+    if (reader.isEndGroup()) {
+      break;
+    }
+    var field = reader.getFieldNumber();
+    switch (field) {
+    default:
+      reader.skipField();
+      break;
+    }
+  }
+  return msg;
+};
+
+
+/**
+ * Serializes the message to binary data (in protobuf wire format).
+ * @return {!Uint8Array}
+ */
+proto.user.ListUsersRequest.prototype.serializeBinary = function() {
+  var writer = new jspb.BinaryWriter();
+  proto.user.ListUsersRequest.serializeBinaryToWriter(this, writer);
+  return writer.getResultBuffer();
+};
+
+
+/**
+ * Serializes the given message to binary data (in protobuf wire
+ * format), writing to the given BinaryWriter.
+ * @param {!proto.user.ListUsersRequest} message
+ * @param {!jspb.BinaryWriter} writer
+ * @suppress {unusedLocalVariables} f is only used for nested messages
+ */
+proto.user.ListUsersRequest.serializeBinaryToWriter = function(message, writer) {
+  var f = undefined;
+};
+
+
+
+/**
+ * List of repeated fields within this message type.
+ * @private {!Array<number>}
+ * @const
+ */
+proto.user.ListUsersResponse.repeatedFields_ = [1];
+
+
+
+if (jspb.Message.GENERATE_TO_OBJECT) {
+/**
+ * Creates an object representation of this proto.
+ * Field names that are reserved in JavaScript and will be renamed to pb_name.
+ * Optional fields that are not set will be set to undefined.
+ * To access a reserved field use, foo.pb_<name>, eg, foo.pb_default.
+ * For the list of reserved names please see:
+ *     net/proto2/compiler/js/internal/generator.cc#kKeyword.
+ * @param {boolean=} opt_includeInstance Deprecated. whether to include the
+ *     JSPB instance for transitional soy proto support:
+ *     http://goto/soy-param-migration
+ * @return {!Object}
+ */
+proto.user.ListUsersResponse.prototype.toObject = function(opt_includeInstance) {
+  return proto.user.ListUsersResponse.toObject(opt_includeInstance, this);
+};
+
+
+/**
+ * Static version of the {@see toObject} method.
+ * @param {boolean|undefined} includeInstance Deprecated. Whether to include
+ *     the JSPB instance for transitional soy proto support:
+ *     http://goto/soy-param-migration
+ * @param {!proto.user.ListUsersResponse} msg The msg instance to transform.
+ * @return {!Object}
+ * @suppress {unusedLocalVariables} f is only used for nested messages
+ */
+proto.user.ListUsersResponse.toObject = function(includeInstance, msg) {
+  var f, obj = {
+    usersList: jspb.Message.toObjectList(msg.getUsersList(),
+    proto.user.User.toObject, includeInstance)
+  };
+
+  if (includeInstance) {
+    obj.$jspbMessageInstance = msg;
+  }
+  return obj;
+};
+}
+
+
+/**
+ * Deserializes binary data (in protobuf wire format).
+ * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @return {!proto.user.ListUsersResponse}
+ */
+proto.user.ListUsersResponse.deserializeBinary = function(bytes) {
+  var reader = new jspb.BinaryReader(bytes);
+  var msg = new proto.user.ListUsersResponse;
+  return proto.user.ListUsersResponse.deserializeBinaryFromReader(msg, reader);
+};
+
+
+/**
+ * Deserializes binary data (in protobuf wire format) from the
+ * given reader into the given message object.
+ * @param {!proto.user.ListUsersResponse} msg The message object to deserialize into.
+ * @param {!jspb.BinaryReader} reader The BinaryReader to use.
+ * @return {!proto.user.ListUsersResponse}
+ */
+proto.user.ListUsersResponse.deserializeBinaryFromReader = function(msg, reader) {
+  while (reader.nextField()) {
+    if (reader.isEndGroup()) {
+      break;
+    }
+    var field = reader.getFieldNumber();
+    switch (field) {
+    case 1:
+      var value = new proto.user.User;
+      reader.readMessage(value,proto.user.User.deserializeBinaryFromReader);
+      msg.addUsers(value);
+      break;
+    default:
+      reader.skipField();
+      break;
+    }
+  }
+  return msg;
+};
+
+
+/**
+ * Serializes the message to binary data (in protobuf wire format).
+ * @return {!Uint8Array}
+ */
+proto.user.ListUsersResponse.prototype.serializeBinary = function() {
+  var writer = new jspb.BinaryWriter();
+  proto.user.ListUsersResponse.serializeBinaryToWriter(this, writer);
+  return writer.getResultBuffer();
+};
+
+
+/**
+ * Serializes the given message to binary data (in protobuf wire
+ * format), writing to the given BinaryWriter.
+ * @param {!proto.user.ListUsersResponse} message
+ * @param {!jspb.BinaryWriter} writer
+ * @suppress {unusedLocalVariables} f is only used for nested messages
+ */
+proto.user.ListUsersResponse.serializeBinaryToWriter = function(message, writer) {
+  var f = undefined;
+  f = message.getUsersList();
+  if (f.length > 0) {
+    writer.writeRepeatedMessage(
+      1,
+      f,
+      proto.user.User.serializeBinaryToWriter
+    );
+  }
+};
+
+
+/**
+ * repeated User users = 1;
+ * @return {!Array<!proto.user.User>}
+ */
+proto.user.ListUsersResponse.prototype.getUsersList = function() {
+  return /** @type{!Array<!proto.user.User>} */ (
+    jspb.Message.getRepeatedWrapperField(this, proto.user.User, 1));
+};
+
+
+/**
+ * @param {!Array<!proto.user.User>} value
+ * @return {!proto.user.ListUsersResponse} returns this
+*/
+proto.user.ListUsersResponse.prototype.setUsersList = function(value) {
+  return jspb.Message.setRepeatedWrapperField(this, 1, value);
+};
+
+
+/**
+ * @param {!proto.user.User=} opt_value
+ * @param {number=} opt_index
+ * @return {!proto.user.User}
+ */
+proto.user.ListUsersResponse.prototype.addUsers = function(opt_value, opt_index) {
+  return jspb.Message.addToRepeatedWrapperField(this, 1, opt_value, proto.user.User, opt_index);
+};
+
+
+/**
+ * Clears the list making it empty but non-null.
+ * @return {!proto.user.ListUsersResponse} returns this
+ */
+proto.user.ListUsersResponse.prototype.clearUsersList = function() {
+  return this.setUsersList([]);
+};
+
+
+goog.object.extend(exports, proto.user);
+=== ./src/proto/user_grpc_web_pb.js ===
+/**
+ * @fileoverview gRPC-Web generated client stub for user
+ * @enhanceable
+ * @public
+ */
+
+// Code generated by protoc-gen-grpc-web. DO NOT EDIT.
+// versions:
+// 	protoc-gen-grpc-web v1.4.2
+// 	protoc              v3.19.1
+// source: user.proto
+
+
+/* eslint-disable */
+// @ts-nocheck
+
+
+
+const grpc = {};
+grpc.web = require('grpc-web');
+
+const proto = {};
+proto.user = require('./user_pb.js');
+
+/**
+ * @param {string} hostname
+ * @param {?Object} credentials
+ * @param {?grpc.web.ClientOptions} options
+ * @constructor
+ * @struct
+ * @final
+ */
+proto.user.UserServiceClient =
+    function(hostname, credentials, options) {
+  if (!options) options = {};
+  options.format = 'text';
+
+  /**
+   * @private @const {!grpc.web.GrpcWebClientBase} The client
+   */
+  this.client_ = new grpc.web.GrpcWebClientBase(options);
+
+  /**
+   * @private @const {string} The hostname
+   */
+  this.hostname_ = hostname.replace(/\/+$/, '');
+
+};
+
+
+/**
+ * @param {string} hostname
+ * @param {?Object} credentials
+ * @param {?grpc.web.ClientOptions} options
+ * @constructor
+ * @struct
+ * @final
+ */
+proto.user.UserServicePromiseClient =
+    function(hostname, credentials, options) {
+  if (!options) options = {};
+  options.format = 'text';
+
+  /**
+   * @private @const {!grpc.web.GrpcWebClientBase} The client
+   */
+  this.client_ = new grpc.web.GrpcWebClientBase(options);
+
+  /**
+   * @private @const {string} The hostname
+   */
+  this.hostname_ = hostname.replace(/\/+$/, '');
+
+};
+
+
+/**
+ * @const
+ * @type {!grpc.web.MethodDescriptor<
+ *   !proto.user.GetUserRequest,
+ *   !proto.user.GetUserResponse>}
+ */
+const methodDescriptor_UserService_GetUser = new grpc.web.MethodDescriptor(
+  '/user.UserService/GetUser',
+  grpc.web.MethodType.UNARY,
+  proto.user.GetUserRequest,
+  proto.user.GetUserResponse,
+  /**
+   * @param {!proto.user.GetUserRequest} request
+   * @return {!Uint8Array}
+   */
+  function(request) {
+    return request.serializeBinary();
+  },
+  proto.user.GetUserResponse.deserializeBinary
+);
+
+
+/**
+ * @param {!proto.user.GetUserRequest} request The
+ *     request proto
+ * @param {?Object<string, string>} metadata User defined
+ *     call metadata
+ * @param {function(?grpc.web.RpcError, ?proto.user.GetUserResponse)}
+ *     callback The callback function(error, response)
+ * @return {!grpc.web.ClientReadableStream<!proto.user.GetUserResponse>|undefined}
+ *     The XHR Node Readable Stream
+ */
+proto.user.UserServiceClient.prototype.getUser =
+    function(request, metadata, callback) {
+  return this.client_.rpcCall(this.hostname_ +
+      '/user.UserService/GetUser',
+      request,
+      metadata || {},
+      methodDescriptor_UserService_GetUser,
+      callback);
+};
+
+
+/**
+ * @param {!proto.user.GetUserRequest} request The
+ *     request proto
+ * @param {?Object<string, string>=} metadata User defined
+ *     call metadata
+ * @return {!Promise<!proto.user.GetUserResponse>}
+ *     Promise that resolves to the response
+ */
+proto.user.UserServicePromiseClient.prototype.getUser =
+    function(request, metadata) {
+  return this.client_.unaryCall(this.hostname_ +
+      '/user.UserService/GetUser',
+      request,
+      metadata || {},
+      methodDescriptor_UserService_GetUser);
+};
+
+
+/**
+ * @const
+ * @type {!grpc.web.MethodDescriptor<
+ *   !proto.user.CreateUserRequest,
+ *   !proto.user.CreateUserResponse>}
+ */
+const methodDescriptor_UserService_CreateUser = new grpc.web.MethodDescriptor(
+  '/user.UserService/CreateUser',
+  grpc.web.MethodType.UNARY,
+  proto.user.CreateUserRequest,
+  proto.user.CreateUserResponse,
+  /**
+   * @param {!proto.user.CreateUserRequest} request
+   * @return {!Uint8Array}
+   */
+  function(request) {
+    return request.serializeBinary();
+  },
+  proto.user.CreateUserResponse.deserializeBinary
+);
+
+
+/**
+ * @param {!proto.user.CreateUserRequest} request The
+ *     request proto
+ * @param {?Object<string, string>} metadata User defined
+ *     call metadata
+ * @param {function(?grpc.web.RpcError, ?proto.user.CreateUserResponse)}
+ *     callback The callback function(error, response)
+ * @return {!grpc.web.ClientReadableStream<!proto.user.CreateUserResponse>|undefined}
+ *     The XHR Node Readable Stream
+ */
+proto.user.UserServiceClient.prototype.createUser =
+    function(request, metadata, callback) {
+  return this.client_.rpcCall(this.hostname_ +
+      '/user.UserService/CreateUser',
+      request,
+      metadata || {},
+      methodDescriptor_UserService_CreateUser,
+      callback);
+};
+
+
+/**
+ * @param {!proto.user.CreateUserRequest} request The
+ *     request proto
+ * @param {?Object<string, string>=} metadata User defined
+ *     call metadata
+ * @return {!Promise<!proto.user.CreateUserResponse>}
+ *     Promise that resolves to the response
+ */
+proto.user.UserServicePromiseClient.prototype.createUser =
+    function(request, metadata) {
+  return this.client_.unaryCall(this.hostname_ +
+      '/user.UserService/CreateUser',
+      request,
+      metadata || {},
+      methodDescriptor_UserService_CreateUser);
+};
+
+
+/**
+ * @const
+ * @type {!grpc.web.MethodDescriptor<
+ *   !proto.user.ListUsersRequest,
+ *   !proto.user.ListUsersResponse>}
+ */
+const methodDescriptor_UserService_ListUsers = new grpc.web.MethodDescriptor(
+  '/user.UserService/ListUsers',
+  grpc.web.MethodType.UNARY,
+  proto.user.ListUsersRequest,
+  proto.user.ListUsersResponse,
+  /**
+   * @param {!proto.user.ListUsersRequest} request
+   * @return {!Uint8Array}
+   */
+  function(request) {
+    return request.serializeBinary();
+  },
+  proto.user.ListUsersResponse.deserializeBinary
+);
+
+
+/**
+ * @param {!proto.user.ListUsersRequest} request The
+ *     request proto
+ * @param {?Object<string, string>} metadata User defined
+ *     call metadata
+ * @param {function(?grpc.web.RpcError, ?proto.user.ListUsersResponse)}
+ *     callback The callback function(error, response)
+ * @return {!grpc.web.ClientReadableStream<!proto.user.ListUsersResponse>|undefined}
+ *     The XHR Node Readable Stream
+ */
+proto.user.UserServiceClient.prototype.listUsers =
+    function(request, metadata, callback) {
+  return this.client_.rpcCall(this.hostname_ +
+      '/user.UserService/ListUsers',
+      request,
+      metadata || {},
+      methodDescriptor_UserService_ListUsers,
+      callback);
+};
+
+
+/**
+ * @param {!proto.user.ListUsersRequest} request The
+ *     request proto
+ * @param {?Object<string, string>=} metadata User defined
+ *     call metadata
+ * @return {!Promise<!proto.user.ListUsersResponse>}
+ *     Promise that resolves to the response
+ */
+proto.user.UserServicePromiseClient.prototype.listUsers =
+    function(request, metadata) {
+  return this.client_.unaryCall(this.hostname_ +
+      '/user.UserService/ListUsers',
+      request,
+      metadata || {},
+      methodDescriptor_UserService_ListUsers);
+};
+
+
+module.exports = proto.user;
+
+=== ./src/main.js ===
+import { createApp } from 'vue'
+import App from './App.vue'
+import router from './router'
+import './assets/styles/index.css'
+import Header from './components/navigation/Header.vue'
+import Footer from './components/navigation/Footer.vue'
+import Navigation from './components/navigation/Navigation.vue'
+import { store } from './store/index'
+
+const app = createApp(App)
+
+app.component('header-component', Header)
+app.component('navigation-component', Navigation)
+app.component('footer-component', Footer)
+app.use(router)
+app.use(store)
+app.mount('#app')
+=== ./src/components/layout/Card.vue ===
+=== ./src/components/navigation/Footer.vue ===
+<template>
+	<footer>
+		<p>Footer</p>
+	</footer>
+</template>=== ./src/components/navigation/Header.vue ===
+<template>
+	<header>
+		<router-link to="/">Header</router-link>
+		<navigation-component></navigation-component>
+	</header>
+</template>
+=== ./src/components/navigation/Navigation.vue ===
+<template>
+	<nav>
+		<router-link to="/signup">Singup</router-link>
+		<router-link to="/login">Login</router-link>
+	</nav>
+</template>=== ./src/components/Button.vue ===
+=== ./src/router.js ===
+import { createRouter, createWebHistory } from 'vue-router'
+import Login from './pages/authentication/Login.vue'
+import Signup from './pages/authentication/Signup.vue'
+import Welcome from './pages/general/Welcome.vue'
+import Dashboard from './pages/general/Dashboard.vue'
+import NotFound from './pages/NotFound.vue'
+
+const router = createRouter({
+	history: createWebHistory(),
+	routes: [
+		{ path: '/', component: Welcome },
+		{ path: '/dashboard', component: Dashboard },
+		{ path: '/signup', component: Signup },
+		{ path: '/login', component: Login },
+		//{ path: '/', redirect: null },
+		// { path: '/coaches', component: null },
+		// {
+		// 	path: '/coaches/:id', component: null, children: [
+		// 		{ path: 'contact', component: null },
+		// 	]
+		// },
+		{ path: '/:notFound(.*)', component: NotFound },
+	]
+})
+
+export default router;
+=== ./src/assets/styles/index.css ===
+@import './base/typography.css';
+@import './base/reset.css';
+@import './base/variables.css';
+
+@import './components/buttons.css';
+@import './components/cards.css';
+@import './components/forms.css';
+@import './components/layout.css';
+@import './components/navigation.css';
+
+@import './utilities/animations.css';
+@import './utilities/helpers.css';
+@import './utilities/spacing.css';
+
+@import './vendor/overrides.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities
+=== ./src/assets/styles/utilities/spacing.css ===
+/* ===== UTILITIES/SPACING.CSS ===== */
+
+	/* Custom spacing utilities */
+	.space-y-xs > * + * {
+	  margin-top: var(--spacing-xs);
+	}
+
+	.space-y-sm > * + * {
+	  margin-top: var(--spacing-sm);
+	}
+
+	.space-y-md > * + * {
+	  margin-top: var(--spacing-md);
+	}
+
+	.space-y-lg > * + * {
+	  margin-top: var(--spacing-lg);
+	}
+
+	.space-y-xl > * + * {
+	  margin-top: var(--spacing-xl);
+	}
+
+	.space-x-xs > * + * {
+	  margin-left: var(--spacing-xs);
+	}
+
+	.space-x-sm > * + * {
+	  margin-left: var(--spacing-sm);
+	}
+
+	.space-x-md > * + * {
+	  margin-left: var(--spacing-md);
+	}
+
+	.space-x-lg > * + * {
+	  margin-left: var(--spacing-lg);
+	}
+
+	.space-x-xl > * + * {
+	  margin-left: var(--spacing-xl);
+	}
+
+	/* Container utilities */
+	.container-xs {
+	  max-width: 475px;
+	  margin: 0 auto;
+	  padding: 0 var(--spacing-md);
+	}
+
+	.container-sm {
+	  max-width: 640px;
+	  margin: 0 auto;
+	  padding: 0 var(--spacing-md);
+	}
+
+	.container-md {
+	  max-width: 768px;
+	  margin: 0 auto;
+	  padding: 0 var(--spacing-md);
+	}
+
+	.container-lg {
+	  max-width: 1024px;
+	  margin: 0 auto;
+	  padding: 0 var(--spacing-md);
+	}
+
+	.container-xl {
+	  max-width: 1280px;
+	  margin: 0 auto;
+	  padding: 0 var(--spacing-md);
+	}
+
+	/* Section spacing */
+	.section-padding {
+	  padding: var(--spacing-3xl) 0;
+	}
+
+	.section-padding-sm {
+	  padding: var(--spacing-2xl) 0;
+	}
+
+	.section-padding-lg {
+	  padding: 6rem 0;
+	}
+=== ./src/assets/styles/utilities/animations.css ===
+=== ./src/assets/styles/utilities/helpers.css ===
+=== ./src/assets/styles/components/forms.css ===
+=== ./src/assets/styles/components/navigation.css ===
+=== ./src/assets/styles/components/layout.css ===
+=== ./src/assets/styles/components/buttons.css ===
+=== ./src/assets/styles/components/cards.css ===
+=== ./src/assets/styles/base/typography.css ===
+/* ===== BASE/TYPOGRAPHY.CSS ===== */
+@layer base {
+
+	h1 {
+		@apply font-bold leading-tight text-gray-900 mb-8 text-4xl;
+	  }
+
+	  h2 {
+		@apply font-bold leading-tight text-gray-900 mb-6 text-3xl;
+	  }
+
+	  h3 {
+		@apply font-bold leading-tight text-gray-900 mb-4 text-2xl;
+	  }
+
+	  h4 {
+		@apply font-bold leading-tight text-gray-900 mb-3 text-xl;
+	  }
+
+	  h5 {
+		@apply font-bold leading-tight text-gray-900 mb-3 text-lg;
+	  }
+
+	  h6 {
+		@apply font-bold leading-tight text-gray-900 mb-2 text-base;
+	  }
+
+	  p {
+		@apply mb-4 leading-relaxed text-gray-600;
+	  }
+
+	  a {
+		@apply text-blue-600 transition-colors duration-200 ease-in-out;
+	  }
+
+	  a:hover {
+		@apply text-blue-700;
+	  }
+
+	  strong, b {
+		@apply font-semibold;
+	  }
+
+	  em, i {
+		@apply italic;
+	  }
+
+	  small {
+		@apply text-sm;
+	  }
+
+	  code {
+		@apply font-mono text-sm bg-gray-100 text-gray-800 px-1 py-0.5 rounded;
+	  }
+
+	  pre {
+		@apply font-mono bg-gray-100 text-gray-800 p-4 rounded-md overflow-x-auto mb-4;
+	  }
+
+	  pre code {
+		@apply bg-transparent p-0;
+	  }
+
+	  blockquote {
+		@apply border-l-4 border-blue-500 pl-4 my-6 text-gray-600 italic;
+	  }
+
+	  hr {
+		@apply border-0 h-px bg-gray-200 my-8;
+	  }
+
+	  ul, ol {
+		@apply mb-4 pl-6 list-disc;
+	  }
+
+	  ol {
+		@apply list-decimal;
+	  }
+
+	  li {
+		@apply mb-1 leading-relaxed text-gray-600;
+	  }
+
+}
+=== ./src/assets/styles/base/reset.css ===
+/* ===== BASE/RESET.CSS ===== */
+
+	*,
+	*::before,
+	*::after {
+	  @apply box-border;
+	}
+	* {
+	  @apply m-0 p-0;
+	}
+	html {
+	  @apply scroll-smooth;
+	  -webkit-text-size-adjust: 100%;
+	  tab-size: 4;
+	}
+	body {
+	  @apply leading-[var(--line-height-normal)] bg-[color:var(--color-bg-primary)] text-[color:var(--color-text-primary)];
+	  font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
+		"Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+	  -webkit-font-smoothing: antialiased;
+	  -moz-osx-font-smoothing: grayscale;
+	}
+	img,
+	picture,
+	video,
+	canvas,
+	svg {
+	  @apply block max-w-full h-auto;
+	}
+	input,
+	button,
+	textarea,
+	select {
+	  font: inherit;
+	}
+	button {
+	  @apply cursor-pointer disabled:cursor-not-allowed;
+	}
+	a {
+	  @apply text-inherit;
+	  text-decoration: inherit;
+	}
+	table {
+	  @apply border-spacing-0 border-collapse;
+	}
+	ul,
+	ol {
+	  list-style: none;
+	}
+=== ./src/assets/styles/base/variables.css ===
+/* ===== BASE/VARIABLES.CSS ===== */
+	:root {
+	  /* === BRAND COLORS === */
+	  --color-primary-50: #eff6ff;
+	  --color-primary-100: #dbeafe;
+	  --color-primary-200: #bfdbfe;
+	  --color-primary-300: #93c5fd;
+	  --color-primary-400: #60a5fa;
+	  --color-primary-500: #3b82f6;
+	  --color-primary-600: #2563eb;
+	  --color-primary-700: #1d4ed8;
+	  --color-primary-800: #1e40af;
+	  --color-primary-900: #1e3a8a;
+
+	  /* === SECONDARY COLORS === */
+	  --color-secondary-50: #f8fafc;
+	  --color-secondary-100: #f1f5f9;
+	  --color-secondary-200: #e2e8f0;
+	  --color-secondary-300: #cbd5e1;
+	  --color-secondary-400: #94a3b8;
+	  --color-secondary-500: #64748b;
+	  --color-secondary-600: #475569;
+	  --color-secondary-700: #334155;
+	  --color-secondary-800: #1e293b;
+	  --color-secondary-900: #0f172a;
+
+	  /* === ACCENT COLORS === */
+	  --color-accent-50: #fdf4ff;
+	  --color-accent-100: #fae8ff;
+	  --color-accent-200: #f5d0fe;
+	  --color-accent-300: #f0abfc;
+	  --color-accent-400: #e879f9;
+	  --color-accent-500: #d946ef;
+	  --color-accent-600: #c026d3;
+	  --color-accent-700: #a21caf;
+	  --color-accent-800: #86198f;
+	  --color-accent-900: #701a75;
+
+	  /* === STATUS COLORS === */
+	  --color-success-50: #f0fdf4;
+	  --color-success-100: #dcfce7;
+	  --color-success-200: #bbf7d0;
+	  --color-success-300: #86efac;
+	  --color-success-400: #4ade80;
+	  --color-success-500: #22c55e;
+	  --color-success-600: #16a34a;
+	  --color-success-700: #15803d;
+	  --color-success-800: #166534;
+	  --color-success-900: #14532d;
+
+	  --color-warning-50: #fffbeb;
+	  --color-warning-100: #fef3c7;
+	  --color-warning-200: #fde68a;
+	  --color-warning-300: #fcd34d;
+	  --color-warning-400: #fbbf24;
+	  --color-warning-500: #f59e0b;
+	  --color-warning-600: #d97706;
+	  --color-warning-700: #b45309;
+	  --color-warning-800: #92400e;
+	  --color-warning-900: #78350f;
+
+	  --color-error-50: #fef2f2;
+	  --color-error-100: #fee2e2;
+	  --color-error-200: #fecaca;
+	  --color-error-300: #fca5a5;
+	  --color-error-400: #f87171;
+	  --color-error-500: #ef4444;
+	  --color-error-600: #dc2626;
+	  --color-error-700: #b91c1c;
+	  --color-error-800: #991b1b;
+	  --color-error-900: #7f1d1d;
+
+	  /* === NEUTRAL COLORS === */
+	  --color-neutral-50: #fafafa;
+	  --color-neutral-100: #f5f5f5;
+	  --color-neutral-200: #e5e5e5;
+	  --color-neutral-300: #d4d4d4;
+	  --color-neutral-400: #a3a3a3;
+	  --color-neutral-500: #737373;
+	  --color-neutral-600: #525252;
+	  --color-neutral-700: #404040;
+	  --color-neutral-800: #262626;
+	  --color-neutral-900: #171717;
+
+
+	/* Dark mode variables */
+	@media (prefers-color-scheme: dark) {
+	  :root {
+		--color-bg-primary: var(--color-neutral-900);
+		--color-bg-secondary: var(--color-neutral-800);
+		--color-text-primary: var(--color-neutral-100);
+		--color-text-secondary: var(--color-neutral-300);
+		--color-border: var(--color-neutral-700);
+	  }
+	}
+
+	/* Light mode variables */
+	@media (prefers-color-scheme: light) {
+	  :root {
+		--color-bg-primary: var(--color-neutral-50);
+		--color-bg-secondary: var(--color-neutral-100);
+		--color-text-primary: var(--color-neutral-900);
+		--color-text-secondary: var(--color-neutral-600);
+		--color-border: var(--color-neutral-200);
+	  }
+	}
+  }
+=== ./src/assets/styles/vendor/overrides.css ===
+=== ./src/pages/general/Dashboard.vue ===
+<template>
+	<p>Dashboard</p>
+</template>=== ./src/pages/general/Welcome.vue ===
+<template>
+	<div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+	  <!-- Create User Form -->
+	  <div class="bg-white p-6 rounded-lg shadow">
+		<h2 class="text-lg font-medium text-gray-900 mb-4">Create New User</h2>
+
+		<form @submit.prevent="submitCreateUser" class="space-y-4">
+		  <div>
+			<label for="name" class="block text-sm font-medium text-gray-700">Name</label>
+			<input
+			  type="text"
+			  id="name"
+			  v-model="newUser.name"
+			  required
+			  placeholder="Enter name"
+			  class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+			/>
+		  </div>
+
+		  <div>
+			<label for="email" class="block text-sm font-medium text-gray-700">Email</label>
+			<input
+			  type="email"
+			  id="email"
+			  v-model="newUser.email"
+			  required
+			  placeholder="email@example.com"
+			  class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+			/>
+		  </div>
+
+		  <div>
+			<label for="age" class="block text-sm font-medium text-gray-700">Age</label>
+			<input
+			  type="number"
+			  id="age"
+			  v-model.number="newUser.age"
+			  required
+			  min="1"
+			  max="150"
+			  placeholder="25"
+			  class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+			/>
+		  </div>
+
+		  <div>
+			<label for="role" class="block text-sm font-medium text-gray-700">Role</label>
+			<select
+			  id="role"
+			  v-model="newUser.role"
+			  class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+			>
+			  <option value="user">User</option>
+			  <option value="admin">Admin</option>
+			</select>
+		  </div>
+
+		  <button
+			type="submit"
+			:disabled="isCreating || !isConnected"
+			class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
+		  >
+			<svg v-if="isCreating" class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+			  <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+			  <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+			</svg>
+			{{ isCreating ? 'Creating User...' : 'Create User' }}
+		  </button>
+		</form>
+	  </div>
+
+	  <!-- Users List -->
+	  <div class="bg-white p-6 rounded-lg shadow">
+		<div class="flex justify-between items-center mb-4">
+		  <h2 class="text-lg font-medium text-gray-900">All Users</h2>
+		  <button
+			@click="loadUsers"
+			:disabled="isLoading || !isConnected"
+			class="inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
+		  >
+			<svg v-if="isLoading" class="animate-spin -ml-1 mr-2 h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+			  <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+			  <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+			</svg>
+			{{ isLoading ? 'Loading...' : 'Refresh' }}
+		  </button>
+		</div>
+
+		<div class="space-y-4">
+		  <!-- Loading State -->
+		  <div v-if="isLoading && !hasUsers" class="flex items-center justify-center py-8">
+			<div class="flex items-center">
+			  <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+				<circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+				<path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+			  </svg>
+			  <span class="text-gray-500">Loading users...</span>
+			</div>
+		  </div>
+
+		  <!-- Empty State -->
+		  <div v-else-if="!hasUsers && !isLoading" class="text-center py-8">
+			<svg class="mx-auto h-12 w-12 text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48">
+			  <path d="M34 40h10v-4a6 6 0 00-10.712-3.714M34 40H14m20 0v-4a9.971 9.971 0 00-.712-3.714M14 40H4v-4a6 6 0 0110.713-3.714M14 40v-4c0-1.313.253-2.566.713-3.714m0 0A10.003 10.003 0 0124 26c4.21 0 7.813 2.602 9.288 6.286M30 14a6 6 0 11-12 0 6 6 0 0112 0z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+			</svg>
+			<h3 class="mt-2 text-sm font-medium text-gray-900">No users found</h3>
+			<p class="mt-1 text-sm text-gray-500">Create the first user to get started.</p>
+		  </div>
+
+		  <!-- Users Table -->
+		  <div v-else class="overflow-hidden">
+			<table class="min-w-full divide-y divide-gray-200">
+			  <thead class="bg-gray-50">
+				<tr>
+				  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">User</th>
+				  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
+				  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Age</th>
+				  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Role</th>
+				</tr>
+			  </thead>
+			  <tbody class="bg-white divide-y divide-gray-200">
+				<tr v-for="user in users" :key="user.id" class="hover:bg-gray-50">
+				  <td class="px-6 py-4 whitespace-nowrap">
+					<div class="flex items-center">
+					  <div class="flex-shrink-0 h-10 w-10">
+						<div class="h-10 w-10 rounded-full bg-blue-500 flex items-center justify-center">
+						  <span class="text-white font-medium text-sm">{{ user.name.charAt(0).toUpperCase() }}</span>
+						</div>
+					  </div>
+					  <div class="ml-4">
+						<div class="text-sm font-medium text-gray-900">{{ user.name }}</div>
+						<div class="text-sm text-gray-500">ID: {{ user.id }}</div>
+					  </div>
+					</div>
+				  </td>
+				  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ user.email }}</td>
+				  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ user.age }}</td>
+				  <td class="px-6 py-4 whitespace-nowrap">
+					<span :class="[
+					  'inline-flex px-2 py-1 text-xs font-semibold rounded-full',
+					  user.role === 'admin' ? 'bg-purple-100 text-purple-800' : 'bg-green-100 text-green-800'
+					]">
+					  {{ user.role }}
+					</span>
+				  </td>
+				</tr>
+			  </tbody>
+			</table>
+		  </div>
+
+		  <!-- Last Updated -->
+		  <div v-if="lastUpdated" class="text-center text-xs text-gray-500 mt-4">
+			Last updated: {{ lastUpdated }}
+		  </div>
+		</div>
+	  </div>
+	</div>
+
+	<!-- Status Message -->
+	<div v-if="message"
+		 :class="[
+		   'mt-6 p-4 rounded-md',
+		   message.type === 'success' ? 'bg-green-50 text-green-800 border border-green-200' : 'bg-red-50 text-red-800 border border-red-200'
+		 ]">
+	  {{ message.text }}
+	</div>
+
+	<!-- Debug Info -->
+	<div class="mt-8 bg-gray-100 p-4 rounded-lg">
+	  <h3 class="text-sm font-medium text-gray-900 mb-2">Debug Information</h3>
+	  <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs text-gray-600">
+		<div>
+		  <strong>gRPC-Web URL:</strong> {{ connectionInfo.url }}
+		</div>
+		<div>
+		  <strong>Connection Status:</strong> {{ connectionInfo.status }}
+		</div>
+		<div>
+		  <strong>Connection Health:</strong> {{ connectionInfo.healthy ? 'Healthy' : 'Unhealthy' }}
+		</div>
+		<div>
+		  <strong>Users Count:</strong> {{ userCount }}
+		</div>
+		<div>
+		  <strong>Last Checked:</strong> {{ connectionInfo.lastChecked ? new Date(connectionInfo.lastChecked).toLocaleTimeString() : 'Never' }}
+		</div>
+		<div>
+		  <strong>Errors:</strong> {{ error || 'None' }}
+		</div>
+	  </div>
+	</div>
+  </template>
+
+  <script>
+  import { mapState, mapGetters, mapActions } from 'vuex'
+
+  export default {
+	name: 'WelcomePage',
+
+	data() {
+	  return {
+		message: null,
+		lastUpdated: null,
+		newUser: {
+		  name: '',
+		  email: '',
+		  age: '',
+		  role: 'user'
+		}
+	  }
+	},
+
+	computed: {
+	  ...mapState('users', ['users', 'loading', 'creating', 'error']),
+	  ...mapState('connection', ['grpcWebUrl']),
+	  ...mapGetters('users', ['hasUsers', 'userCount']),
+	  ...mapGetters('connection', ['isConnected', 'connectionInfo']),
+
+	  isLoading() {
+		return this.loading
+	  },
+
+	  isCreating() {
+		return this.creating
+	  }
+	},
+
+	methods: {
+	  ...mapActions('users', ['fetchUsers', 'createUser', 'clearError']),
+	  ...mapActions('connection', ['checkHealth', 'reconnect']),
+	  ...mapActions(['initializeApp']),
+
+	  async loadUsers() {
+		if (!this.isConnected) {
+		  this.showMessage('âš ï¸ Backend connection not available', 'error')
+		  return
+		}
+
+		try {
+		  await this.fetchUsers()
+		  this.lastUpdated = new Date().toLocaleTimeString()
+
+		  if (!this.hasUsers) {
+			this.showMessage('ğŸ“‹ No users found in database', 'success')
+		  }
+		} catch (error) {
+		  console.error('âŒ Error loading users:', error)
+		  this.showMessage(`âŒ Error: ${error.message}`, 'error')
+		}
+	  },
+
+	  async submitCreateUser() {
+		if (!this.isConnected) {
+		  this.showMessage('âš ï¸ Backend connection not available', 'error')
+		  return
+		}
+
+		try {
+		  const response = await this.createUser(this.newUser)
+
+		  // Reset form
+		  this.newUser = {
+			name: '',
+			email: '',
+			age: '',
+			role: 'user'
+		  }
+
+		  // Update timestamp
+		  this.lastUpdated = new Date().toLocaleTimeString()
+
+		  this.showMessage(`ğŸ‰ User "${response.user.name}" created successfully!`, 'success')
+		} catch (error) {
+		  console.error('âŒ Error creating user:', error)
+		  this.showMessage(`âŒ Error: ${error.message}`, 'error')
+		}
+	  },
+
+	  async checkConnection() {
+		try {
+		  await this.checkHealth()
+		  if (this.isConnected) {
+			this.showMessage('âœ… Connection successful!', 'success')
+		  }
+		} catch (error) {
+		  this.showMessage(`âŒ Connection failed: ${error.message}`, 'error')
+		}
+	  },
+
+	  showMessage(text, type = 'success') {
+		this.message = { text, type }
+		setTimeout(() => {
+		  this.message = null
+		}, 5000)
+	  }
+	},
+
+	async mounted() {
+	  console.log('ğŸš€ Welcome page mounted')
+
+	  try {
+		// Initialize the entire app (connection + health check)
+		const initialized = await this.initializeApp()
+
+		if (initialized && this.isConnected) {
+		  // Load initial data
+		  await this.loadUsers()
+		  this.showMessage('âœ… Application ready!', 'success')
+		} else {
+		  console.warn('âš ï¸ Application initialized with connection issues')
+		  this.showMessage('âš ï¸ Connection issues detected. Some features may not work.', 'error')
+		}
+	  } catch (error) {
+		console.error('âŒ Failed to initialize application:', error)
+		this.showMessage(`âŒ Initialization failed: ${error.message}`, 'error')
+	  }
+	}
+  }
+  </script>
+=== ./src/pages/authentication/PasswordReset.vue ===
+<template>
+	<p>Reset</p>
+</template>=== ./src/pages/authentication/Login.vue ===
+<template>
+	<p>Login</p>
+</template>=== ./src/pages/authentication/Signup.vue ===
+<template>
+	<p>Signup</p>
+</template>=== ./src/pages/NotFound.vue ===
+<template>
+	<p>404 - Not Found</p>
+</template>=== ./src/store/index.js ===
+// store/index.js
+import { createStore } from 'vuex'
+import users from './modules/users/index.js'
+import connection from './modules/connection/index.js'
+
+export const store = createStore({
+  modules: {
+    users,
+    connection
+  },
+
+  // Global actions for initialization
+  actions: {
+    async initializeApp({ dispatch }) {
+      console.log('ğŸš€ Initializing application...')
+
+      try {
+        // Initialize gRPC connection
+        await dispatch('connection/initializeClient')
+
+        // Check health
+        const healthResult = await dispatch('connection/checkHealth')
+
+        if (healthResult.status === 'healthy') {
+          console.log('âœ… Application initialized successfully')
+          return true
+        } else {
+          console.warn('âš ï¸ Application initialized with connection issues')
+          return false
+        }
+      } catch (error) {
+        console.error('âŒ Application initialization failed:', error)
+        throw error
+      }
+    }
+  },
+
+  // Global getters for convenience
+  getters: {
+    isAppReady(state, getters) {
+      return getters['connection/isConnected']
+    },
+
+    appStatus(state, getters) {
+      return {
+        connection: getters['connection/connectionInfo'],
+        usersLoaded: getters['users/hasUsers'],
+        userCount: getters['users/userCount']
+      }
+    }
+  }
+})
+=== ./src/store/modules/connection/index.js ===
+// store/modules/connection/index.js
+import { UserServiceClient } from '../../../proto/user_grpc_web_pb'
+import { ListUsersRequest } from '../../../proto/user_pb'
+
+export default {
+  namespaced: true,
+
+  state() {
+    return {
+      status: 'disconnected', // 'connecting', 'connected', 'disconnected', 'error'
+      healthy: false,
+      message: 'Not connected',
+      grpcWebUrl: process.env.VUE_APP_GRPC_WEB_URL,
+      client: null,
+      lastChecked: null,
+      error: null
+    }
+  },
+
+  mutations: {
+    SET_STATUS(state, status) {
+      state.status = status
+    },
+
+    SET_HEALTHY(state, healthy) {
+      state.healthy = healthy
+    },
+
+    SET_MESSAGE(state, message) {
+      state.message = message
+    },
+
+    SET_CLIENT(state, client) {
+      state.client = client
+    },
+
+    SET_LAST_CHECKED(state, timestamp) {
+      state.lastChecked = timestamp
+    },
+
+    SET_ERROR(state, error) {
+      state.error = error
+    },
+
+    CLEAR_ERROR(state) {
+      state.error = null
+    }
+  },
+
+  actions: {
+    initializeClient({ commit, state }) {
+      console.log(`ğŸ”§ Initializing gRPC-Web client for ${state.grpcWebUrl}`)
+
+      try {
+        const client = new UserServiceClient(state.grpcWebUrl, null, null)
+        commit('SET_CLIENT', client)
+        commit('SET_STATUS', 'initialized')
+        console.log('âœ… gRPC-Web client initialized')
+        return client
+      } catch (error) {
+        console.error('âŒ Failed to initialize gRPC-Web client:', error)
+        commit('SET_STATUS', 'error')
+        commit('SET_ERROR', `Client initialization failed: ${error.message}`)
+        throw error
+      }
+    },
+
+    async checkHealth({ commit, state, dispatch }) {
+      console.log('ğŸ¥ Checking gRPC-Web connection health...')
+
+      commit('SET_STATUS', 'connecting')
+      commit('CLEAR_ERROR')
+
+      try {
+        // Initialize client if not exists
+        if (!state.client) {
+          await dispatch('initializeClient')
+        }
+
+        // Test connection with a simple ListUsers call
+        const request = new ListUsersRequest()
+        const response = await dispatch('promisifyGrpcCall', {
+          method: state.client.listUsers,
+          request: request
+        })
+
+        const userCount = response.getUsersList().length
+
+        commit('SET_STATUS', 'connected')
+        commit('SET_HEALTHY', true)
+        commit('SET_MESSAGE', `âœ… Connected via gRPC-Web with ${userCount} users`)
+        commit('SET_LAST_CHECKED', new Date().toISOString())
+
+        console.log(`âœ… gRPC-Web health check successful - ${userCount} users found`)
+
+        return {
+          status: 'healthy',
+          connection: 'grpc-web',
+          users: userCount,
+          url: state.grpcWebUrl
+        }
+
+      } catch (error) {
+        console.error('âŒ gRPC-Web health check failed:', error)
+
+        commit('SET_STATUS', 'error')
+        commit('SET_HEALTHY', false)
+        commit('SET_MESSAGE', `âŒ gRPC-Web server not reachable: ${error.message}`)
+        commit('SET_ERROR', error.message)
+
+        return {
+          status: 'unhealthy',
+          connection: 'grpc-web',
+          error: error.message,
+          url: state.grpcWebUrl
+        }
+      }
+    },
+
+    promisifyGrpcCall({ state }, { method, request, timeout = 10000 }) {
+      return new Promise((resolve, reject) => {
+        const call = method.call(state.client, request, {}, (err, response) => {
+          if (err) {
+            console.error('âŒ gRPC-Web Error Details:', {
+              code: err.code,
+              message: err.message,
+              details: err.details,
+              metadata: err.metadata
+            })
+
+            // User-friendly error messages
+            let userFriendlyMessage = err.message || 'gRPC-Web connection failed'
+
+            if (err.code === 14 || err.message?.includes('UNAVAILABLE')) {
+              userFriendlyMessage = `gRPC server not reachable at ${state.grpcWebUrl}. Is the backend running?`
+            } else if (err.code === 12 || err.message?.includes('UNIMPLEMENTED')) {
+              userFriendlyMessage = 'gRPC method not implemented on server'
+            }
+
+            reject(new Error(userFriendlyMessage))
+          } else {
+            resolve(response)
+          }
+        })
+
+        // Timeout handling
+        setTimeout(() => {
+          if (call && typeof call.cancel === 'function') {
+            call.cancel()
+          }
+          reject(new Error(`gRPC call timeout after ${timeout}ms to ${state.grpcWebUrl}`))
+        }, timeout)
+      })
+    },
+
+    async reconnect({ dispatch }) {
+      console.log('ğŸ”„ Attempting to reconnect...')
+      return await dispatch('checkHealth')
+    }
+  },
+
+  getters: {
+    isConnected(state) {
+      return state.status === 'connected' && state.healthy
+    },
+
+    isConnecting(state) {
+      return state.status === 'connecting'
+    },
+
+    connectionInfo(state) {
+      return {
+        status: state.status,
+        healthy: state.healthy,
+        message: state.message,
+        connection: 'grpc-web',
+        url: state.grpcWebUrl,
+        lastChecked: state.lastChecked
+      }
+    },
+
+    hasError(state) {
+      return !!state.error
+    },
+
+    grpcClient(state) {
+      return state.client
+    }
+  }
+}
+=== ./src/store/modules/users/mutations.js ===
+export default {
+	SET_USERS(state, users) {
+		state.users = users || []
+	},
+
+	SET_LOADING(state, loading) {
+		state.loading = loading
+	},
+
+	SET_CREATING(state, creating) {
+		state.creating = creating
+	},
+
+	SET_ERROR(state, error) {
+		state.error = error
+	},
+
+	ADD_USER(state, user) {
+		state.users.push(user)
+	},
+
+	UPDATE_USER(state, updatedUser) {
+		const index = state.users.findIndex(user => user.id === updatedUser.id)
+		if (index !== -1) {
+			state.users.splice(index, 1, updatedUser)
+		}
+	},
+
+	REMOVE_USER(state, userId) {
+		state.users = state.users.filter(user => user.id !== userId)
+	}
+}
+=== ./src/store/modules/users/actions.js ===
+import axios from 'axios'
+
+const API_BASE = process.env.NODE_ENV === 'production' ? '' : 'http://localhost:3000'
+
+export default {
+	async fetchUsers({ commit }) {
+		commit('SET_LOADING', true)
+		commit('SET_ERROR', null)
+
+		try {
+			const response = await axios.get(`${API_BASE}/api/users`)
+			commit('SET_USERS', response.data)
+			return response.data
+		} catch (error) {
+			const errorMessage = error.response?.data?.error || error.message
+			commit('SET_ERROR', `Fehler beim Laden der Users: ${errorMessage}`)
+			throw error
+		} finally {
+			commit('SET_LOADING', false)
+		}
+	},
+
+	async createUser({ commit, dispatch }, userData) {
+		commit('SET_CREATING', true)
+		commit('SET_ERROR', null)
+
+		try {
+			const response = await axios.post(`${API_BASE}/api/users`, {
+				name: userData.name,
+				email: userData.email,
+				age: parseInt(userData.age),
+				role: userData.role || 'user'
+			})
+
+			// Nach dem Erstellen die Liste neu laden
+			await dispatch('fetchUsers')
+			return response.data
+		} catch (error) {
+			const errorMessage = error.response?.data?.error || error.message
+			commit('SET_ERROR', `Fehler beim Erstellen des Users: ${errorMessage}`)
+			throw error
+		} finally {
+			commit('SET_CREATING', false)
+		}
+	},
+
+	async getUserById({ commit }, userId) {
+		commit('SET_LOADING', true)
+		commit('SET_ERROR', null)
+
+		try {
+			const response = await axios.get(`${API_BASE}/api/users/${userId}`)
+			return response.data
+		} catch (error) {
+			const errorMessage = error.response?.data?.error || error.message
+			commit('SET_ERROR', `Fehler beim Laden des Users: ${errorMessage}`)
+			throw error
+		} finally {
+			commit('SET_LOADING', false)
+		}
+	},
+
+	clearError({ commit }) {
+		commit('SET_ERROR', null)
+	},
+
+	clearUsers({ commit }) {
+		commit('SET_USERS', [])
+	}
+}
+=== ./src/store/modules/users/getters.js ===
+export default {
+	users(state) {
+		return state.users
+	},
+
+	hasUsers(state) {
+		return state.users && state.users.length > 0
+	},
+
+	userCount(state) {
+		return state.users ? state.users.length : 0
+	},
+
+	isLoading(state) {
+		return state.loading
+	},
+
+	isCreating(state) {
+		return state.creating
+	},
+
+	error(state) {
+		return state.error
+	},
+
+	getUserById: (state) => (id) => {
+		return state.users.find(user => user.id === id)
+	},
+
+	getUsersByRole: (state) => (role) => {
+		return state.users.filter(user => user.role === role)
+	},
+
+	adminUsers(state) {
+		return state.users.filter(user => user.role === 'admin')
+	},
+
+	regularUsers(state) {
+		return state.users.filter(user => user.role === 'user')
+	}
+}
+=== ./src/store/modules/users/index.js ===
+// store/modules/users/index.js
+import mutations from './mutations.js'
+import actions from './actions.js'
+import getters from './getters.js'
+
+import {
+  GetUserRequest,
+  CreateUserRequest,
+  ListUsersRequest
+} from '../../../proto/user_pb'
+
+// Enhanced Actions mit gRPC Integration
+const grpcActions = {
+  async fetchUsers({ commit, dispatch, rootGetters }) {
+    commit('SET_LOADING', true)
+    commit('SET_ERROR', null)
+
+    try {
+      // Check if connection is available
+      if (!rootGetters['connection/isConnected']) {
+        throw new Error('No gRPC connection available. Please check your connection.')
+      }
+
+      console.log('ğŸ“‹ Fetching users via gRPC-Web...')
+
+      const request = new ListUsersRequest()
+      const response = await dispatch('connection/promisifyGrpcCall', {
+        method: rootGetters['connection/grpcClient'].listUsers,
+        request: request
+      }, { root: true })
+
+      const users = response.getUsersList().map(user => ({
+        id: user.getId(),
+        name: user.getName(),
+        email: user.getEmail(),
+        age: user.getAge(),
+        role: user.getRole()
+      }))
+
+      commit('SET_USERS', users)
+      console.log(`âœ… Loaded ${users.length} users via gRPC-Web`)
+
+      return { users, count: users.length }
+
+    } catch (error) {
+      console.error('âŒ Error fetching users:', error)
+      const errorMessage = error.message || 'Failed to fetch users'
+      commit('SET_ERROR', `Error loading users: ${errorMessage}`)
+      throw error
+    } finally {
+      commit('SET_LOADING', false)
+    }
+  },
+
+  async createUser({ commit, dispatch, rootGetters }, userData) {
+    commit('SET_CREATING', true)
+    commit('SET_ERROR', null)
+
+    try {
+      // Check if connection is available
+      if (!rootGetters['connection/isConnected']) {
+        throw new Error('No gRPC connection available. Please check your connection.')
+      }
+
+      console.log(`â• Creating user via gRPC-Web: ${userData.name}`)
+
+      const request = new CreateUserRequest()
+      request.setName(userData.name)
+      request.setEmail(userData.email)
+      request.setAge(parseInt(userData.age))
+      request.setRole(userData.role || 'user')
+
+      const response = await dispatch('connection/promisifyGrpcCall', {
+        method: rootGetters['connection/grpcClient'].createUser,
+        request: request
+      }, { root: true })
+
+      const user = response.getUser()
+      const createdUser = {
+        id: user.getId(),
+        name: user.getName(),
+        email: user.getEmail(),
+        age: user.getAge(),
+        role: user.getRole()
+      }
+
+      // Add to local state
+      commit('ADD_USER', createdUser)
+
+      console.log(`âœ… User created: ${createdUser.name} with ID ${createdUser.id}`)
+
+      return { user: createdUser }
+
+    } catch (error) {
+      console.error('âŒ Error creating user:', error)
+      const errorMessage = error.message || 'Failed to create user'
+      commit('SET_ERROR', `Error creating user: ${errorMessage}`)
+      throw error
+    } finally {
+      commit('SET_CREATING', false)
+    }
+  },
+
+  async getUserById({ commit, dispatch, rootGetters }, userId) {
+    commit('SET_LOADING', true)
+    commit('SET_ERROR', null)
+
+    try {
+      // Check if connection is available
+      if (!rootGetters['connection/isConnected']) {
+        throw new Error('No gRPC connection available. Please check your connection.')
+      }
+
+      console.log(`ğŸ‘¤ Getting user by ID via gRPC-Web: ${userId}`)
+
+      const request = new GetUserRequest()
+      request.setId(parseInt(userId))
+
+      const response = await dispatch('connection/promisifyGrpcCall', {
+        method: rootGetters['connection/grpcClient'].getUser,
+        request: request
+      }, { root: true })
+
+      const user = response.getUser()
+      const userData = {
+        id: user.getId(),
+        name: user.getName(),
+        email: user.getEmail(),
+        age: user.getAge(),
+        role: user.getRole()
+      }
+
+      console.log(`âœ… Found user: ${userData.name}`)
+
+      return { user: userData }
+
+    } catch (error) {
+      console.error('âŒ Error getting user:', error)
+      const errorMessage = error.message || 'Failed to get user'
+      commit('SET_ERROR', `Error loading user: ${errorMessage}`)
+      throw error
+    } finally {
+      commit('SET_LOADING', false)
+    }
+  },
+
+  // Keep existing actions for backward compatibility
+  ...actions,
+
+  clearError({ commit }) {
+    commit('SET_ERROR', null)
+  },
+
+  clearUsers({ commit }) {
+    commit('SET_USERS', [])
+  }
+}
+
+export default {
+  namespaced: true,
+
+  state() {
+    return {
+      users: [],
+      loading: false,
+      creating: false,
+      error: null
+    }
+  },
+
+  mutations,
+  actions: grpcActions,
+  getters
+}
