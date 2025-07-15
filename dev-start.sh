@@ -2,12 +2,21 @@
 
 echo "🚀 Starting Enhanced Hot-Reload Development Environment..."
 
+# Set default values for missing environment variables
+export BACKEND_PORT=${BACKEND_PORT:-50051}
+export GRPC_WEB_PORT=${GRPC_WEB_PORT:-8081}
+export FRONTEND_PORT=${FRONTEND_PORT:-3000}
+export PORT=${BACKEND_PORT}
+export WEB_PORT=${GRPC_WEB_PORT}
+
 # Debug: Show environment
 echo "📍 Current directory: $(pwd)"
 echo "📍 Environment Variables:"
 echo "  - BACKEND_PORT: ${BACKEND_PORT}"
 echo "  - GRPC_WEB_PORT: ${GRPC_WEB_PORT}"
 echo "  - FRONTEND_PORT: ${FRONTEND_PORT}"
+echo "  - PORT: ${PORT}"
+echo "  - WEB_PORT: ${WEB_PORT}"
 
 # CRITICAL: Ensure Go bin directories are in PATH
 export PATH="/go/bin:/go/bin/linux_amd64:$PATH"
@@ -33,6 +42,33 @@ command_exists() {
     command -v "$1" >/dev/null 2>&1
 }
 
+# Function to kill all related processes
+kill_all_processes() {
+    log_info "🧹 Cleaning up existing processes..."
+
+    # Kill Air processes
+    pkill -f "air" 2>/dev/null || true
+    pkill -f "./tmp/main" 2>/dev/null || true
+    pkill -f "main" 2>/dev/null || true
+
+    # Kill frontend processes
+    pkill -f "npm run serve" 2>/dev/null || true
+    pkill -f "vue-cli-service" 2>/dev/null || true
+
+    # Kill file watchers
+    pkill -f "inotifywait" 2>/dev/null || true
+
+    # Wait for clean shutdown
+    sleep 2
+
+    # Force kill if needed
+    pkill -9 -f "air" 2>/dev/null || true
+    pkill -9 -f "./tmp/main" 2>/dev/null || true
+    pkill -9 -f "vue-cli-service" 2>/dev/null || true
+
+    log_success "Processes cleaned up"
+}
+
 # Check required tools
 log_info "Checking required tools..."
 
@@ -51,20 +87,7 @@ elif [ -f "/go/bin/linux_amd64/air" ]; then
     log_success "air found at /go/bin/linux_amd64/air and added to PATH"
 else
     log_error "air not found in common locations"
-    log_info "Available files in /go/bin:"
-    ls -la /go/bin/ 2>/dev/null || echo "Directory not found"
-    log_info "Searching for air binary recursively..."
-    find /go -name "air" -type f 2>/dev/null | head -10 || echo "No air binary found"
-
-    # Try to find any air binary and use it
-    AIR_BINARY=$(find /go -name "air" -type f 2>/dev/null | head -1)
-    if [ -n "$AIR_BINARY" ]; then
-        AIR_COMMAND="$AIR_BINARY"
-        log_warning "Found air at $AIR_BINARY, using it directly"
-    else
-        log_error "No air binary found anywhere!"
-        exit 1
-    fi
+    exit 1
 fi
 
 # Test Air command
@@ -75,7 +98,7 @@ else
     log_warning "Air command test failed, but continuing anyway..."
 fi
 
-# Check protoc and Go tools
+# Check other tools
 for tool in protoc node npm go; do
     if command_exists "$tool"; then
         log_success "$tool found"
@@ -91,8 +114,6 @@ if command_exists protoc-gen-go; then
     log_success "protoc-gen-go found at $(which protoc-gen-go)"
 else
     log_error "protoc-gen-go not found in PATH"
-    log_info "Searching for protoc-gen-go..."
-    find /go -name "protoc-gen-go" -type f 2>/dev/null | head -5
     exit 1
 fi
 
@@ -100,10 +121,11 @@ if command_exists protoc-gen-go-grpc; then
     log_success "protoc-gen-go-grpc found at $(which protoc-gen-go-grpc)"
 else
     log_error "protoc-gen-go-grpc not found in PATH"
-    log_info "Searching for protoc-gen-go-grpc..."
-    find /go -name "protoc-gen-go-grpc" -type f 2>/dev/null | head -5
     exit 1
 fi
+
+# Clean up any existing processes
+kill_all_processes
 
 # Create necessary directories
 mkdir -p server/pb server/tmp frontend/src/proto
@@ -114,391 +136,7 @@ PIDS=()
 # Cleanup function
 cleanup() {
     log_warning "Shutting down all processes..."
-    for pid in "${PIDS[@]}"; do
-        if kill -0 "$pid" 2>/dev/null; then
-            log_info "Killing process $pid"
-            kill -TERM "$pid" 2>/dev/null || kill -KILL "$pid" 2>/dev/null
-        fi
-    done
-
-    # Kill any remaining processes
-    pkill -f "air" 2>/dev/null || true
-    pkill -f "npm run serve" 2>/dev/null || true
-    pkill -f "inotifywait" 2>/dev/null || true
-
-    log_success "Cleanup completed"
-    exit 0
-}
-
-trap cleanup SIGTERM SIGINT
-
-# Function to generate proto files
-generate_proto() {
-    log_info "🔨 Generating proto files..."
-
-    # Debug: Show what's available
-    log_info "Current PATH: $PATH"
-    log_info "protoc-gen-go location: $(which protoc-gen-go 2>/dev/null || echo 'NOT FOUND')"
-    log_info "protoc-gen-go-grpc location: $(which protoc-gen-go-grpc 2>/dev/null || echo 'NOT FOUND')"
-
-    # Generate Go files
-    if protoc --go_out=server/pb --go_opt=paths=source_relative \
-             --go-grpc_out=server/pb --go-grpc_opt=paths=source_relative \
-             --proto_path=proto proto/*.proto; then
-        log_success "Go proto files generated"
-    else
-        log_error "Failed to generate Go proto files"
-        return 1
-    fi
-
-    # Generate JavaScript files
-    cd frontend
-    if npx grpc_tools_node_protoc \
-        --js_out=import_style=commonjs,binary:src/proto \
-        --proto_path=../proto ../proto/*.proto; then
-        log_success "JavaScript proto files generated"
-    else
-        log_error "Failed to generate JavaScript proto files"
-        cd ..
-        return 1
-    fi
-
-    # Generate gRPC-Web files
-    if npx grpc_tools_node_protoc \
-        --grpc-web_out=import_style=commonjs,mode=grpcwebtext:src/proto \
-        --proto_path=../proto ../proto/*.proto; then
-        log_success "gRPC-Web proto files generated"
-    else
-        log_error "Failed to generate gRPC-Web proto files"
-        cd ..
-        return 1
-    fi
-
-    cd ..
-    log_success "✅ All proto files generated successfully"
-}
-
-# Function to start proto file watcher
-start_proto_watcher() {
-    log_info "🔍 Starting proto file watcher..."
-
-    (
-        while inotifywait -e modify,create,delete,move -r proto/ 2>/dev/null; do
-            log_warning "📝 Proto file changes detected, regenerating..."
-            if generate_proto; then
-                log_success "🔄 Proto files regenerated successfully"
-                # Touch a Go file to trigger Air reload
-                touch server/cmd/server/main.go
-            else
-                log_error "❌ Proto regeneration failed"
-            fi
-        done
-    ) &
-
-    PROTO_WATCHER_PID=$!
-    PIDS+=($PROTO_WATCHER_PID)
-    log_success "Proto watcher started (PID: $PROTO_WATCHER_PID)"
-}
-
-# Function to start CSS/Asset watcher for frontend
-start_asset_watcher() {
-    log_info "🎨 Starting asset file watcher..."
-
-    (
-        while inotifywait -e modify,create,delete,move -r frontend/src/assets/ 2>/dev/null; do
-            log_warning "🎨 Asset file changes detected"
-            # Vue's dev server should handle this automatically, but we can trigger explicit reload
-            touch frontend/src/App.vue
-        done
-    ) &
-
-    ASSET_WATCHER_PID=$!
-    PIDS+=($ASSET_WATCHER_PID)
-    log_success "Asset watcher started (PID: $ASSET_WATCHER_PID)"
-}
-
-# Function to start Vue.js file watcher (enhanced)
-start_vue_watcher() {
-    log_info "🖼️ Starting Vue.js component watcher..."
-
-    (
-        while inotifywait -e modify,create,delete,move -r frontend/src/ --exclude 'node_modules|dist|proto' 2>/dev/null; do
-            log_warning "🖼️ Vue.js file changes detected"
-            # Vue dev server handles this automatically, but we can add custom logic here
-        done
-    ) &
-
-    VUE_WATCHER_PID=$!
-    PIDS+=($VUE_WATCHER_PID)
-    log_success "Vue.js watcher started (PID: $VUE_WATCHER_PID)"
-}
-
-start_go_file_watcher() {
-    log_info "🐹 Starting comprehensive Go file watcher..."
-
-    # Test inotifywait first
-    if ! command -v inotifywait >/dev/null 2>&1; then
-        log_error "inotifywait not found - Go file watcher disabled"
-        return 1
-    fi
-
-    # Test directory exists
-    if [ ! -d "server/" ]; then
-        log_error "server/ directory not found - Go file watcher disabled"
-        return 1
-    fi
-
-    (
-        while inotifywait -e modify,create,delete,move -r server/ --exclude 'tmp|pb|node_modules|dist' 2>/dev/null; do
-            log_warning "🐹 Go source file changes detected"
-            # Air should pick this up, but we can also force a rebuild
-            if pgrep -f "air" >/dev/null; then
-                log_info "Air is running, it should detect the change"
-            else
-                log_warning "Air not running, restarting..."
-                cd server && $AIR_COMMAND -c .air.toml > ../backend.log 2>&1 &
-                NEW_BACKEND_PID=$!
-                # Update the PID array
-                for i in "${!PIDS[@]}"; do
-                    if [[ ${PIDS[i]} == $BACKEND_PID ]]; then
-                        PIDS[i]=$NEW_BACKEND_PID
-                    fi
-                done
-                BACKEND_PID=$NEW_BACKEND_PID
-                cd ..
-            fi
-        done
-    ) &
-
-    GO_FILE_WATCHER_PID=$!
-    PIDS+=($GO_FILE_WATCHER_PID)
-    log_success "Go file watcher started (PID: $GO_FILE_WATCHER_PID)"
-}
-# Function to start Go dependencies watcher
-start_go_deps_watcher() {
-    log_info "📦 Starting Go dependencies watcher..."
-
-    (
-        while inotifywait -e modify server/go.mod server/go.sum 2>/dev/null; do
-            log_warning "📦 Go dependencies changed, running go mod tidy..."
-            cd server
-            go mod tidy
-            cd ..
-            log_success "🔄 Go dependencies updated"
-        done
-    ) &
-
-    GO_DEPS_WATCHER_PID=$!
-    PIDS+=($GO_DEPS_WATCHER_PID)
-    log_success "Go dependencies watcher started (PID: $GO_DEPS_WATCHER_PID)"
-}
-
-# Function to start npm dependencies watcher
-start_npm_deps_watcher() {
-    log_info "📦 Starting npm dependencies watcher..."
-
-    (
-        while inotifywait -e modify frontend/package.json frontend/package-lock.json 2>/dev/null; do
-            log_warning "📦 npm dependencies changed, running npm install..."
-            cd frontend
-            npm install
-            cd ..
-            log_success "🔄 npm dependencies updated"
-        done
-    ) &
-
-    NPM_DEPS_WATCHER_PID=$!
-    PIDS+=($NPM_DEPS_WATCHER_PID)
-    log_success "npm dependencies watcher started (PID: $NPM_DEPS_WATCHER_PID)"
-}
-
-# Initial proto generation
-log_info "🔧 Initial setup..."
-if ! generate_proto; then
-    log_error "Initial proto generation failed"
-    exit 1
-fi
-
-# Start all watchers
-start_proto_watcher
-start_asset_watcher
-start_vue_watcher
-start_go_deps_watcher
-start_npm_deps_watcher
-start_go_file_watcher
-
-# Prepare Go environment
-log_info "🔧 Preparing Go environment..."
-cd server
-if [ -f "go.mod" ]; then
-    go mod tidy
-    log_success "Go modules prepared"
-else
-    log_error "go.mod not found"
-    exit 1
-fi
-cd ..
-
-# Prepare Node.js environment
-log_info "🔧 Preparing Node.js environment..."
-cd frontend
-if [ ! -d "node_modules" ]; then
-    log_info "Installing npm dependencies..."
-    npm install
-fi
-
-# Ensure grpc-tools is available
-if ! npm list grpc-tools >/dev/null 2>&1; then
-    log_info "Installing grpc-tools..."
-    npm install grpc-tools@latest
-fi
-cd ..
-
-# Start Go backend with Air (hot reload)
-log_info "🔥 Starting Go backend with Air hot-reload..."
-cd server
-
-# Use the detected Air command
-log_info "Using Air command: $AIR_COMMAND"
-$AIR_COMMAND -c .air.toml > ../backend.log 2>&1 &
-BACKEND_PID=$!
-PIDS+=($BACKEND_PID)
-cd ..
-log_success "Backend started with Air (PID: $BACKEND_PID)"
-
-# Wait for backend to start
-log_info "⏳ Waiting for backend to start..."
-for i in {1..30}; do
-    if curl -s http://localhost:${GRPC_WEB_PORT} >/dev/null 2>&1; then
-        log_success "✅ Backend is responding"
-        break
-    fi
-    if [ $i -eq 30 ]; then
-        log_error "❌ Backend failed to start within 30 seconds"
-        log_info "Backend log:"
-        tail -20 backend.log 2>/dev/null || echo "No backend log available"
-        exit 1
-    fi
-    sleep 1
-done
-
-# Start Vue.js frontend with hot-reload
-log_info "🎨 Starting Vue.js frontend with hot-reload..."
-cd frontend
-export CHOKIDAR_USEPOLLING=true
-export WATCHPACK_POLLING=true
-npm run serve -- --host 0.0.0.0 --port ${FRONTEND_PORT} > ../frontend.log 2>&1 &
-FRONTEND_PID=$!
-PIDS+=($FRONTEND_PID)
-cd ..
-log_success "Frontend started with hot-reload (PID: $FRONTEND_PID)"
-
-# Wait for frontend to start
-log_info "⏳ Waiting for frontend to start..."
-for i in {1..60}; do
-    if curl -s http://localhost:${FRONTEND_PORT} >/dev/null 2>&1; then
-        log_success "✅ Frontend is responding"
-        break
-    fi
-    if [ $i -eq 60 ]; then
-        log_error "❌ Frontend failed to start within 60 seconds"
-        log_info "Frontend log:"
-        tail -20 frontend.log 2>/dev/null || echo "No frontend log available"
-        exit 1
-    fi
-    sleep 1
-done
-
-# Display service information
-echo ""
-log_success "🎉 Enhanced Hot-Reload Development Environment is ready!"
-echo ""
-echo -e "${PURPLE}📋 Services:${NC}"
-echo -e "   🔗 Backend (gRPC): http://localhost:${BACKEND_PORT}"
-echo -e "   🌐 gRPC-Web: http://localhost:${GRPC_WEB_PORT}"
-echo -e "   🎨 Frontend: http://localhost:${FRONTEND_PORT}"
-echo ""
-echo -e "${PURPLE}🔍 Hot-Reload Features:${NC}"
-echo -e "   📝 .proto files → Auto-regeneration + backend restart"
-echo -e "   🐹 .go files → Air hot-reload"
-echo -e "   🖼️ .vue/.js files → Vue dev server hot-reload"
-echo -e "   🎨 .css files → Vue dev server hot-reload"
-echo -e "   📦 package.json → Auto npm install"
-echo -e "   📦 go.mod → Auto go mod tidy"
-echo ""
-echo -e "${PURPLE}📋 Logs:${NC}"
-echo -e "   Backend: tail -f backend.log"
-echo -e "   Frontend: tail -f frontend.log"
-echo ""
-echo -e "${YELLOW}💡 Tips:${NC}"
-echo -e "   • Edit any .proto file to see automatic regeneration"
-echo -e "   • Edit any .go file to see Air hot-reload"
-echo -e "   • Edit any .vue/.js/.css file to see instant frontend updates"
-echo -e "   • Press Ctrl+C to stop all services"
-echo ""
-
-# Health monitoring loop
-log_info "👀 Starting health monitoring..."
-HEALTH_CHECK_INTERVAL=30
-LAST_HEALTH_CHECK=0
-
-while true; do
-    current_time=$(date +%s)
-
-    # Health check every 30 seconds
-    if [ $((current_time - LAST_HEALTH_CHECK)) -ge $HEALTH_CHECK_INTERVAL ]; then
-        # Check if all main processes are still running
-        if ! kill -0 $BACKEND_PID 2>/dev/null; then
-            log_error "❌ Backend process died!"
-            log_info "Backend log:"
-            tail -20 backend.log 2>/dev/null || echo "No backend log available"
-            exit 1
-        fi
-
-        if ! kill -0 $FRONTEND_PID 2>/dev/null; then
-            log_error "❌ Frontend process died!"
-            log_info "Frontend log:"
-            tail -20 frontend.log 2>/dev/null || echo "No frontend log available"
-            exit 1
-        fi
-
-        # Check if services are responding
-        if ! curl -s http://localhost:${GRPC_WEB_PORT} >/dev/null 2>&1; then
-            log_warning "⚠️ Backend not responding"
-        fi
-
-        if ! curl -s http://localhost:${FRONTEND_PORT} >/dev/null 2>&1; then
-            log_warning "⚠️ Frontend not responding"
-        fi
-
-        LAST_HEALTH_CHECK=$current_time
-        log_info "💚 Health check passed - All services running"
-    fi
-
-    sleep 5
-done
-
-# Create necessary directories
-mkdir -p server/pb server/tmp frontend/src/proto
-
-# PID tracking for cleanup
-PIDS=()
-
-# Cleanup function
-cleanup() {
-    log_warning "Shutting down all processes..."
-    for pid in "${PIDS[@]}"; do
-        if kill -0 "$pid" 2>/dev/null; then
-            log_info "Killing process $pid"
-            kill -TERM "$pid" 2>/dev/null || kill -KILL "$pid" 2>/dev/null
-        fi
-    done
-
-    # Kill any remaining processes
-    pkill -f "air" 2>/dev/null || true
-    pkill -f "npm run serve" 2>/dev/null || true
-    pkill -f "inotifywait" 2>/dev/null || true
-
+    kill_all_processes
     log_success "Cleanup completed"
     exit 0
 }
@@ -546,124 +184,49 @@ generate_proto() {
     log_success "✅ All proto files generated successfully"
 }
 
-# Function to start proto file watcher
-start_proto_watcher() {
-    log_info "🔍 Starting proto file watcher..."
+# Start a simple Go file watcher that restarts Air completely
+start_simple_go_watcher() {
+    log_info "🐹 Starting simple Go file watcher..."
 
-    (
-        while inotifywait -e modify,create,delete,move -r proto/ 2>/dev/null; do
-            log_warning "📝 Proto file changes detected, regenerating..."
-            if generate_proto; then
-                log_success "🔄 Proto files regenerated successfully"
-                # Touch a Go file to trigger Air reload
-                touch server/cmd/server/main.go
-            else
-                log_error "❌ Proto regeneration failed"
-            fi
-        done
-    ) &
-
-    PROTO_WATCHER_PID=$!
-    PIDS+=($PROTO_WATCHER_PID)
-    log_success "Proto watcher started (PID: $PROTO_WATCHER_PID)"
-}
-
-# Function to start CSS/Asset watcher for frontend
-start_asset_watcher() {
-    log_info "🎨 Starting asset file watcher..."
-
-    (
-        while inotifywait -e modify,create,delete,move -r frontend/src/assets/ 2>/dev/null; do
-            log_warning "🎨 Asset file changes detected"
-            # Vue's dev server should handle this automatically, but we can trigger explicit reload
-            touch frontend/src/App.vue
-        done
-    ) &
-
-    ASSET_WATCHER_PID=$!
-    PIDS+=($ASSET_WATCHER_PID)
-    log_success "Asset watcher started (PID: $ASSET_WATCHER_PID)"
-}
-
-# Function to start Vue.js file watcher (enhanced)
-start_vue_watcher() {
-    log_info "🖼️ Starting Vue.js component watcher..."
-
-    (
-        while inotifywait -e modify,create,delete,move -r frontend/src/ --exclude 'node_modules|dist|proto' 2>/dev/null; do
-            log_warning "🖼️ Vue.js file changes detected"
-            # Vue dev server handles this automatically, but we can add custom logic here
-        done
-    ) &
-
-    VUE_WATCHER_PID=$!
-    PIDS+=($VUE_WATCHER_PID)
-    log_success "Vue.js watcher started (PID: $VUE_WATCHER_PID)"
-}
-
-start_go_file_watcher() {
-    log_info "🐹 Starting comprehensive Go file watcher..."
-
-    # Test inotifywait first
     if ! command -v inotifywait >/dev/null 2>&1; then
         log_error "inotifywait not found - Go file watcher disabled"
         return 1
     fi
 
-    # Test directory exists
     if [ ! -d "server/" ]; then
         log_error "server/ directory not found - Go file watcher disabled"
         return 1
     fi
 
     (
-        while inotifywait -e modify,create,delete,move -r server/ --exclude 'tmp|pb|node_modules|dist' 2>/dev/null; do
-            log_warning "🐹 Go source file changes detected"
-            # ... rest of logic
-        done
-    ) &
+        while inotifywait -e modify,create,delete,move -r server/ --exclude '(tmp|pb|node_modules|dist|\.log)' 2>/dev/null; do
+            log_warning "🐹 Go file changed - Restarting backend..."
 
-    GO_FILE_WATCHER_PID=$!
-    PIDS+=($GO_FILE_WATCHER_PID)
-    log_success "Go file watcher started (PID: $GO_FILE_WATCHER_PID)"
-}
+            # Kill backend process
+            if [ ! -z "${BACKEND_PID}" ] && kill -0 $BACKEND_PID 2>/dev/null; then
+                kill -TERM $BACKEND_PID 2>/dev/null || true
+                sleep 1
+                kill -KILL $BACKEND_PID 2>/dev/null || true
+            fi
 
-# Function to start Go dependencies watcher
-start_go_deps_watcher() {
-    log_info "📦 Starting Go dependencies watcher..."
+            # Kill any Air processes
+            pkill -f "air" 2>/dev/null || true
+            pkill -f "./tmp/main" 2>/dev/null || true
 
-    (
-        while inotifywait -e modify server/go.mod server/go.sum 2>/dev/null; do
-            log_warning "📦 Go dependencies changed, running go mod tidy..."
+            # Wait and restart
+            sleep 2
             cd server
-            go mod tidy
+            $AIR_COMMAND -c .air.toml > ../backend.log 2>&1 &
+            BACKEND_PID=$!
             cd ..
-            log_success "🔄 Go dependencies updated"
+
+            log_success "🔄 Backend restarted (PID: $BACKEND_PID)"
         done
     ) &
 
-    GO_DEPS_WATCHER_PID=$!
-    PIDS+=($GO_DEPS_WATCHER_PID)
-    log_success "Go dependencies watcher started (PID: $GO_DEPS_WATCHER_PID)"
-}
-
-# Function to start npm dependencies watcher
-start_npm_deps_watcher() {
-    log_info "📦 Starting npm dependencies watcher..."
-
-    (
-        while inotifywait -e modify frontend/package.json frontend/package-lock.json 2>/dev/null; do
-            log_warning "📦 npm dependencies changed, running npm install..."
-            cd frontend
-            npm install
-            cd ..
-            log_success "🔄 npm dependencies updated"
-        done
-    ) &
-
-    NPM_DEPS_WATCHER_PID=$!
-    PIDS+=($NPM_DEPS_WATCHER_PID)
-    log_success "npm dependencies watcher started (PID: $NPM_DEPS_WATCHER_PID)"
+    GO_WATCHER_PID=$!
+    PIDS+=($GO_WATCHER_PID)
+    log_success "Go file watcher started (PID: $GO_WATCHER_PID)"
 }
 
 # Initial proto generation
@@ -673,13 +236,8 @@ if ! generate_proto; then
     exit 1
 fi
 
-# Start all watchers
-start_proto_watcher
-start_asset_watcher
-start_vue_watcher
-start_go_deps_watcher
-start_npm_deps_watcher
-start_go_file_watcher
+# Start simple Go watcher
+start_simple_go_watcher
 
 # Prepare Go environment
 log_info "🔧 Preparing Go environment..."
@@ -691,6 +249,11 @@ else
     log_error "go.mod not found"
     exit 1
 fi
+
+# Ensure tmp directory exists and is clean
+mkdir -p tmp
+rm -f tmp/main
+
 cd ..
 
 # Prepare Node.js environment
@@ -708,30 +271,50 @@ if ! npm list grpc-tools >/dev/null 2>&1; then
 fi
 cd ..
 
-# Start Go backend with Air (hot reload)
+# Start Go backend with Air
 log_info "🔥 Starting Go backend with Air hot-reload..."
 cd server
 
-# Use the detected Air command
 log_info "Using Air command: $AIR_COMMAND"
+log_info "Environment check - PORT: $PORT, WEB_PORT: $WEB_PORT"
+
+# Start Air in background
 $AIR_COMMAND -c .air.toml > ../backend.log 2>&1 &
 BACKEND_PID=$!
 PIDS+=($BACKEND_PID)
 cd ..
 log_success "Backend started with Air (PID: $BACKEND_PID)"
 
-# Wait for backend to start
+# Wait for backend to start with enhanced checking
 log_info "⏳ Waiting for backend to start..."
-for i in {1..30}; do
+for i in {1..60}; do
+    # Check if process is still running
+    if ! kill -0 $BACKEND_PID 2>/dev/null; then
+        log_error "❌ Backend process died during startup"
+        log_info "Backend log:"
+        tail -50 backend.log 2>/dev/null || echo "No backend log available"
+        exit 1
+    fi
+
+    # Check if services are responding
     if curl -s http://localhost:${GRPC_WEB_PORT} >/dev/null 2>&1; then
-        log_success "✅ Backend is responding"
+        log_success "✅ Backend is responding on port ${GRPC_WEB_PORT}"
         break
     fi
-    if [ $i -eq 30 ]; then
-        log_error "❌ Backend failed to start within 30 seconds"
+
+    if [ $i -eq 60 ]; then
+        log_error "❌ Backend failed to start within 60 seconds"
         log_info "Backend log:"
-        tail -20 backend.log 2>/dev/null || echo "No backend log available"
+        tail -50 backend.log 2>/dev/null || echo "No backend log available"
+        log_info "Process status:"
+        ps aux | grep -E "(air|main)" | grep -v grep || echo "No relevant processes found"
         exit 1
+    fi
+
+    if [ $((i % 10)) -eq 0 ]; then
+        echo "Waiting... ($i/60)"
+    else
+        echo -n "."
     fi
     sleep 1
 done
@@ -751,7 +334,7 @@ log_success "Frontend started with hot-reload (PID: $FRONTEND_PID)"
 log_info "⏳ Waiting for frontend to start..."
 for i in {1..60}; do
     if curl -s http://localhost:${FRONTEND_PORT} >/dev/null 2>&1; then
-        log_success "✅ Frontend is responding"
+        log_success "✅ Frontend is responding on port ${FRONTEND_PORT}"
         break
     fi
     if [ $i -eq 60 ]; then
@@ -759,6 +342,11 @@ for i in {1..60}; do
         log_info "Frontend log:"
         tail -20 frontend.log 2>/dev/null || echo "No frontend log available"
         exit 1
+    fi
+    if [ $((i % 10)) -eq 0 ]; then
+        echo "Waiting... ($i/60)"
+    else
+        echo -n "."
     fi
     sleep 1
 done
@@ -774,60 +362,45 @@ echo -e "   🎨 Frontend: http://localhost:${FRONTEND_PORT}"
 echo ""
 echo -e "${PURPLE}🔍 Hot-Reload Features:${NC}"
 echo -e "   📝 .proto files → Auto-regeneration + backend restart"
-echo -e "   🐹 .go files → Air hot-reload"
+echo -e "   🐹 .go files → Air hot-reload with automatic restart"
 echo -e "   🖼️ .vue/.js files → Vue dev server hot-reload"
 echo -e "   🎨 .css files → Vue dev server hot-reload"
-echo -e "   📦 package.json → Auto npm install"
-echo -e "   📦 go.mod → Auto go mod tidy"
 echo ""
 echo -e "${PURPLE}📋 Logs:${NC}"
 echo -e "   Backend: tail -f backend.log"
 echo -e "   Frontend: tail -f frontend.log"
 echo ""
 echo -e "${YELLOW}💡 Tips:${NC}"
-echo -e "   • Edit any .proto file to see automatic regeneration"
 echo -e "   • Edit any .go file to see Air hot-reload"
 echo -e "   • Edit any .vue/.js/.css file to see instant frontend updates"
 echo -e "   • Press Ctrl+C to stop all services"
 echo ""
 
-# Health monitoring loop
+# Simple health monitoring loop
 log_info "👀 Starting health monitoring..."
-HEALTH_CHECK_INTERVAL=30
-LAST_HEALTH_CHECK=0
 
 while true; do
-    current_time=$(date +%s)
+    sleep 30
 
-    # Health check every 30 seconds
-    if [ $((current_time - LAST_HEALTH_CHECK)) -ge $HEALTH_CHECK_INTERVAL ]; then
-        # Check if all main processes are still running
-        if ! kill -0 $BACKEND_PID 2>/dev/null; then
-            log_error "❌ Backend process died!"
-            log_info "Backend log:"
-            tail -20 backend.log 2>/dev/null || echo "No backend log available"
-            exit 1
-        fi
-
-        if ! kill -0 $FRONTEND_PID 2>/dev/null; then
-            log_error "❌ Frontend process died!"
-            log_info "Frontend log:"
-            tail -20 frontend.log 2>/dev/null || echo "No frontend log available"
-            exit 1
-        fi
-
-        # Check if services are responding
-        if ! curl -s http://localhost:${GRPC_WEB_PORT} >/dev/null 2>&1; then
-            log_warning "⚠️ Backend not responding"
-        fi
-
-        if ! curl -s http://localhost:${FRONTEND_PORT} >/dev/null 2>&1; then
-            log_warning "⚠️ Frontend not responding"
-        fi
-
-        LAST_HEALTH_CHECK=$current_time
-        log_info "💚 Health check passed - All services running"
+    # Check if main processes are still running
+    if ! kill -0 $BACKEND_PID 2>/dev/null; then
+        log_error "❌ Backend process died!"
+        exit 1
     fi
 
-    sleep 5
+    if ! kill -0 $FRONTEND_PID 2>/dev/null; then
+        log_error "❌ Frontend process died!"
+        exit 1
+    fi
+
+    # Check if services are responding
+    if ! curl -s http://localhost:${GRPC_WEB_PORT} >/dev/null 2>&1; then
+        log_warning "⚠️ Backend not responding"
+    fi
+
+    if ! curl -s http://localhost:${FRONTEND_PORT} >/dev/null 2>&1; then
+        log_warning "⚠️ Frontend not responding"
+    fi
+
+    log_info "💚 Health check passed - All services running"
 done

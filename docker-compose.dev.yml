@@ -16,21 +16,24 @@ services:
     networks:
       - app-network-dev
     environment:
+      # CRITICAL: Ensure all environment variables are properly set
       # Backend environment
-      - PORT=${BACKEND_PORT}
-      - WEB_PORT=${GRPC_WEB_PORT}
-      - BACKEND_HOST=${BACKEND_HOST}
-      - BACKEND_BASE_URL=${BACKEND_BASE_URL}
-      - GRPC_WEB_URL=${GRPC_WEB_URL}
+      - PORT=${BACKEND_PORT:-50051}
+      - WEB_PORT=${GRPC_WEB_PORT:-8081}
+      - BACKEND_PORT=${BACKEND_PORT:-50051}
+      - GRPC_WEB_PORT=${GRPC_WEB_PORT:-8081}
+      - BACKEND_HOST=${BACKEND_HOST:-localhost}
+      - BACKEND_BASE_URL=${BACKEND_BASE_URL:-http://localhost:50051}
+      - GRPC_WEB_URL=${GRPC_WEB_URL:-http://localhost:8081}
       - DEEPL_API_KEY=${DEEPL_API_KEY}
       - GO_ENV=development
 
       # Frontend environment
-      - FRONTEND_PORT=${FRONTEND_PORT}
-      - FRONTEND_HOST=${FRONTEND_HOST}
-      - FRONTEND_PROTOCOL=${FRONTEND_PROTOCOL}
-      - BASE_URL=${BASE_URL}
-      - VUE_APP_GRPC_WEB_URL=${GRPC_WEB_URL}
+      - FRONTEND_PORT=${FRONTEND_PORT:-3000}
+      - FRONTEND_HOST=${FRONTEND_HOST:-localhost}
+      - FRONTEND_PROTOCOL=${FRONTEND_PROTOCOL:-http}
+      - BASE_URL=${BASE_URL:-http://localhost:3000/}
+      - VUE_APP_GRPC_WEB_URL=${GRPC_WEB_URL:-http://localhost:8081}
       - NODE_ENV=development
 
       # Hot-reload environment variables
@@ -72,8 +75,8 @@ services:
         test -f /app/server/pb/user.pb.go &&
         test -f /app/server/pb/user_grpc.pb.go &&
         # Check services are responding
-        curl -f http://localhost:${FRONTEND_PORT} &&
-        curl -f http://localhost:${GRPC_WEB_PORT} || exit 1
+        curl -f http://localhost:${FRONTEND_PORT:-3000} &&
+        curl -f http://localhost:${GRPC_WEB_PORT:-8081} || exit 1
       interval: 30s
       timeout: 15s
       retries: 3
