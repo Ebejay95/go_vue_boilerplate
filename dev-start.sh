@@ -5,9 +5,9 @@ echo "🚀 Starting Enhanced Hot-Reload Development Environment..."
 # Debug: Show environment
 echo "📍 Current directory: $(pwd)"
 echo "📍 Environment Variables:"
-echo "  - BACKEND_PORT: ${BACKEND_PORT:-50051}"
-echo "  - GRPC_WEB_PORT: ${GRPC_WEB_PORT:-8081}"
-echo "  - FRONTEND_PORT: ${FRONTEND_PORT:-3000}"
+echo "  - BACKEND_PORT: ${BACKEND_PORT}"
+echo "  - GRPC_WEB_PORT: ${GRPC_WEB_PORT}"
+echo "  - FRONTEND_PORT: ${FRONTEND_PORT}"
 
 # CRITICAL: Ensure Go bin directories are in PATH
 export PATH="/go/bin:/go/bin/linux_amd64:$PATH"
@@ -233,6 +233,47 @@ start_vue_watcher() {
     log_success "Vue.js watcher started (PID: $VUE_WATCHER_PID)"
 }
 
+start_go_file_watcher() {
+    log_info "🐹 Starting comprehensive Go file watcher..."
+
+    # Test inotifywait first
+    if ! command -v inotifywait >/dev/null 2>&1; then
+        log_error "inotifywait not found - Go file watcher disabled"
+        return 1
+    fi
+
+    # Test directory exists
+    if [ ! -d "server/" ]; then
+        log_error "server/ directory not found - Go file watcher disabled"
+        return 1
+    fi
+
+    (
+        while inotifywait -e modify,create,delete,move -r server/ --exclude 'tmp|pb|node_modules|dist' 2>/dev/null; do
+            log_warning "🐹 Go source file changes detected"
+            # Air should pick this up, but we can also force a rebuild
+            if pgrep -f "air" >/dev/null; then
+                log_info "Air is running, it should detect the change"
+            else
+                log_warning "Air not running, restarting..."
+                cd server && $AIR_COMMAND -c .air.toml > ../backend.log 2>&1 &
+                NEW_BACKEND_PID=$!
+                # Update the PID array
+                for i in "${!PIDS[@]}"; do
+                    if [[ ${PIDS[i]} == $BACKEND_PID ]]; then
+                        PIDS[i]=$NEW_BACKEND_PID
+                    fi
+                done
+                BACKEND_PID=$NEW_BACKEND_PID
+                cd ..
+            fi
+        done
+    ) &
+
+    GO_FILE_WATCHER_PID=$!
+    PIDS+=($GO_FILE_WATCHER_PID)
+    log_success "Go file watcher started (PID: $GO_FILE_WATCHER_PID)"
+}
 # Function to start Go dependencies watcher
 start_go_deps_watcher() {
     log_info "📦 Starting Go dependencies watcher..."
@@ -284,6 +325,7 @@ start_asset_watcher
 start_vue_watcher
 start_go_deps_watcher
 start_npm_deps_watcher
+start_go_file_watcher
 
 # Prepare Go environment
 log_info "🔧 Preparing Go environment..."
@@ -327,7 +369,7 @@ log_success "Backend started with Air (PID: $BACKEND_PID)"
 # Wait for backend to start
 log_info "⏳ Waiting for backend to start..."
 for i in {1..30}; do
-    if curl -s http://localhost:${GRPC_WEB_PORT:-8081} >/dev/null 2>&1; then
+    if curl -s http://localhost:${GRPC_WEB_PORT} >/dev/null 2>&1; then
         log_success "✅ Backend is responding"
         break
     fi
@@ -345,7 +387,7 @@ log_info "🎨 Starting Vue.js frontend with hot-reload..."
 cd frontend
 export CHOKIDAR_USEPOLLING=true
 export WATCHPACK_POLLING=true
-npm run serve -- --host 0.0.0.0 --port ${FRONTEND_PORT:-3000} > ../frontend.log 2>&1 &
+npm run serve -- --host 0.0.0.0 --port ${FRONTEND_PORT} > ../frontend.log 2>&1 &
 FRONTEND_PID=$!
 PIDS+=($FRONTEND_PID)
 cd ..
@@ -354,7 +396,7 @@ log_success "Frontend started with hot-reload (PID: $FRONTEND_PID)"
 # Wait for frontend to start
 log_info "⏳ Waiting for frontend to start..."
 for i in {1..60}; do
-    if curl -s http://localhost:${FRONTEND_PORT:-3000} >/dev/null 2>&1; then
+    if curl -s http://localhost:${FRONTEND_PORT} >/dev/null 2>&1; then
         log_success "✅ Frontend is responding"
         break
     fi
@@ -372,9 +414,9 @@ echo ""
 log_success "🎉 Enhanced Hot-Reload Development Environment is ready!"
 echo ""
 echo -e "${PURPLE}📋 Services:${NC}"
-echo -e "   🔗 Backend (gRPC): http://localhost:${BACKEND_PORT:-50051}"
-echo -e "   🌐 gRPC-Web: http://localhost:${GRPC_WEB_PORT:-8081}"
-echo -e "   🎨 Frontend: http://localhost:${FRONTEND_PORT:-3000}"
+echo -e "   🔗 Backend (gRPC): http://localhost:${BACKEND_PORT}"
+echo -e "   🌐 gRPC-Web: http://localhost:${GRPC_WEB_PORT}"
+echo -e "   🎨 Frontend: http://localhost:${FRONTEND_PORT}"
 echo ""
 echo -e "${PURPLE}🔍 Hot-Reload Features:${NC}"
 echo -e "   📝 .proto files → Auto-regeneration + backend restart"
@@ -421,11 +463,11 @@ while true; do
         fi
 
         # Check if services are responding
-        if ! curl -s http://localhost:${GRPC_WEB_PORT:-8081} >/dev/null 2>&1; then
+        if ! curl -s http://localhost:${GRPC_WEB_PORT} >/dev/null 2>&1; then
             log_warning "⚠️ Backend not responding"
         fi
 
-        if ! curl -s http://localhost:${FRONTEND_PORT:-3000} >/dev/null 2>&1; then
+        if ! curl -s http://localhost:${FRONTEND_PORT} >/dev/null 2>&1; then
             log_warning "⚠️ Frontend not responding"
         fi
 
@@ -559,6 +601,33 @@ start_vue_watcher() {
     log_success "Vue.js watcher started (PID: $VUE_WATCHER_PID)"
 }
 
+start_go_file_watcher() {
+    log_info "🐹 Starting comprehensive Go file watcher..."
+
+    # Test inotifywait first
+    if ! command -v inotifywait >/dev/null 2>&1; then
+        log_error "inotifywait not found - Go file watcher disabled"
+        return 1
+    fi
+
+    # Test directory exists
+    if [ ! -d "server/" ]; then
+        log_error "server/ directory not found - Go file watcher disabled"
+        return 1
+    fi
+
+    (
+        while inotifywait -e modify,create,delete,move -r server/ --exclude 'tmp|pb|node_modules|dist' 2>/dev/null; do
+            log_warning "🐹 Go source file changes detected"
+            # ... rest of logic
+        done
+    ) &
+
+    GO_FILE_WATCHER_PID=$!
+    PIDS+=($GO_FILE_WATCHER_PID)
+    log_success "Go file watcher started (PID: $GO_FILE_WATCHER_PID)"
+}
+
 # Function to start Go dependencies watcher
 start_go_deps_watcher() {
     log_info "📦 Starting Go dependencies watcher..."
@@ -610,6 +679,7 @@ start_asset_watcher
 start_vue_watcher
 start_go_deps_watcher
 start_npm_deps_watcher
+start_go_file_watcher
 
 # Prepare Go environment
 log_info "🔧 Preparing Go environment..."
@@ -653,7 +723,7 @@ log_success "Backend started with Air (PID: $BACKEND_PID)"
 # Wait for backend to start
 log_info "⏳ Waiting for backend to start..."
 for i in {1..30}; do
-    if curl -s http://localhost:${GRPC_WEB_PORT:-8081} >/dev/null 2>&1; then
+    if curl -s http://localhost:${GRPC_WEB_PORT} >/dev/null 2>&1; then
         log_success "✅ Backend is responding"
         break
     fi
@@ -671,7 +741,7 @@ log_info "🎨 Starting Vue.js frontend with hot-reload..."
 cd frontend
 export CHOKIDAR_USEPOLLING=true
 export WATCHPACK_POLLING=true
-npm run serve -- --host 0.0.0.0 --port ${FRONTEND_PORT:-3000} > ../frontend.log 2>&1 &
+npm run serve -- --host 0.0.0.0 --port ${FRONTEND_PORT} > ../frontend.log 2>&1 &
 FRONTEND_PID=$!
 PIDS+=($FRONTEND_PID)
 cd ..
@@ -680,7 +750,7 @@ log_success "Frontend started with hot-reload (PID: $FRONTEND_PID)"
 # Wait for frontend to start
 log_info "⏳ Waiting for frontend to start..."
 for i in {1..60}; do
-    if curl -s http://localhost:${FRONTEND_PORT:-3000} >/dev/null 2>&1; then
+    if curl -s http://localhost:${FRONTEND_PORT} >/dev/null 2>&1; then
         log_success "✅ Frontend is responding"
         break
     fi
@@ -698,9 +768,9 @@ echo ""
 log_success "🎉 Enhanced Hot-Reload Development Environment is ready!"
 echo ""
 echo -e "${PURPLE}📋 Services:${NC}"
-echo -e "   🔗 Backend (gRPC): http://localhost:${BACKEND_PORT:-50051}"
-echo -e "   🌐 gRPC-Web: http://localhost:${GRPC_WEB_PORT:-8081}"
-echo -e "   🎨 Frontend: http://localhost:${FRONTEND_PORT:-3000}"
+echo -e "   🔗 Backend (gRPC): http://localhost:${BACKEND_PORT}"
+echo -e "   🌐 gRPC-Web: http://localhost:${GRPC_WEB_PORT}"
+echo -e "   🎨 Frontend: http://localhost:${FRONTEND_PORT}"
 echo ""
 echo -e "${PURPLE}🔍 Hot-Reload Features:${NC}"
 echo -e "   📝 .proto files → Auto-regeneration + backend restart"
@@ -747,11 +817,11 @@ while true; do
         fi
 
         # Check if services are responding
-        if ! curl -s http://localhost:${GRPC_WEB_PORT:-8081} >/dev/null 2>&1; then
+        if ! curl -s http://localhost:${GRPC_WEB_PORT} >/dev/null 2>&1; then
             log_warning "⚠️ Backend not responding"
         fi
 
-        if ! curl -s http://localhost:${FRONTEND_PORT:-3000} >/dev/null 2>&1; then
+        if ! curl -s http://localhost:${FRONTEND_PORT} >/dev/null 2>&1; then
             log_warning "⚠️ Frontend not responding"
         fi
 

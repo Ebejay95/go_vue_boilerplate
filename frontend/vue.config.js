@@ -13,7 +13,7 @@ module.exports = defineConfig({
   // Development Server Configuration
   devServer: {
     host: '0.0.0.0',
-    port: process.env.FRONTEND_PORT || 3000,
+    port: process.env.FRONTEND_PORT,
     hot: true,
     liveReload: true,
 

@@ -76,9 +76,9 @@ RUN mkdir -p /var/cache/nginx/client_temp \
 	/var/cache/nginx/scgi_temp
 
 # Set default environment variables (can be overridden by docker-compose)
-ENV FRONTEND_PORT=3000
-ENV BACKEND_HOST=backend-grpc-server
-ENV GRPC_WEB_PORT=8081
+ENV FRONTEND_PORT=${FRONTEND_PORT}
+ENV BACKEND_HOST=${BACKEND_HOST}
+ENV GRPC_WEB_PORT=${GRPC_WEB_PORT}
 
 EXPOSE ${FRONTEND_PORT}
 
