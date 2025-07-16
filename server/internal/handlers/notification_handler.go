@@ -31,45 +31,77 @@ func (h *NotificationHandler) GetNotification(ctx context.Context, req *pb.GetNo
 
 	return &pb.GetNotificationResponse{
 		Notification: &pb.Notification{
-			Id:      notification.ID,
-			Message: notification.Message,
-			Type:    notification.Type,
+			Id:        notification.ID,
+			Message:   notification.Message,
+			Type:      notification.Type,
+			CreatedAt: notification.CreatedAt.Format("2006-01-02T15:04:05Z07:00"),
+			UpdatedAt: notification.UpdatedAt.Format("2006-01-02T15:04:05Z07:00"),
 		},
 	}, nil
 }
 
 // CreateNotification creates a new notification
 func (h *NotificationHandler) CreateNotification(ctx context.Context, req *pb.CreateNotificationRequest) (*pb.CreateNotificationResponse, error) {
-	notification := &models.Notification{
+	params := &models.CreateNotificationParams{
 		Message: req.Message,
 		Type:    req.Type,
 	}
 
-	createdNotification := h.store.CreateNotification(notification)
+	notification, err := h.store.CreateNotification(params)
+	if err != nil {
+		return nil, fmt.Errorf("failed to create notification: %w", err)
+	}
 
 	return &pb.CreateNotificationResponse{
 		Notification: &pb.Notification{
-			Id:      createdNotification.ID,
-			Message: createdNotification.Message,
-			Type:    createdNotification.Type,
+			Id:        notification.ID,
+			Message:   notification.Message,
+			Type:      notification.Type,
+			CreatedAt: notification.CreatedAt.Format("2006-01-02T15:04:05Z07:00"),
+			UpdatedAt: notification.UpdatedAt.Format("2006-01-02T15:04:05Z07:00"),
 		},
 	}, nil
 }
 
-// ListNotifications returns all notifications
+// ListNotifications returns all notifications (ohne Pagination da Proto es nicht unterstützt)
 func (h *NotificationHandler) ListNotifications(ctx context.Context, req *pb.ListNotificationsRequest) (*pb.ListNotificationsResponse, error) {
-	notifications := h.store.ListNotifications()
+	// Da das Proto keine Pagination hat, verwenden wir Standard-Parameter
+	params := &models.ListNotificationsParams{
+		Limit:  100, // Standard-Limit
+		Offset: 0,   // Keine Pagination
+	}
+
+	notifications, _, err := h.store.ListNotifications(params)
+	if err != nil {
+		return nil, fmt.Errorf("failed to list notifications: %w", err)
+	}
 
 	var pbNotifications []*pb.Notification
 	for _, notification := range notifications {
 		pbNotifications = append(pbNotifications, &pb.Notification{
-			Id:      notification.ID,
-			Message: notification.Message,
-			Type:    notification.Type,
+			Id:        notification.ID,
+			Message:   notification.Message,
+			Type:      notification.Type,
+			CreatedAt: notification.CreatedAt.Format("2006-01-02T15:04:05Z07:00"),
+			UpdatedAt: notification.UpdatedAt.Format("2006-01-02T15:04:05Z07:00"),
 		})
 	}
 
 	return &pb.ListNotificationsResponse{
 		Notifications: pbNotifications,
+	}, nil
+}
+
+// DeleteNotification deletes a notification by ID
+func (h *NotificationHandler) DeleteNotification(ctx context.Context, req *pb.DeleteNotificationRequest) (*pb.DeleteNotificationResponse, error) {
+	err := h.store.DeleteNotification(req.Id)
+	if err != nil {
+		return &pb.DeleteNotificationResponse{
+			Success: false,
+		}, nil
+	}
+
+	return &pb.DeleteNotificationResponse{
+		Success: true,
 	}, nil
 }

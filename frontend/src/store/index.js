@@ -1,3 +1,6 @@
+// src/store/index.js
+// Updated to load notifications on app initialization
+
 import { createStore } from 'vuex'
 import users from './modules/users/index.js'
 import connection from './modules/connection/index.js'
@@ -54,18 +57,30 @@ export const store = createStore({
 				const healthResult = await dispatch('connection/checkHealth')
 
 				if (healthResult.status === 'healthy') {
-					console.log('✅ App initialization successful')
+					console.log('✅ Connection healthy - loading initial data...')
 					commit('SET_APP_INITIALIZED', true)
 
-					// Optional: Load initial data
-					try {
-						console.log('📋 Loading initial user data...')
-						await dispatch('users/fetchUsers')
-					} catch (userError) {
-						console.warn('⚠️ Could not load initial users:', userError.message)
-						// Don't fail initialization just because users couldn't be loaded
-					}
+					// 3. Load initial data concurrently
+					const loadingPromises = []
 
+					// Load users
+					loadingPromises.push(
+						dispatch('users/fetchUsers').catch(error => {
+							console.warn('⚠️ Could not load initial users:', error.message)
+						})
+					)
+
+					// NEW: Load persistent notifications
+					loadingPromises.push(
+						dispatch('notifications/loadPersistentNotifications').catch(error => {
+							console.warn('⚠️ Could not load persistent notifications:', error.message)
+						})
+					)
+
+					// Wait for all initial data to load
+					await Promise.allSettled(loadingPromises)
+
+					console.log('✅ App initialization completed successfully')
 					return true
 				} else {
 					console.warn('⚠️ App initialized with connection issues')

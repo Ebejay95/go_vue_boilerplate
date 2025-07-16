@@ -4,6 +4,8 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"os/signal"
+	"syscall"
 
 	"backend-grpc-server/internal/server"
 )
@@ -29,6 +31,17 @@ func main() {
 	// Create server
 	srv := server.NewServer()
 
+	// Setup graceful shutdown
+	c := make(chan os.Signal, 1)
+	signal.Notify(c, os.Interrupt, syscall.SIGTERM)
+
+	go func() {
+		<-c
+		log.Println("Received shutdown signal")
+		srv.Shutdown()
+		os.Exit(0)
+	}()
+
 	// Start gRPC server in goroutine
 	go func() {
 		log.Printf("Starting gRPC server on port %s", port)
@@ -39,6 +52,8 @@ func main() {
 
 	// Start HTTP server for gRPC-Web
 	log.Printf("Starting gRPC-Web server on port %s", webPort)
+	log.Printf("Health check available at: http://localhost:%s/health", webPort)
+
 	if err := http.ListenAndServe(":"+webPort, srv.CreateHTTPHandler()); err != nil {
 		log.Fatalf("Failed to serve gRPC-Web: %v", err)
 	}

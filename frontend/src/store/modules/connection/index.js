@@ -1,5 +1,8 @@
 // store/modules/connection/index.js
+// Updated to include notification client
+
 import { UserServiceClient } from '../../../proto/user_grpc_web_pb'
+import { NotificationServiceClient } from '../../../proto/notification_grpc_web_pb'
 import { ListUsersRequest } from '../../../proto/user_pb'
 
 export default {
@@ -11,7 +14,8 @@ export default {
 			healthy: false,
 			message: 'Not connected',
 			grpcWebUrl: process.env.VUE_APP_GRPC_WEB_URL,
-			client: null,
+			userClient: null,
+			notificationClient: null, // NEW: Notification client
 			lastChecked: null,
 			error: null
 		}
@@ -30,8 +34,13 @@ export default {
 			state.message = message
 		},
 
-		SET_CLIENT(state, client) {
-			state.client = client
+		SET_USER_CLIENT(state, client) {
+			state.userClient = client
+		},
+
+		// NEW: Set notification client
+		SET_NOTIFICATION_CLIENT(state, client) {
+			state.notificationClient = client
 		},
 
 		SET_LAST_CHECKED(state, timestamp) {
@@ -49,16 +58,23 @@ export default {
 
 	actions: {
 		initializeClient({ commit, state }) {
-			console.log(`🔧 Initializing gRPC-Web client for ${state.grpcWebUrl}`)
+			console.log(`🔧 Initializing gRPC-Web clients for ${state.grpcWebUrl}`)
 
 			try {
-				const client = new UserServiceClient(state.grpcWebUrl, null, null)
-				commit('SET_CLIENT', client)
+				// Initialize user client
+				const userClient = new UserServiceClient(state.grpcWebUrl, null, null)
+				commit('SET_USER_CLIENT', userClient)
+
+				// Initialize notification client
+				const notificationClient = new NotificationServiceClient(state.grpcWebUrl, null, null)
+				commit('SET_NOTIFICATION_CLIENT', notificationClient)
+
 				commit('SET_STATUS', 'initialized')
-				console.log('✅ gRPC-Web client initialized')
-				return client
+				console.log('✅ gRPC-Web clients initialized (User + Notification)')
+
+				return { userClient, notificationClient }
 			} catch (error) {
-				console.error('❌ Failed to initialize gRPC-Web client:', error)
+				console.error('❌ Failed to initialize gRPC-Web clients:', error)
 				commit('SET_STATUS', 'error')
 				commit('SET_ERROR', `Client initialization failed: ${error.message}`)
 				throw error
@@ -72,15 +88,15 @@ export default {
 			commit('CLEAR_ERROR')
 
 			try {
-				// Initialize client if not exists
-				if (!state.client) {
+				// Initialize clients if not exists
+				if (!state.userClient || !state.notificationClient) {
 					await dispatch('initializeClient')
 				}
 
 				// Test connection with a simple ListUsers call
 				const request = new ListUsersRequest()
 				const response = await dispatch('promisifyGrpcCall', {
-					method: state.client.listUsers,
+					method: state.userClient.listUsers,
 					request: request
 				})
 
@@ -119,13 +135,22 @@ export default {
 
 		promisifyGrpcCall({ state }, { method, request, timeout = 10000 }) {
 			return new Promise((resolve, reject) => {
-				const call = method.call(state.client, request, {}, (err, response) => {
+				// Determine which client to use based on method
+				let client = state.userClient
+				if (method.toString().includes('notification') || method.toString().includes('Notification')) {
+					client = state.notificationClient
+				}
+
+				console.log('📡 Making gRPC call:', method.name || 'unknown method')
+
+				const call = method.call(client, request, {}, (err, response) => {
 					if (err) {
 						console.error('❌ gRPC-Web Error Details:', {
 							code: err.code,
 							message: err.message,
 							details: err.details,
-							metadata: err.metadata
+							metadata: err.metadata,
+							method: method.name || 'unknown'
 						})
 
 						// User-friendly error messages
@@ -139,6 +164,7 @@ export default {
 
 						reject(new Error(userFriendlyMessage))
 					} else {
+						console.log('✅ gRPC call successful:', method.name || 'unknown method')
 						resolve(response)
 					}
 				})
@@ -184,7 +210,12 @@ export default {
 		},
 
 		grpcClient(state) {
-			return state.client
+			return state.userClient
+		},
+
+		// NEW: Notification client getter
+		notificationClient(state) {
+			return state.notificationClient
 		}
 	}
 }

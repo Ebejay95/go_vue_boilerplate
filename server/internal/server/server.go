@@ -1,10 +1,12 @@
 package server
 
 import (
+	"log"
 	"net"
 	"net/http"
 	"os"
 
+	"backend-grpc-server/internal/database"
 	"backend-grpc-server/internal/handlers"
 	"backend-grpc-server/internal/storage"
 	pb "backend-grpc-server/pb"
@@ -20,13 +22,20 @@ type Server struct {
 	wrappedGrpc  *grpcweb.WrappedGrpcServer
 	userHandler  *handlers.UserHandler
 	notifHandler *handlers.NotificationHandler
+	db           *database.DB
 }
 
-// NewServer creates a new server instance
+// NewServer creates a new server instance with PostgreSQL
 func NewServer() *Server {
-	// Create stores
-	userStore := storage.NewInMemoryUserStore()
-	notificationStore := storage.NewInMemoryNotificationStore()
+	// Initialize database connection
+	db, err := database.NewConnection()
+	if err != nil {
+		log.Fatalf("Failed to connect to database: %v", err)
+	}
+
+	// Create stores with PostgreSQL backend
+	userStore := storage.NewPostgresUserStore(db)
+	notificationStore := storage.NewPostgresNotificationStore(db)
 
 	// Create handlers
 	userHandler := handlers.NewUserHandler(userStore)
@@ -48,13 +57,16 @@ func NewServer() *Server {
 			allowedOrigins := []string{
 				os.Getenv("BASE_URL"),
 				os.Getenv("BACKEND_BASE_URL"),
+				"http://localhost:3000", // Default frontend
+				"http://localhost:8080", // Default alternative
 			}
 			for _, allowed := range allowedOrigins {
 				if origin == allowed {
 					return true
 				}
 			}
-			return false
+			// Allow localhost for development
+			return origin == "" || origin == "null"
 		}),
 		grpcweb.WithWebsockets(true),
 		grpcweb.WithWebsocketOriginFunc(func(req *http.Request) bool {
@@ -67,6 +79,7 @@ func NewServer() *Server {
 		wrappedGrpc:  wrappedGrpc,
 		userHandler:  userHandler,
 		notifHandler: notifHandler,
+		db:           db,
 	}
 }
 
@@ -77,6 +90,7 @@ func (s *Server) ServeGRPC(port string) error {
 		return err
 	}
 
+	log.Printf("gRPC server listening on port %s", port)
 	return s.grpcServer.Serve(lis)
 }
 
@@ -93,6 +107,12 @@ func (s *Server) CreateHTTPHandler() http.HandlerFunc {
 			return
 		}
 
+		// Health check endpoint
+		if req.URL.Path == "/health" {
+			s.handleHealthCheck(resp, req)
+			return
+		}
+
 		if s.wrappedGrpc.IsGrpcWebRequest(req) || s.wrappedGrpc.IsGrpcWebSocketRequest(req) {
 			s.wrappedGrpc.ServeHTTP(resp, req)
 			return
@@ -103,7 +123,30 @@ func (s *Server) CreateHTTPHandler() http.HandlerFunc {
 	}
 }
 
+// handleHealthCheck provides a health check endpoint
+func (s *Server) handleHealthCheck(resp http.ResponseWriter, req *http.Request) {
+	if err := s.db.HealthCheck(); err != nil {
+		resp.WriteHeader(http.StatusServiceUnavailable)
+		resp.Write([]byte(`{"status":"unhealthy","database":"disconnected"}`))
+		return
+	}
+
+	resp.Header().Set("Content-Type", "application/json")
+	resp.WriteHeader(http.StatusOK)
+	resp.Write([]byte(`{"status":"healthy","database":"connected"}`))
+}
+
 // Shutdown gracefully shuts down the server
 func (s *Server) Shutdown() {
+	log.Println("Shutting down server...")
+
+	// Stop gRPC server
 	s.grpcServer.GracefulStop()
+
+	// Close database connection
+	if err := s.db.Close(); err != nil {
+		log.Printf("Error closing database connection: %v", err)
+	}
+
+	log.Println("Server shutdown complete")
 }

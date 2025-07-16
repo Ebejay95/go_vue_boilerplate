@@ -8,6 +8,7 @@ service NotificationService {
   rpc GetNotification(GetNotificationRequest) returns (GetNotificationResponse);
   rpc CreateNotification(CreateNotificationRequest) returns (CreateNotificationResponse);
   rpc ListNotifications(ListNotificationsRequest) returns (ListNotificationsResponse);
+  rpc DeleteNotification(DeleteNotificationRequest) returns (DeleteNotificationResponse);
 }
 
 // Notification message
@@ -15,6 +16,8 @@ message Notification {
   int32 id = 1;
   string message = 2;
   string type = 3;
+  string created_at = 4;
+  string updated_at = 5;
 }
 
 // Get Notification request/response
@@ -23,22 +26,31 @@ message GetNotificationRequest {
 }
 
 message GetNotificationResponse {
-  Notification Notification = 1;
+  Notification notification = 1;
 }
 
 // Create Notification request/response
 message CreateNotificationRequest {
-	string message = 1;
-	string type = 2;
+  string message = 1;
+  string type = 2;
 }
 
 message CreateNotificationResponse {
-  Notification Notification = 1;
+  Notification notification = 1;
 }
 
 // List Notifications request/response
 message ListNotificationsRequest {}
 
 message ListNotificationsResponse {
-  repeated Notification Notifications = 1;
+  repeated Notification notifications = 1;
+}
+
+// Delete Notification request/response
+message DeleteNotificationRequest {
+  int32 id = 1;
+}
+
+message DeleteNotificationResponse {
+  bool success = 1;
 }

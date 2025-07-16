@@ -257,5 +257,66 @@ proto.notification.NotificationServicePromiseClient.prototype.listNotifications 
 };
 
 
+/**
+ * @const
+ * @type {!grpc.web.MethodDescriptor<
+ *   !proto.notification.DeleteNotificationRequest,
+ *   !proto.notification.DeleteNotificationResponse>}
+ */
+const methodDescriptor_NotificationService_DeleteNotification = new grpc.web.MethodDescriptor(
+  '/notification.NotificationService/DeleteNotification',
+  grpc.web.MethodType.UNARY,
+  proto.notification.DeleteNotificationRequest,
+  proto.notification.DeleteNotificationResponse,
+  /**
+   * @param {!proto.notification.DeleteNotificationRequest} request
+   * @return {!Uint8Array}
+   */
+  function(request) {
+    return request.serializeBinary();
+  },
+  proto.notification.DeleteNotificationResponse.deserializeBinary
+);
+
+
+/**
+ * @param {!proto.notification.DeleteNotificationRequest} request The
+ *     request proto
+ * @param {?Object<string, string>} metadata User defined
+ *     call metadata
+ * @param {function(?grpc.web.RpcError, ?proto.notification.DeleteNotificationResponse)}
+ *     callback The callback function(error, response)
+ * @return {!grpc.web.ClientReadableStream<!proto.notification.DeleteNotificationResponse>|undefined}
+ *     The XHR Node Readable Stream
+ */
+proto.notification.NotificationServiceClient.prototype.deleteNotification =
+    function(request, metadata, callback) {
+  return this.client_.rpcCall(this.hostname_ +
+      '/notification.NotificationService/DeleteNotification',
+      request,
+      metadata || {},
+      methodDescriptor_NotificationService_DeleteNotification,
+      callback);
+};
+
+
+/**
+ * @param {!proto.notification.DeleteNotificationRequest} request The
+ *     request proto
+ * @param {?Object<string, string>=} metadata User defined
+ *     call metadata
+ * @return {!Promise<!proto.notification.DeleteNotificationResponse>}
+ *     Promise that resolves to the response
+ */
+proto.notification.NotificationServicePromiseClient.prototype.deleteNotification =
+    function(request, metadata) {
+  return this.client_.unaryCall(this.hostname_ +
+      '/notification.NotificationService/DeleteNotification',
+      request,
+      metadata || {},
+      methodDescriptor_NotificationService_DeleteNotification);
+};
+
+
 module.exports = proto.notification;
 

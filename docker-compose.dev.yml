@@ -1,6 +1,7 @@
 version: '3.8'
 
 services:
+  # Existing dev-environment service
   dev-environment:
     build:
       context: .
@@ -24,6 +25,14 @@ services:
       - DEEPL_API_KEY=${DEEPL_API_KEY}
       - GO_ENV=development
 
+      # Database connection for dev environment
+      - DB_HOST=postgres-dev
+      - DB_PORT=5432
+      - DB_USER=postgres
+      - DB_PASSWORD=devpassword
+      - DB_NAME=grpc_server_db
+      - DB_SSLMODE=disable
+
       - FRONTEND_PORT=${FRONTEND_PORT:-3000}
       - FRONTEND_HOST=${FRONTEND_HOST:-localhost}
       - FRONTEND_PROTOCOL=${FRONTEND_PROTOCOL:-http}
@@ -34,19 +43,16 @@ services:
       - CHOKIDAR_USEPOLLING=true
       - WATCHPACK_POLLING=true
       - FAST_REFRESH=true
-
       - NODE_OPTIONS=--max-old-space-size=4096
+
     volumes:
       - ./server:/app/server:cached
       - ./frontend:/app/frontend:cached
       - ./proto:/app/proto:cached
-
       - ./dev-start.sh:/app/dev-start.sh:ro
-
       - dev-go-cache:/go/pkg/mod
       - dev-node-cache:/app/frontend/node_modules
       - dev-webpack-cache:/app/frontend/node_modules/.cache
-
       - /app/server/tmp
       - /app/frontend/dist
       - /app/frontend/node_modules/.cache/webpack
@@ -54,6 +60,8 @@ services:
     container_name: ${APP_NAME}-dev-environment
     restart: unless-stopped
     working_dir: /app
+    depends_on:
+      - postgres-dev
 
     healthcheck:
       test: |
@@ -83,6 +91,38 @@ services:
       - "dev.hotreload=true"
       - "dev.environment=development"
 
+  # PostgreSQL Development Database
+  postgres-dev:
+    image: postgres:15-alpine
+    environment:
+      - POSTGRES_DB=grpc_server_db
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=devpassword
+      - POSTGRES_INITDB_ARGS=--encoding=UTF-8 --lc-collate=C --lc-ctype=C
+    ports:
+      - "5432:5432"
+    networks:
+      - app-network-dev
+    volumes:
+      - postgres-dev-data:/var/lib/postgresql/data
+      - ./init-db.sql:/docker-entrypoint-initdb.d/init-db.sql:ro
+    container_name: ${APP_NAME}-postgres-dev
+    restart: unless-stopped
+
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d grpc_server_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+        reservations:
+          memory: 256M
+
 networks:
   app-network-dev:
     driver: bridge
@@ -97,4 +137,7 @@ volumes:
     driver: local
   dev-webpack-cache:
     name: ${APP_NAME}-dev-webpack-cache
+    driver: local
+  postgres-dev-data:
+    name: ${APP_NAME}-postgres-dev-data
     driver: local

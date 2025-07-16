@@ -1,62 +1,172 @@
 package storage
 
 import (
-	"sync"
+	"database/sql"
+	"fmt"
+
+	"backend-grpc-server/internal/database"
 	"backend-grpc-server/internal/models"
 )
 
-// NotificationStore interface defines the contract for notification storage operations
-type NotificationStore interface {
-	GetNotification(id int32) (*models.Notification, bool)
-	CreateNotification(notification *models.Notification) *models.Notification
-	ListNotifications() []*models.Notification
+type PostgresNotificationStore struct {
+	db *database.DB
 }
 
-// InMemoryNotificationStore implements NotificationStore using in-memory storage
-type InMemoryNotificationStore struct {
-	notifications map[int32]*models.Notification
-	mutex         sync.RWMutex
-	nextID        int32
-}
-
-// NewInMemoryNotificationStore creates a new in-memory notification store
-func NewInMemoryNotificationStore() *InMemoryNotificationStore {
-	return &InMemoryNotificationStore{
-		notifications: make(map[int32]*models.Notification),
-		nextID:        1,
+func NewPostgresNotificationStore(db *database.DB) NotificationStore {
+	return &PostgresNotificationStore{
+		db: db,
 	}
 }
 
-// GetNotification retrieves a notification by ID
-func (s *InMemoryNotificationStore) GetNotification(id int32) (*models.Notification, bool) {
-	s.mutex.RLock()
-	defer s.mutex.RUnlock()
+func (s *PostgresNotificationStore) GetNotification(id int32) (*models.Notification, bool) {
+	query := `
+		SELECT id, message, type, created_at, updated_at
+		FROM notifications
+		WHERE id = $1
+	`
 
-	notification, exists := s.notifications[id]
-	return notification, exists
+	notification := &models.Notification{}
+	err := s.db.QueryRow(query, id).Scan(
+		&notification.ID,
+		&notification.Message,
+		&notification.Type,
+		&notification.CreatedAt,
+		&notification.UpdatedAt,
+	)
+
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return nil, false
+		}
+		fmt.Printf("Error getting notification: %v\n", err)
+		return nil, false
+	}
+
+	return notification, true
 }
 
-// CreateNotification creates a new notification
-func (s *InMemoryNotificationStore) CreateNotification(notification *models.Notification) *models.Notification {
-	s.mutex.Lock()
-	defer s.mutex.Unlock()
+func (s *PostgresNotificationStore) CreateNotification(params *models.CreateNotificationParams) (*models.Notification, error) {
+	query := `
+		INSERT INTO notifications (message, type)
+		VALUES ($1, $2)
+		RETURNING id, message, type, created_at, updated_at
+	`
 
-	notification.ID = s.nextID
-	s.notifications[s.nextID] = notification
-	s.nextID++
+	notification := &models.Notification{}
+	err := s.db.QueryRow(query, params.Message, params.Type).Scan(
+		&notification.ID,
+		&notification.Message,
+		&notification.Type,
+		&notification.CreatedAt,
+		&notification.UpdatedAt,
+	)
 
-	return notification
+	if err != nil {
+		return nil, fmt.Errorf("failed to create notification: %w", err)
+	}
+
+	return notification, nil
 }
 
-// ListNotifications returns all notifications
-func (s *InMemoryNotificationStore) ListNotifications() []*models.Notification {
-	s.mutex.RLock()
-	defer s.mutex.RUnlock()
+func (s *PostgresNotificationStore) UpdateNotification(params *models.UpdateNotificationParams) (*models.Notification, error) {
+	query := `
+		UPDATE notifications
+		SET message = $2, type = $3, updated_at = CURRENT_TIMESTAMP
+		WHERE id = $1
+		RETURNING id, message, type, created_at, updated_at
+	`
 
-	notifications := make([]*models.Notification, 0, len(s.notifications))
-	for _, notification := range s.notifications {
+	notification := &models.Notification{}
+	err := s.db.QueryRow(query, params.ID, params.Message, params.Type).Scan(
+		&notification.ID,
+		&notification.Message,
+		&notification.Type,
+		&notification.CreatedAt,
+		&notification.UpdatedAt,
+	)
+
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return nil, fmt.Errorf("notification with ID %d not found", params.ID)
+		}
+		return nil, fmt.Errorf("failed to update notification: %w", err)
+	}
+
+	return notification, nil
+}
+
+func (s *PostgresNotificationStore) DeleteNotification(id int32) error {
+	query := `DELETE FROM notifications WHERE id = $1`
+
+	result, err := s.db.Exec(query, id)
+	if err != nil {
+		return fmt.Errorf("failed to delete notification: %w", err)
+	}
+
+	rowsAffected, err := result.RowsAffected()
+	if err != nil {
+		return fmt.Errorf("failed to get rows affected: %w", err)
+	}
+
+	if rowsAffected == 0 {
+		return fmt.Errorf("notification with ID %d not found", id)
+	}
+
+	return nil
+}
+
+func (s *PostgresNotificationStore) ListNotifications(params *models.ListNotificationsParams) ([]*models.Notification, int32, error) {
+	// Default values
+	limit := params.Limit
+	if limit <= 0 {
+		limit = 50 // Default limit
+	}
+	offset := params.Offset
+	if offset < 0 {
+		offset = 0
+	}
+
+	// Get total count
+	countQuery := `SELECT COUNT(*) FROM notifications`
+	var total int32
+	err := s.db.QueryRow(countQuery).Scan(&total)
+	if err != nil {
+		return nil, 0, fmt.Errorf("failed to count notifications: %w", err)
+	}
+
+	// Get notifications with pagination
+	query := `
+		SELECT id, message, type, created_at, updated_at
+		FROM notifications
+		ORDER BY created_at DESC
+		LIMIT $1 OFFSET $2
+	`
+
+	rows, err := s.db.Query(query, limit, offset)
+	if err != nil {
+		return nil, 0, fmt.Errorf("failed to list notifications: %w", err)
+	}
+	defer rows.Close()
+
+	var notifications []*models.Notification
+	for rows.Next() {
+		notification := &models.Notification{}
+		err := rows.Scan(
+			&notification.ID,
+			&notification.Message,
+			&notification.Type,
+			&notification.CreatedAt,
+			&notification.UpdatedAt,
+		)
+		if err != nil {
+			return nil, 0, fmt.Errorf("failed to scan notification: %w", err)
+		}
 		notifications = append(notifications, notification)
 	}
 
-	return notifications
+	if err = rows.Err(); err != nil {
+		return nil, 0, fmt.Errorf("error iterating notifications: %w", err)
+	}
+
+	return notifications, total, nil
 }
