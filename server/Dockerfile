@@ -27,7 +27,7 @@ RUN echo "=== Package declaration ===" && head -1 pb/user.pb.go
 
 # Initialize Go modules and build
 RUN go mod tidy
-RUN CGO_ENABLED=0 GOOS=linux go build -v -o main ./cmd/server
+RUN CGO_ENABLED=0 GOOS=linux go build -v -o main ./
 
 # Runtime stage
 FROM alpine:latest

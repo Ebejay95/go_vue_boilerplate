@@ -1,54 +1,42 @@
 <template>
-	<!-- Notification List Component -->
-	<div class="fixed top-4 right-4 z-50 space-y-2 max-w-sm">
+	<!-- Toast Notifications (temporär, oben rechts, OHNE X-Button) -->
+	<div class="fixed top-4 right-4 z-50 space-y-2 max-w-sm pointer-events-none">
 	  <transition-group
-		name="notification"
+		name="toast"
 		tag="div"
 		class="space-y-2"
 	  >
 		<div
-		  v-for="notification in visibleNotifications"
-		  :key="notification.id"
+		  v-for="toast in visibleToasts"
+		  :key="toast.id"
 		  :class="[
-			'transform transition-all duration-300 ease-in-out',
+			'transform transition-all duration-300 ease-in-out pointer-events-auto',
 			'bg-white rounded-lg shadow-lg border-l-4 p-4',
-			'flex items-start space-x-3 min-w-80',
-			getTypeClasses(notification.type)
+			'flex items-start space-x-3 min-w-80 cursor-default',
+			getTypeClasses(toast.type)
 		  ]"
-		  @click="markAsRead(notification.id)"
 		>
 		  <!-- Icon -->
 		  <div class="flex-shrink-0">
 			<component
-			  :is="getIcon(notification.type)"
-			  :class="[
-				'h-5 w-5',
-				getIconColor(notification.type)
-			  ]"
+			  :is="getIcon(toast.type)"
+			  :class="['h-5 w-5', getIconColor(toast.type)]"
 			/>
 		  </div>
 
 		  <!-- Content -->
 		  <div class="flex-1 min-w-0">
-			<p :class="[
-			  'text-sm font-medium',
-			  notification.read ? 'text-gray-600' : 'text-gray-900'
-			]">
-			  {{ notification.message }}
+			<p class="text-sm font-medium text-gray-900">
+			  {{ toast.message }}
 			</p>
 
-			<!-- Timestamp -->
-			<p class="text-xs text-gray-500 mt-1">
-			  {{ formatTime(notification.createdAt) }}
-			</p>
-
-			<!-- Actions -->
-			<div v-if="notification.actions && notification.actions.length"
+			<!-- Actions für Toast (falls vorhanden) -->
+			<div v-if="toast.actions && toast.actions.length"
 				 class="mt-2 space-x-2">
 			  <button
-				v-for="action in notification.actions"
+				v-for="action in toast.actions"
 				:key="action.label"
-				@click.stop="handleAction(action, notification)"
+				@click="handleToastAction(action, toast)"
 				class="text-xs px-2 py-1 bg-gray-100 hover:bg-gray-200 rounded transition-colors"
 			  >
 				{{ action.label }}
@@ -56,22 +44,24 @@
 			</div>
 		  </div>
 
-		  <!-- Close Button -->
-		  <button
-			@click.stop="removeNotification(notification.id)"
-			class="flex-shrink-0 text-gray-400 hover:text-gray-600 transition-colors"
-		  >
-			<svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-			  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-			</svg>
-		  </button>
+		  <!-- Progress Bar für verbleibende Zeit -->
+		  <div class="absolute bottom-0 left-0 right-0 h-1 bg-gray-200 rounded-b-lg overflow-hidden">
+			<div
+			  class="h-full bg-current opacity-30 transition-all linear"
+			  :class="getIconColor(toast.type)"
+			  :style="{
+				width: '100%',
+				animation: `shrink ${toast.duration}ms linear forwards`
+			  }"
+			></div>
+		  </div>
 		</div>
 	  </transition-group>
 	</div>
 
-	<!-- Notification Badge (für Header) -->
+	<!-- Notification Bell Badge -->
 	<div
-	  v-if="showBadge && hasUnreadNotifications"
+	  v-if="showBadge"
 	  class="relative inline-block cursor-pointer"
 	  @click="toggleNotificationPanel"
 	>
@@ -82,7 +72,7 @@
 			  d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
 	  </svg>
 
-	  <!-- Badge -->
+	  <!-- Badge für ungelesene persistente Nachrichten -->
 	  <span
 		v-if="unreadCount > 0"
 		class="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center font-medium"
@@ -91,53 +81,66 @@
 	  </span>
 	</div>
 
-	<!-- Notification Panel (optional dropdown) -->
+	<!-- Notification Panel (persistente Liste) -->
 	<div
 	  v-if="showPanel && showNotificationPanel"
 	  class="fixed top-16 right-4 z-50 bg-white rounded-lg shadow-xl border w-80 max-h-96 overflow-hidden"
+	  @click.stop
 	>
 	  <!-- Header -->
 	  <div class="px-4 py-3 border-b bg-gray-50">
 		<div class="flex items-center justify-between">
-		  <h3 class="text-sm font-medium text-gray-900">Benachrichtigungen</h3>
+		  <h3 class="text-sm font-medium text-gray-900">
+			Benachrichtigungen ({{ persistentNotifications.length }})
+		  </h3>
 		  <div class="flex space-x-2">
 			<button
-			  v-if="hasUnreadNotifications"
+			  v-if="hasUnreadPersistent"
 			  @click="markAllAsRead"
 			  class="text-xs text-blue-600 hover:text-blue-800"
 			>
-			  Alle als gelesen markieren
+			  Alle gelesen
 			</button>
 			<button
-			  @click="clearAllNotifications"
+			  @click="clearAllPersistent"
 			  class="text-xs text-gray-500 hover:text-gray-700"
 			>
 			  Alle löschen
+			</button>
+			<button
+			  @click="closePanel"
+			  class="text-xs text-gray-400 hover:text-gray-600"
+			>
+			  ✕
 			</button>
 		  </div>
 		</div>
 	  </div>
 
-	  <!-- Notifications List -->
+	  <!-- Persistent Notifications List -->
 	  <div class="max-h-64 overflow-y-auto">
-		<div v-if="!hasNotifications" class="p-4 text-center text-gray-500 text-sm">
-		  Keine Benachrichtigungen
+		<div v-if="persistentNotifications.length === 0" class="p-4 text-center text-gray-500 text-sm">
+		  <svg class="mx-auto h-8 w-8 text-gray-300 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+			<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+		  </svg>
+		  Keine gespeicherten Benachrichtigungen
 		</div>
 
 		<div
-		  v-for="notification in allNotifications"
+		  v-for="notification in persistentNotifications"
 		  :key="notification.id"
 		  :class="[
 			'p-3 border-b last:border-b-0 cursor-pointer hover:bg-gray-50 transition-colors',
-			!notification.read ? 'bg-blue-50' : ''
+			!notification.read ? 'bg-blue-50 border-l-2 border-l-blue-500' : ''
 		  ]"
 		  @click="markAsRead(notification.id)"
 		>
-		  <div class="flex items-start space-x-2">
+		  <div class="flex items-start space-x-3">
 			<component
 			  :is="getIcon(notification.type)"
 			  :class="['h-4 w-4 mt-0.5 flex-shrink-0', getIconColor(notification.type)]"
 			/>
+
 			<div class="flex-1 min-w-0">
 			  <p :class="[
 				'text-sm',
@@ -148,8 +151,35 @@
 			  <p class="text-xs text-gray-500 mt-1">
 				{{ formatTime(notification.createdAt) }}
 			  </p>
+
+			  <!-- Actions für persistente Nachrichten -->
+			  <div v-if="notification.actions && notification.actions.length"
+				   class="mt-2 space-x-2">
+				<button
+				  v-for="action in notification.actions"
+				  :key="action.label"
+				  @click.stop="handlePersistentAction(action, notification)"
+				  class="text-xs px-2 py-1 bg-blue-100 hover:bg-blue-200 text-blue-800 rounded transition-colors"
+				>
+				  {{ action.label }}
+				</button>
+			  </div>
 			</div>
-			<div v-if="!notification.read" class="w-2 h-2 bg-blue-500 rounded-full flex-shrink-0 mt-2"></div>
+
+			<div class="flex items-center space-x-2">
+			  <!-- Unread indicator -->
+			  <div v-if="!notification.read" class="w-2 h-2 bg-blue-500 rounded-full flex-shrink-0"></div>
+
+			  <!-- Delete button -->
+			  <button
+				@click.stop="removePersistentNotification(notification.id)"
+				class="text-gray-400 hover:text-red-500 transition-colors"
+			  >
+				<svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+				  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+				</svg>
+			  </button>
+			</div>
 		  </div>
 		</div>
 	  </div>
@@ -171,7 +201,7 @@
 		type: Boolean,
 		default: true
 	  },
-	  maxVisible: {
+	  maxToasts: {
 		type: Number,
 		default: 5
 	  }
@@ -184,27 +214,25 @@
 	},
 
 	computed: {
-	  ...mapState('notifications', ['notifications']),
+	  ...mapState('notifications', ['toasts', 'persistentNotifications']),
 	  ...mapGetters('notifications', [
-		'allNotifications',
-		'unreadNotifications',
 		'unreadCount',
-		'hasNotifications',
-		'hasUnreadNotifications',
-		'latestNotifications'
+		'hasUnreadPersistent'
 	  ]),
 
-	  visibleNotifications() {
-		return this.latestNotifications.slice(0, this.maxVisible)
+	  // Nur die sichtbaren Toasts (begrenzt)
+	  visibleToasts() {
+		return this.toasts.slice(0, this.maxToasts)
 	  }
 	},
 
 	methods: {
 	  ...mapActions('notifications', [
-		'removeNotification',
+		'dismissToast',
+		'removePersistentNotification',
 		'markAsRead',
 		'markAllAsRead',
-		'clearAllNotifications'
+		'clearAllPersistent'
 	  ]),
 
 	  getTypeClasses(type) {
@@ -228,7 +256,6 @@
 	  },
 
 	  getIcon(type) {
-		// Return inline SVG components
 		const icons = {
 		  success: {
 			template: `
@@ -286,9 +313,25 @@
 		this.showNotificationPanel = !this.showNotificationPanel
 	  },
 
-	  handleAction(action, notification) {
+	  closePanel() {
+		this.showNotificationPanel = false
+	  },
+
+	  handleToastAction(action, toast) {
+		if (typeof action.handler === 'function') {
+		  action.handler(toast)
+		}
+		// Toast nach Action automatisch schließen
+		this.dismissToast(toast.id)
+	  },
+
+	  handlePersistentAction(action, notification) {
 		if (typeof action.handler === 'function') {
 		  action.handler(notification)
+		}
+		// Notification als gelesen markieren nach Action
+		if (!notification.read) {
+		  this.markAsRead(notification.id)
 		}
 	  },
 
@@ -311,23 +354,51 @@
   </script>
 
   <style scoped>
-  /* Transition animations */
-  .notification-enter-active,
-  .notification-leave-active {
-	transition: all 0.3s ease;
+  /* Toast animations */
+  .toast-enter-active,
+  .toast-leave-active {
+	transition: all 0.4s ease;
   }
 
-  .notification-enter-from {
+  .toast-enter-from {
 	opacity: 0;
-	transform: translateX(100%);
+	transform: translateX(100%) scale(0.9);
   }
 
-  .notification-leave-to {
+  .toast-leave-to {
 	opacity: 0;
-	transform: translateX(100%);
+	transform: translateX(100%) scale(0.9);
   }
 
-  .notification-move {
-	transition: transform 0.3s ease;
+  .toast-move {
+	transition: transform 0.4s ease;
+  }
+
+  /* Progress bar animation */
+  @keyframes shrink {
+	from {
+	  width: 100%;
+	}
+	to {
+	  width: 0%;
+	}
+  }
+
+  /* Smooth scrollbar */
+  .max-h-64::-webkit-scrollbar {
+	width: 4px;
+  }
+
+  .max-h-64::-webkit-scrollbar-track {
+	background: #f1f5f9;
+  }
+
+  .max-h-64::-webkit-scrollbar-thumb {
+	background: #cbd5e1;
+	border-radius: 2px;
+  }
+
+  .max-h-64::-webkit-scrollbar-thumb:hover {
+	background: #94a3b8;
   }
   </style>

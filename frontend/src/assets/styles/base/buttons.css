@@ -1,0 +1,56 @@
+.btn {
+	@apply cursor-pointer px-3 py-1 rounded-md text-white transition-all duration-200 outline-none text-[var(--color-font)] border border-gray-300;
+	font-weight: 500;
+}
+
+.btn.primary {
+	background-color: var(--color-primary);
+	@apply text-[var(--color-font-invert)];
+}
+
+.btn.primary:hover {
+	background-color: var(--color-primary-hover);
+}
+
+.btn.primary:active {
+	@apply border border-gray-600;
+}
+
+.btn.primary:focus {
+	box-shadow: 0 0 0 3px var(--color-primary-focus);
+}
+
+.btn.secondary {
+	background-color: var(--color-secondary);
+}
+
+.btn.secondary:hover {
+	background-color: var(--color-secondary-hover);
+}
+
+.btn.secondary:active {
+	background-color: var(--color-secondary-active);
+}
+
+.btn.secondary:focus {
+	box-shadow: 0 0 0 3px var(--color-secondary-focus);
+}
+
+.btn.flat {
+	@apply border-none shadow-none bg-opacity-100;
+	background-color: transparent;
+	color: var(--color-primary);
+}
+
+.btn.flat:hover {
+	background-color: var(--color-primary-hover);
+	color: #fff;
+}
+
+.btn.flat:active {
+	background-color: var(--color-primary-active);
+}
+
+.btn.flat:focus {
+	box-shadow: 0 0 0 3px var(--color-primary-focus);
+}

@@ -1,0 +1,9 @@
+package models
+
+type User struct {
+	ID    int32  `json:"id"`
+	Name  string `json:"name"`
+	Email string `json:"email"`
+	Age   int32  `json:"age"`
+	Role  string `json:"role"`
+}

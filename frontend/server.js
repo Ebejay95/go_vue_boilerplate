@@ -42,7 +42,7 @@ if (process.env.NODE_ENV === 'production') {
 
 client.ListUsers({}, (error, response) => {
 	if (error) {
-		console.error('❌ gRPC connection failed:', error.message);
+		console.dispatchError('❌ gRPC connection failed:', error.message);
 	} else {
 		console.log('✅ gRPC connection successful');
 		console.log(`Found ${response.users ? response.users.length : 0} users`);

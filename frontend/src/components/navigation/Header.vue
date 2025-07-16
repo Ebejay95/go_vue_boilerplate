@@ -69,7 +69,12 @@
 
 	methods: {
 	  ...mapActions('connection', ['checkHealth', 'reconnect']),
-	  ...mapActions('notifications', ['success', 'error', 'warning', 'info']),
+	  ...mapActions('notifications', {
+		notifySuccess: 'success',
+		notifyError: 'error',
+		notifyWarning: 'warning',
+		notifyInfo: 'info'
+	  }),
 
 	  getStatusMessage() {
 		if (this.healthy) {
@@ -89,13 +94,13 @@
 
 	  async handleReconnect() {
 		try {
-		  this.info('Verbindung wird wiederhergestellt...')
+		  this.notifyInfo('Verbindung wird wiederhergestellt...')
 		  const result = await this.reconnect()
 
 		  if (result.status === 'healthy') {
-			this.success('✅ Verbindung wiederhergestellt!')
+			this.notifySuccess('✅ Verbindung wiederhergestellt!')
 		  } else {
-			this.error(`❌ Wiederverbindung fehlgeschlagen: ${result.error}`, {
+			this.notifyError(`❌ Wiederverbindung fehlgeschlagen: ${result.error}`, {
 			  actions: [
 				{
 				  label: 'Erneut versuchen',
@@ -106,7 +111,7 @@
 		  }
 		} catch (error) {
 		  console.error('❌ Reconnection error:', error)
-		  this.error(`❌ Verbindungsfehler: ${error.message}`, {
+		  this.notifyError(`❌ Verbindungsfehler: ${error.message}`, {
 			persistent: true,
 			actions: [
 			  {
@@ -122,9 +127,9 @@
 	  handleConnectionChange(newStatus, oldStatus) {
 		if (oldStatus && newStatus !== oldStatus) {
 		  if (newStatus === 'connected') {
-			this.success('🔗 Verbindung hergestellt')
+			this.notifySuccess('🔗 Verbindung hergestellt')
 		  } else if (newStatus === 'error' && oldStatus === 'connected') {
-			this.error('🔌 Verbindung verloren', {
+			this.notifyError('🔌 Verbindung verloren', {
 			  persistent: true,
 			  actions: [
 				{
@@ -149,9 +154,9 @@
 	  healthy(newHealthy, oldHealthy) {
 		if (oldHealthy !== undefined && newHealthy !== oldHealthy) {
 		  if (newHealthy) {
-			this.success('✅ Verbindung stabil')
+			this.notifySuccess('✅ Verbindung stabil')
 		  } else {
-			this.warning('⚠️ Verbindung instabil')
+			this.notifyWarning('⚠️ Verbindung instabil')
 		  }
 		}
 	  }

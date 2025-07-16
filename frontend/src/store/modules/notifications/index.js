@@ -1,153 +1,272 @@
+// src/store/modules/notifications/index.js
 const mutations = {
-	ADD_NOTIFICATION(state, notification) {
-	  state.notifications.push({
-		id: Date.now() + Math.random(), // Unique ID
-		...notification,
-		createdAt: new Date().toISOString()
-	  })
+	ADD_TOAST(state, toast) {
+		const newToast = {
+			id: Date.now() + Math.random(),
+			...toast,
+			createdAt: new Date().toISOString()
+		}
+		state.toasts.push(newToast)
 	},
 
-	REMOVE_NOTIFICATION(state, id) {
-	  state.notifications = state.notifications.filter(n => n.id !== id)
+	REMOVE_TOAST(state, id) {
+		state.toasts = state.toasts.filter(t => t.id !== id)
 	},
 
-	CLEAR_ALL_NOTIFICATIONS(state) {
-	  state.notifications = []
+	CLEAR_ALL_TOASTS(state) {
+		state.toasts = []
+	},
+
+	ADD_PERSISTENT(state, notification) {
+		state.persistentNotifications.unshift(notification)
+	},
+
+	REMOVE_PERSISTENT(state, id) {
+		state.persistentNotifications = state.persistentNotifications.filter(n => n.id !== id)
+	},
+
+	CLEAR_ALL_PERSISTENT(state) {
+		state.persistentNotifications = []
 	},
 
 	MARK_AS_READ(state, id) {
-	  const notification = state.notifications.find(n => n.id === id)
-	  if (notification) {
-		notification.read = true
-	  }
+		const notification = state.persistentNotifications.find(n => n.id === id)
+		if (notification) {
+			notification.read = true
+		}
 	},
 
 	MARK_ALL_AS_READ(state) {
-	  state.notifications.forEach(n => n.read = true)
+		state.persistentNotifications.forEach(n => n.read = true)
 	}
-  }
+}
 
-  const actions = {
-	// Hauptmethode zum Hinzufügen von Notifications
-	addNotification({ commit }, { message, type = 'info', duration = 5000, persistent = false, actions = [] }) {
-	  const notification = {
-		message,
-		type, // 'success', 'error', 'warning', 'info'
-		duration,
-		persistent, // Wenn true, wird nicht automatisch entfernt
-		actions, // Array von Action-Objekten { label, handler }
-		read: false
-	  }
+const actions = {
+	// Base Toast Action
+	showToast({ commit }, { message, type = 'info', duration = 2000, actions = [] }) {
+		const toast = {
+			id: Date.now() + Math.random(),
+			message,
+			type,
+			duration,
+			actions,
+			createdAt: new Date().toISOString()
+		}
 
-	  commit('ADD_NOTIFICATION', notification)
+		commit('ADD_TOAST', toast)
 
-	  // Auto-remove nach duration (außer persistent)
-	  if (!persistent && duration > 0) {
-		setTimeout(() => {
-		  commit('REMOVE_NOTIFICATION', notification.id)
-		}, duration)
-	  }
+		if (duration > 0) {
+			setTimeout(() => {
+				commit('REMOVE_TOAST', toast.id)
+			}, duration)
+		}
 
-	  return notification.id
+		return toast.id
 	},
 
-	// Convenience-Methoden für verschiedene Typen
-	success({ dispatch }, message, options = {}) {
-	  return dispatch('addNotification', {
-		message,
-		type: 'success',
-		duration: 4000,
-		...options
-	  })
+	// Base Persistent Action
+	addPersistent({ commit }, { message, type = 'info', actions = [], priority = 'normal' }) {
+		const notification = {
+			id: Date.now() + Math.random(),
+			message,
+			type,
+			actions,
+			priority,
+			createdAt: new Date().toISOString(),
+			read: false
+		}
+
+		commit('ADD_PERSISTENT', notification)
+		return notification.id
 	},
 
-	error({ dispatch }, message, options = {}) {
-	  return dispatch('addNotification', {
-		message,
-		type: 'error',
-		duration: 8000, // Errors bleiben länger
-		...options
-	  })
+	// Toast Management
+	dismissToast({ commit }, id) {
+		commit('REMOVE_TOAST', id)
 	},
 
-	warning({ dispatch }, message, options = {}) {
-	  return dispatch('addNotification', {
-		message,
-		type: 'warning',
-		duration: 6000,
-		...options
-	  })
+	clearAllToasts({ commit }) {
+		commit('CLEAR_ALL_TOASTS')
 	},
 
-	info({ dispatch }, message, options = {}) {
-	  return dispatch('addNotification', {
-		message,
-		type: 'info',
-		duration: 5000,
-		...options
-	  })
+	// Persistent Management
+	removePersistentNotification({ commit }, id) {
+		commit('REMOVE_PERSISTENT', id)
 	},
 
-	// Notification entfernen
-	removeNotification({ commit }, id) {
-	  commit('REMOVE_NOTIFICATION', id)
+	clearAllPersistent({ commit }) {
+		commit('CLEAR_ALL_PERSISTENT')
 	},
 
-	// Alle Notifications löschen
-	clearAllNotifications({ commit }) {
-	  commit('CLEAR_ALL_NOTIFICATIONS')
-	},
-
-	// Als gelesen markieren
 	markAsRead({ commit }, id) {
-	  commit('MARK_AS_READ', id)
+		commit('MARK_AS_READ', id)
 	},
 
 	markAllAsRead({ commit }) {
-	  commit('MARK_ALL_AS_READ')
-	}
-  }
+		commit('MARK_ALL_AS_READ')
+	},
 
-  const getters = {
-	allNotifications(state) {
-	  return state.notifications
+	// Unified Success Action
+	dispatchSuccess({ dispatch }, message, options = {}) {
+		console.log('🎉 Dispatching success:', message, options)
+
+		if (options.persistent) {
+			return dispatch('addPersistent', {
+				message,
+				type: 'success',
+				...options
+			})
+		} else {
+			return dispatch('showToast', {
+				message,
+				type: 'success',
+				duration: 2000,
+				...options
+			})
+		}
+	},
+
+	// Unified Error Action
+	dispatchError({ dispatch }, message, options = {}) {
+		console.log('❌ Dispatching error:', message, options)
+
+		if (options.persistent) {
+			return dispatch('addPersistent', {
+				message,
+				type: 'error',
+				priority: 'high',
+				...options
+			})
+		} else {
+			return dispatch('showToast', {
+				message,
+				type: 'error',
+				duration: 4000,
+				...options
+			})
+		}
+	},
+
+	// Unified Warning Action
+	dispatchWarning({ dispatch }, message, options = {}) {
+		console.log('⚠️ Dispatching warning:', message, options)
+
+		if (options.persistent) {
+			return dispatch('addPersistent', {
+				message,
+				type: 'warning',
+				priority: 'medium',
+				...options
+			})
+		} else {
+			return dispatch('showToast', {
+				message,
+				type: 'warning',
+				duration: 3000,
+				...options
+			})
+		}
+	},
+
+	// Unified Info Action
+	dispatchInfo({ dispatch }, message, options = {}) {
+		console.log('ℹ️ Dispatching info:', message, options)
+
+		if (options.persistent) {
+			return dispatch('addPersistent', {
+				message,
+				type: 'info',
+				...options
+			})
+		} else {
+			return dispatch('showToast', {
+				message,
+				type: 'info',
+				duration: 2000,
+				...options
+			})
+		}
+	},
+
+	// Critical notifications (always both)
+	dispatchCritical({ dispatch }, message, options = {}) {
+		console.log('🚨 Dispatching critical:', message, options)
+
+		// Show toast immediately
+		dispatch('showToast', {
+			message,
+			type: 'error',
+			duration: 5000,
+			...options
+		})
+
+		// Also add to persistent
+		return dispatch('addPersistent', {
+			message,
+			type: 'error',
+			priority: 'critical',
+			...options
+		})
+	}
+}
+
+const getters = {
+	toasts(state) {
+		return state.toasts
+	},
+
+	hasToasts(state) {
+		return state.toasts.length > 0
+	},
+
+	persistentNotifications(state) {
+		return state.persistentNotifications.sort((a, b) => {
+			// Unread first
+			if (a.read !== b.read) {
+				return a.read - b.read
+			}
+			// Then by creation time (newest first)
+			return new Date(b.createdAt) - new Date(a.createdAt)
+		})
 	},
 
 	unreadNotifications(state) {
-	  return state.notifications.filter(n => !n.read)
+		return state.persistentNotifications.filter(n => !n.read)
 	},
 
 	unreadCount(state) {
-	  return state.notifications.filter(n => !n.read).length
+		return state.persistentNotifications.filter(n => !n.read).length
 	},
 
-	notificationsByType: (state) => (type) => {
-	  return state.notifications.filter(n => n.type === type)
+	hasUnreadPersistent(state) {
+		return state.persistentNotifications.some(n => !n.read)
 	},
 
-	latestNotifications(state) {
-	  return state.notifications
-		.slice()
-		.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
-		.slice(0, 5)
+	hasPersistentNotifications(state) {
+		return state.persistentNotifications.length > 0
 	},
 
-	hasNotifications(state) {
-	  return state.notifications.length > 0
+	persistentByType: (state) => (type) => {
+		return state.persistentNotifications.filter(n => n.type === type)
 	},
 
-	hasUnreadNotifications(state) {
-	  return state.notifications.some(n => !n.read)
+	persistentByPriority: (state) => (priority) => {
+		return state.persistentNotifications.filter(n => n.priority === priority)
+	},
+
+	criticalNotifications(state) {
+		return state.persistentNotifications.filter(n => n.priority === 'critical' && !n.read)
 	}
-  }
+}
 
-  export default {
+export default {
 	namespaced: true,
 
 	state() {
-	  return {
-		notifications: []
-	  }
+		return {
+			toasts: [],
+			persistentNotifications: []
+		}
 	},
 
 	mutations,

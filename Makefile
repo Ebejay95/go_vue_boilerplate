@@ -277,7 +277,7 @@ dev-shell:
 
 dev-shell-backend:
 	$(call print_status,"🐚 Opening backend directory in container...")
-	docker-compose -f docker-compose.dev.yml exec dev-environment bash -c "cd /app/server && bash"
+	docker-compose -f docker-compose.dev.yml exec dev-environment bash -c "cd /app && bash"
 
 dev-shell-frontend:
 	$(call print_status,"🐚 Opening frontend directory in container...")
@@ -293,7 +293,7 @@ dev-proto-generate:
 dev-test-hotreload:
 	$(call print_status,"🔥 Testing hot reload functionality...")
 	@echo "$(YELLOW)Adding test comments to trigger reload...$(RESET)"
-	@echo "// Hot reload test $(shell date)" >> server/cmd/server/main.go
+	@echo "// Hot reload test $(shell date)" >> server/main.go
 	@echo "<!-- Hot reload test $(shell date) -->" >> frontend/src/App.vue
 	@echo "/* Hot reload test $(shell date) */" >> proto/user.proto
 	$(call print_success,"Test modifications made! Check logs for reload activity with: make dev-logs")

@@ -1,76 +1,24 @@
+<!-- src/pages/general/Welcome.vue - Updated with Dynamic Form -->
 <template>
 	<base-section>
 	  <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
 
+		<!-- Dynamic Form Card -->
 		<base-card>
 		  <h2 class="text-lg font-medium text-gray-900 mb-4">Neuen Benutzer erstellen</h2>
 
-		  <form @submit.prevent="submitCreateUser" class="space-y-4">
-			<div>
-			  <label for="name" class="block text-sm font-medium text-gray-700">Name</label>
-			  <input
-				type="text"
-				id="name"
-				v-model="newUser.name"
-				required
-				placeholder="Name eingeben"
-				class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-			  />
-			</div>
-
-			<div>
-			  <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
-			  <input
-				type="email"
-				id="email"
-				v-model="newUser.email"
-				required
-				placeholder="email@example.com"
-				class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-			  />
-			</div>
-
-			<div>
-			  <label for="age" class="block text-sm font-medium text-gray-700">Alter</label>
-			  <input
-				type="number"
-				id="age"
-				v-model.number="newUser.age"
-				required
-				min="1"
-				max="150"
-				placeholder="25"
-				class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-			  />
-			</div>
-
-			<div>
-			  <label for="role" class="block text-sm font-medium text-gray-700">Rolle</label>
-			  <select
-				id="role"
-				v-model="newUser.role"
-				class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-			  >
-				<option value="user">Benutzer</option>
-				<option value="admin">Administrator</option>
-			  </select>
-			</div>
-
-			<button
-			  type="submit"
-			  :disabled="isCreating || !isConnected"
-			  class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-			>
-			  <svg v-if="isCreating" class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-				<circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-				<path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-			  </svg>
-			  {{ isCreating ? 'Erstelle Benutzer...' : 'Benutzer erstellen' }}
-			</button>
-		  </form>
+		  <Form
+			:protoMessage="CreateUserRequest"
+			:fieldConfig="userFieldConfig"
+			:customValidators="userValidators"
+			submitText="Benutzer erstellen"
+			submitLoadingText="Erstelle Benutzer..."
+			@submit="handleCreateUser"
+			@error="handleFormError"
+		  />
 		</base-card>
 
-		<!-- Users List -->
+		<!-- Users List Card -->
 		<base-card>
 		  <div class="flex justify-between items-center mb-4">
 			<h2 class="text-lg font-medium text-gray-900">Alle Benutzer</h2>
@@ -155,49 +103,122 @@
 			</div>
 		  </div>
 		</base-card>
+		<base-card>
+			<h3>Persistent Notifications</h3>
+			<ul>
+				<li v-for="pNote in persistentNotifications" :key="pNote.id">
+				{{ pNote.message }} - {{ pNote.type }}
+				</li>
+			</ul>
+		</base-card>
 	  </div>
 
-	  <!-- Debug Info -->
-	  <div class="mt-8 bg-gray-100 p-4 rounded-lg">
-		<h3 class="text-sm font-medium text-gray-900 mb-2">Debug-Informationen</h3>
-		<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 text-xs text-gray-600">
-		  <div>
-			<strong>gRPC-Web URL:</strong> {{ connectionInfo.url }}
-		  </div>
-		  <div>
-			<strong>Verbindungsstatus:</strong> {{ connectionInfo.status }}
-		  </div>
-		  <div>
-			<strong>Verbindungshealth:</strong> {{ connectionInfo.healthy ? 'Gesund' : 'Ungesund' }}
-		  </div>
-		  <div>
-			<strong>Benutzeranzahl:</strong> {{ userCount }}
-		  </div>
-		  <div>
-			<strong>Zuletzt geprüft:</strong> {{ connectionInfo.lastChecked ? new Date(connectionInfo.lastChecked).toLocaleTimeString() : 'Nie' }}
-		  </div>
-		  <div>
-			<strong>Fehler:</strong> {{ error || 'Keine' }}
-		  </div>
-		</div>
-	  </div>
 	</base-section>
+<div class="mt-4 space-x-2">
+  <button @click="testPersistentNotification" class="btn primary">
+    Test Persistent
+  </button>
+  <button @click="testToastNotification" class="btn secondary">
+    Test Toast
+  </button>
+  <button @click="debugNotifications" class="btn flat">
+    Debug Notifications
+  </button>
+</div>
   </template>
 
   <script>
   import { mapState, mapGetters, mapActions } from 'vuex'
+  import Form from '../../components/base/Form.vue'
+  import { CreateUserRequest } from '../../proto/user_pb'
 
   export default {
 	name: 'WelcomePage',
 
+	components: {
+	  Form
+	},
+
 	data() {
 	  return {
 		lastUpdated: null,
-		newUser: {
-		  name: '',
-		  email: '',
-		  age: '',
-		  role: 'user'
+		CreateUserRequest, // Proto message class
+
+		userFieldConfig: {
+		  name: {
+			label: 'Name',
+			placeholder: 'Vollständiger Name',
+			required: true,
+			help: 'Vor- und Nachname eingeben'
+		  },
+
+		  email: {
+			label: 'Email',
+			inputType: 'email',
+			placeholder: 'benutzer@example.com',
+			required: true,
+			help: 'Gültige E-Mail-Adresse eingeben'
+		  },
+
+		  age: {
+			label: 'Alter',
+			inputType: 'range',
+			min: 18,
+			max: 100,
+			step: 1,
+			required: true,
+			help: 'Schieberegler zum Auswählen des Alters verwenden'
+		  },
+
+		  role: {
+			label: 'Rolle',
+			inputType: 'select',
+			options: [
+			  { value: 'user', label: 'Benutzer' },
+			  { value: 'admin', label: 'Administrator' }
+			],
+			required: true,
+			placeholder: 'Rolle auswählen',
+			help: 'Entsprechende Benutzerrolle auswählen'
+		  }
+		},
+
+		userValidators: {
+		  name: (value) => {
+			if (value.length < 2) {
+			  return 'Name muss mindestens 2 Zeichen lang sein'
+			}
+			if (!/^[a-zA-ZäöüÄÖÜß\s]+$/.test(value)) {
+			  return 'Name darf nur Buchstaben und Leerzeichen enthalten'
+			}
+			return null
+		  },
+
+		  email: (value) => {
+			const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+			if (!emailRegex.test(value)) {
+			  return 'Bitte gültige E-Mail-Adresse eingeben'
+			}
+			return null
+		  },
+
+		  age: (value) => {
+			if (value < 18) {
+			  return 'Mindestalter ist 18 Jahre'
+			}
+			if (value > 100) {
+			  return 'Alter darf nicht über 100 Jahre sein'
+			}
+			return null
+		  },
+
+		  role: (value) => {
+			const validRoles = ['user', 'admin', 'moderator']
+			if (!validRoles.includes(value)) {
+			  return 'Ungültige Rolle ausgewählt'
+			}
+			return null
+		  }
 		}
 	  }
 	},
@@ -207,6 +228,7 @@
 	  ...mapState('connection', ['grpcWebUrl']),
 	  ...mapGetters('users', ['hasUsers', 'userCount']),
 	  ...mapGetters('connection', ['isConnected', 'connectionInfo']),
+	  ...mapGetters('notifications', ['persistentNotifications']),
 
 	  isLoading() {
 		return this.loading
@@ -221,34 +243,56 @@
 	  ...mapActions('users', ['fetchUsers', 'createUser', 'clearError']),
 	  ...mapActions('connection', ['checkHealth', 'reconnect']),
 	  ...mapActions(['initializeApp']),
-	  ...mapActions('notifications', ['success', 'error', 'warning', 'info']),
+	  ...mapActions('notifications', [
+		'dispatchSuccess',
+		'dispatchError',
+		'dispatchWarning',
+		'dispatchInfo'
+	  ]),
 
+	  debugNotifications() {
+    console.log('🔍 Debug Notifications:')
+    console.log('Persistent:', this.persistentNotifications)
+    console.log('Unread Count:', this.unreadCount)
+    console.log('Has Unread:', this.hasUnreadPersistent)
+  },
+
+  testPersistentNotification() {
+    console.log('🧪 Testing persistent notification...')
+    this.dispatchSuccess('Test Persistent Notification', {
+      persistent: true,
+      actions: [
+        {
+          label: 'Test Action',
+          handler: () => console.log('Action clicked!')
+        }
+      ]
+    })
+
+    // Debug nach 100ms
+    setTimeout(() => {
+      this.debugNotifications()
+    }, 100)
+  },
+
+  testToastNotification() {
+    console.log('🧪 Testing toast notification...')
+    this.dispatchSuccess('Test Toast Notification')
+  },
 	  async loadUsers() {
-		if (!this.isConnected) {
-		  this.warning('⚠️ Backend-Verbindung nicht verfügbar', {
-			actions: [
-			  {
-				label: 'Verbindung prüfen',
-				handler: () => this.checkConnection()
-			  }
-			]
-		  })
-		  return
-		}
-
 		try {
-		  this.info('Lade Benutzer...', { duration: 2000 })
+		  this.dispatchInfo('Lade Benutzer...')
 		  const result = await this.fetchUsers()
 		  this.lastUpdated = new Date().toLocaleTimeString()
 
 		  if (!this.hasUsers) {
-			this.info('📋 Keine Benutzer in der Datenbank gefunden')
+			this.dispatchInfo('📋 Keine Benutzer in der Datenbank gefunden')
 		  } else {
-			this.success(`📋 ${result.count} Benutzer erfolgreich geladen`)
+			this.dispatchSuccess(`📋 ${result.count} Benutzer erfolgreich geladen`, { persistent: true })
 		  }
 		} catch (error) {
 		  console.error('❌ Error loading users:', error)
-		  this.error(`❌ Fehler beim Laden: ${error.message}`, {
+		  this.dispatchError(`❌ Fehler beim Laden: ${error.message}`, {
 			actions: [
 			  {
 				label: 'Erneut versuchen',
@@ -259,111 +303,53 @@
 		}
 	  },
 
-	  async submitCreateUser() {
+	  // Handle dynamic form submission
+	  async handleCreateUser(protoMessage, formData) {
 		if (!this.isConnected) {
-		  this.warning('⚠️ Backend-Verbindung nicht verfügbar')
+		  this.dispatchWarning('⚠️ Backend-Verbindung nicht verfügbar')
 		  return
 		}
 
 		try {
-		  const response = await this.createUser(this.newUser)
+		  console.log('Creating user with proto message:', protoMessage)
+		  console.log('Form data:', formData)
 
-		  // Reset form
-		  const userName = this.newUser.name
-		  this.newUser = {
-			name: '',
-			email: '',
-			age: '',
-			role: 'user'
-		  }
+		  const response = await this.createUser(formData)
 
 		  // Update timestamp
 		  this.lastUpdated = new Date().toLocaleTimeString()
 
-		  this.success(`🎉 Benutzer "${userName}" erfolgreich erstellt!`, {
+		  this.dispatchSuccess(`🎉 Benutzer "${formData.name}" erfolgreich erstellt!`, {
 			actions: [
 			  {
 				label: 'Liste aktualisieren',
 				handler: () => this.loadUsers()
-			  },
-			  {
-				label: 'Neuen erstellen',
-				handler: () => this.$refs.nameInput?.focus()
 			  }
 			]
 		  })
+
+		  // Auto-refresh user list
+		  setTimeout(() => this.loadUsers(), 500)
+
 		} catch (error) {
 		  console.error('❌ Error creating user:', error)
-		  this.error(`❌ Fehler beim Erstellen: ${error.message}`, {
+		  this.dispatchError(`❌ Fehler beim Erstellen: ${error.message}`, {
 			persistent: true,
 			actions: [
 			  {
 				label: 'Erneut versuchen',
-				handler: () => this.submitCreateUser()
+				handler: () => this.handleCreateUser(protoMessage, formData)
 			  }
 			]
 		  })
 		}
 	  },
 
-	  async checkConnection() {
-		try {
-		  this.info('Prüfe Verbindung...')
-		  await this.checkHealth()
-		  if (this.isConnected) {
-			this.success('✅ Verbindung erfolgreich!')
-			// Automatisch Benutzer laden nach erfolgreicher Verbindung
-			setTimeout(() => this.loadUsers(), 500)
-		  }
-		} catch (error) {
-		  this.error(`❌ Verbindungsfehler: ${error.message}`, {
-			actions: [
-			  {
-				label: 'Erneut versuchen',
-				handler: () => this.checkConnection()
-			  }
-			]
-		  })
-		}
-	  }
-	},
-
-	async mounted() {
-	  console.log('🚀 Welcome page mounted')
-
-	  try {
-		// Initialize the entire app (connection + health check)
-		this.info('Initialisiere Anwendung...', { duration: 3000 })
-		const initialized = await this.initializeApp()
-
-		if (initialized && this.isConnected) {
-		  // Load initial data
-		  await this.loadUsers()
-		  this.success('✅ Anwendung bereit!', { duration: 3000 })
-		} else {
-		  console.warn('⚠️ Application initialized with connection issues')
-		  this.warning('⚠️ Verbindungsprobleme erkannt. Einige Funktionen sind möglicherweise nicht verfügbar.', {
-			persistent: true,
-			actions: [
-			  {
-				label: 'Verbindung prüfen',
-				handler: () => this.checkConnection()
-			  }
-			]
-		  })
-		}
-	  } catch (error) {
-		console.error('❌ Failed to initialize application:', error)
-		this.error(`❌ Initialisierung fehlgeschlagen: ${error.message}`, {
-		  persistent: true,
-		  actions: [
-			{
-			  label: 'Erneut versuchen',
-			  handler: () => this.$router.go(0) // Reload page
-			}
-		  ]
-		})
-	  }
+	  // Handle form errors
+	  handleFormError(error) {
+		console.error('❌ Form error:', error)
+		this.dispatchError(`❌ Formular-Fehler: ${error.message}`)
+	  },
 	}
   }
   </script>
