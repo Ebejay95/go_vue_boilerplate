@@ -77,6 +77,67 @@ proto.notification.NotificationServicePromiseClient =
 /**
  * @const
  * @type {!grpc.web.MethodDescriptor<
+ *   !proto.notification.CreateNotificationRequest,
+ *   !proto.notification.CreateNotificationResponse>}
+ */
+const methodDescriptor_NotificationService_CreateNotification = new grpc.web.MethodDescriptor(
+  '/notification.NotificationService/CreateNotification',
+  grpc.web.MethodType.UNARY,
+  proto.notification.CreateNotificationRequest,
+  proto.notification.CreateNotificationResponse,
+  /**
+   * @param {!proto.notification.CreateNotificationRequest} request
+   * @return {!Uint8Array}
+   */
+  function(request) {
+    return request.serializeBinary();
+  },
+  proto.notification.CreateNotificationResponse.deserializeBinary
+);
+
+
+/**
+ * @param {!proto.notification.CreateNotificationRequest} request The
+ *     request proto
+ * @param {?Object<string, string>} metadata User defined
+ *     call metadata
+ * @param {function(?grpc.web.RpcError, ?proto.notification.CreateNotificationResponse)}
+ *     callback The callback function(error, response)
+ * @return {!grpc.web.ClientReadableStream<!proto.notification.CreateNotificationResponse>|undefined}
+ *     The XHR Node Readable Stream
+ */
+proto.notification.NotificationServiceClient.prototype.createNotification =
+    function(request, metadata, callback) {
+  return this.client_.rpcCall(this.hostname_ +
+      '/notification.NotificationService/CreateNotification',
+      request,
+      metadata || {},
+      methodDescriptor_NotificationService_CreateNotification,
+      callback);
+};
+
+
+/**
+ * @param {!proto.notification.CreateNotificationRequest} request The
+ *     request proto
+ * @param {?Object<string, string>=} metadata User defined
+ *     call metadata
+ * @return {!Promise<!proto.notification.CreateNotificationResponse>}
+ *     Promise that resolves to the response
+ */
+proto.notification.NotificationServicePromiseClient.prototype.createNotification =
+    function(request, metadata) {
+  return this.client_.unaryCall(this.hostname_ +
+      '/notification.NotificationService/CreateNotification',
+      request,
+      metadata || {},
+      methodDescriptor_NotificationService_CreateNotification);
+};
+
+
+/**
+ * @const
+ * @type {!grpc.web.MethodDescriptor<
  *   !proto.notification.GetNotificationRequest,
  *   !proto.notification.GetNotificationResponse>}
  */
@@ -138,61 +199,122 @@ proto.notification.NotificationServicePromiseClient.prototype.getNotification =
 /**
  * @const
  * @type {!grpc.web.MethodDescriptor<
- *   !proto.notification.CreateNotificationRequest,
- *   !proto.notification.CreateNotificationResponse>}
+ *   !proto.notification.UpdateNotificationRequest,
+ *   !proto.notification.UpdateNotificationResponse>}
  */
-const methodDescriptor_NotificationService_CreateNotification = new grpc.web.MethodDescriptor(
-  '/notification.NotificationService/CreateNotification',
+const methodDescriptor_NotificationService_UpdateNotification = new grpc.web.MethodDescriptor(
+  '/notification.NotificationService/UpdateNotification',
   grpc.web.MethodType.UNARY,
-  proto.notification.CreateNotificationRequest,
-  proto.notification.CreateNotificationResponse,
+  proto.notification.UpdateNotificationRequest,
+  proto.notification.UpdateNotificationResponse,
   /**
-   * @param {!proto.notification.CreateNotificationRequest} request
+   * @param {!proto.notification.UpdateNotificationRequest} request
    * @return {!Uint8Array}
    */
   function(request) {
     return request.serializeBinary();
   },
-  proto.notification.CreateNotificationResponse.deserializeBinary
+  proto.notification.UpdateNotificationResponse.deserializeBinary
 );
 
 
 /**
- * @param {!proto.notification.CreateNotificationRequest} request The
+ * @param {!proto.notification.UpdateNotificationRequest} request The
  *     request proto
  * @param {?Object<string, string>} metadata User defined
  *     call metadata
- * @param {function(?grpc.web.RpcError, ?proto.notification.CreateNotificationResponse)}
+ * @param {function(?grpc.web.RpcError, ?proto.notification.UpdateNotificationResponse)}
  *     callback The callback function(error, response)
- * @return {!grpc.web.ClientReadableStream<!proto.notification.CreateNotificationResponse>|undefined}
+ * @return {!grpc.web.ClientReadableStream<!proto.notification.UpdateNotificationResponse>|undefined}
  *     The XHR Node Readable Stream
  */
-proto.notification.NotificationServiceClient.prototype.createNotification =
+proto.notification.NotificationServiceClient.prototype.updateNotification =
     function(request, metadata, callback) {
   return this.client_.rpcCall(this.hostname_ +
-      '/notification.NotificationService/CreateNotification',
+      '/notification.NotificationService/UpdateNotification',
       request,
       metadata || {},
-      methodDescriptor_NotificationService_CreateNotification,
+      methodDescriptor_NotificationService_UpdateNotification,
       callback);
 };
 
 
 /**
- * @param {!proto.notification.CreateNotificationRequest} request The
+ * @param {!proto.notification.UpdateNotificationRequest} request The
  *     request proto
  * @param {?Object<string, string>=} metadata User defined
  *     call metadata
- * @return {!Promise<!proto.notification.CreateNotificationResponse>}
+ * @return {!Promise<!proto.notification.UpdateNotificationResponse>}
  *     Promise that resolves to the response
  */
-proto.notification.NotificationServicePromiseClient.prototype.createNotification =
+proto.notification.NotificationServicePromiseClient.prototype.updateNotification =
     function(request, metadata) {
   return this.client_.unaryCall(this.hostname_ +
-      '/notification.NotificationService/CreateNotification',
+      '/notification.NotificationService/UpdateNotification',
       request,
       metadata || {},
-      methodDescriptor_NotificationService_CreateNotification);
+      methodDescriptor_NotificationService_UpdateNotification);
+};
+
+
+/**
+ * @const
+ * @type {!grpc.web.MethodDescriptor<
+ *   !proto.notification.DeleteNotificationRequest,
+ *   !proto.notification.DeleteNotificationResponse>}
+ */
+const methodDescriptor_NotificationService_DeleteNotification = new grpc.web.MethodDescriptor(
+  '/notification.NotificationService/DeleteNotification',
+  grpc.web.MethodType.UNARY,
+  proto.notification.DeleteNotificationRequest,
+  proto.notification.DeleteNotificationResponse,
+  /**
+   * @param {!proto.notification.DeleteNotificationRequest} request
+   * @return {!Uint8Array}
+   */
+  function(request) {
+    return request.serializeBinary();
+  },
+  proto.notification.DeleteNotificationResponse.deserializeBinary
+);
+
+
+/**
+ * @param {!proto.notification.DeleteNotificationRequest} request The
+ *     request proto
+ * @param {?Object<string, string>} metadata User defined
+ *     call metadata
+ * @param {function(?grpc.web.RpcError, ?proto.notification.DeleteNotificationResponse)}
+ *     callback The callback function(error, response)
+ * @return {!grpc.web.ClientReadableStream<!proto.notification.DeleteNotificationResponse>|undefined}
+ *     The XHR Node Readable Stream
+ */
+proto.notification.NotificationServiceClient.prototype.deleteNotification =
+    function(request, metadata, callback) {
+  return this.client_.rpcCall(this.hostname_ +
+      '/notification.NotificationService/DeleteNotification',
+      request,
+      metadata || {},
+      methodDescriptor_NotificationService_DeleteNotification,
+      callback);
+};
+
+
+/**
+ * @param {!proto.notification.DeleteNotificationRequest} request The
+ *     request proto
+ * @param {?Object<string, string>=} metadata User defined
+ *     call metadata
+ * @return {!Promise<!proto.notification.DeleteNotificationResponse>}
+ *     Promise that resolves to the response
+ */
+proto.notification.NotificationServicePromiseClient.prototype.deleteNotification =
+    function(request, metadata) {
+  return this.client_.unaryCall(this.hostname_ +
+      '/notification.NotificationService/DeleteNotification',
+      request,
+      metadata || {},
+      methodDescriptor_NotificationService_DeleteNotification);
 };
 
 
@@ -260,61 +382,366 @@ proto.notification.NotificationServicePromiseClient.prototype.listNotifications 
 /**
  * @const
  * @type {!grpc.web.MethodDescriptor<
- *   !proto.notification.DeleteNotificationRequest,
- *   !proto.notification.DeleteNotificationResponse>}
+ *   !proto.notification.MarkNotificationAsReadRequest,
+ *   !proto.notification.MarkNotificationAsReadResponse>}
  */
-const methodDescriptor_NotificationService_DeleteNotification = new grpc.web.MethodDescriptor(
-  '/notification.NotificationService/DeleteNotification',
+const methodDescriptor_NotificationService_MarkNotificationAsRead = new grpc.web.MethodDescriptor(
+  '/notification.NotificationService/MarkNotificationAsRead',
   grpc.web.MethodType.UNARY,
-  proto.notification.DeleteNotificationRequest,
-  proto.notification.DeleteNotificationResponse,
+  proto.notification.MarkNotificationAsReadRequest,
+  proto.notification.MarkNotificationAsReadResponse,
   /**
-   * @param {!proto.notification.DeleteNotificationRequest} request
+   * @param {!proto.notification.MarkNotificationAsReadRequest} request
    * @return {!Uint8Array}
    */
   function(request) {
     return request.serializeBinary();
   },
-  proto.notification.DeleteNotificationResponse.deserializeBinary
+  proto.notification.MarkNotificationAsReadResponse.deserializeBinary
 );
 
 
 /**
- * @param {!proto.notification.DeleteNotificationRequest} request The
+ * @param {!proto.notification.MarkNotificationAsReadRequest} request The
  *     request proto
  * @param {?Object<string, string>} metadata User defined
  *     call metadata
- * @param {function(?grpc.web.RpcError, ?proto.notification.DeleteNotificationResponse)}
+ * @param {function(?grpc.web.RpcError, ?proto.notification.MarkNotificationAsReadResponse)}
  *     callback The callback function(error, response)
- * @return {!grpc.web.ClientReadableStream<!proto.notification.DeleteNotificationResponse>|undefined}
+ * @return {!grpc.web.ClientReadableStream<!proto.notification.MarkNotificationAsReadResponse>|undefined}
  *     The XHR Node Readable Stream
  */
-proto.notification.NotificationServiceClient.prototype.deleteNotification =
+proto.notification.NotificationServiceClient.prototype.markNotificationAsRead =
     function(request, metadata, callback) {
   return this.client_.rpcCall(this.hostname_ +
-      '/notification.NotificationService/DeleteNotification',
+      '/notification.NotificationService/MarkNotificationAsRead',
       request,
       metadata || {},
-      methodDescriptor_NotificationService_DeleteNotification,
+      methodDescriptor_NotificationService_MarkNotificationAsRead,
       callback);
 };
 
 
 /**
- * @param {!proto.notification.DeleteNotificationRequest} request The
+ * @param {!proto.notification.MarkNotificationAsReadRequest} request The
  *     request proto
  * @param {?Object<string, string>=} metadata User defined
  *     call metadata
- * @return {!Promise<!proto.notification.DeleteNotificationResponse>}
+ * @return {!Promise<!proto.notification.MarkNotificationAsReadResponse>}
  *     Promise that resolves to the response
  */
-proto.notification.NotificationServicePromiseClient.prototype.deleteNotification =
+proto.notification.NotificationServicePromiseClient.prototype.markNotificationAsRead =
     function(request, metadata) {
   return this.client_.unaryCall(this.hostname_ +
-      '/notification.NotificationService/DeleteNotification',
+      '/notification.NotificationService/MarkNotificationAsRead',
       request,
       metadata || {},
-      methodDescriptor_NotificationService_DeleteNotification);
+      methodDescriptor_NotificationService_MarkNotificationAsRead);
+};
+
+
+/**
+ * @const
+ * @type {!grpc.web.MethodDescriptor<
+ *   !proto.notification.MarkNotificationAsUnreadRequest,
+ *   !proto.notification.MarkNotificationAsUnreadResponse>}
+ */
+const methodDescriptor_NotificationService_MarkNotificationAsUnread = new grpc.web.MethodDescriptor(
+  '/notification.NotificationService/MarkNotificationAsUnread',
+  grpc.web.MethodType.UNARY,
+  proto.notification.MarkNotificationAsUnreadRequest,
+  proto.notification.MarkNotificationAsUnreadResponse,
+  /**
+   * @param {!proto.notification.MarkNotificationAsUnreadRequest} request
+   * @return {!Uint8Array}
+   */
+  function(request) {
+    return request.serializeBinary();
+  },
+  proto.notification.MarkNotificationAsUnreadResponse.deserializeBinary
+);
+
+
+/**
+ * @param {!proto.notification.MarkNotificationAsUnreadRequest} request The
+ *     request proto
+ * @param {?Object<string, string>} metadata User defined
+ *     call metadata
+ * @param {function(?grpc.web.RpcError, ?proto.notification.MarkNotificationAsUnreadResponse)}
+ *     callback The callback function(error, response)
+ * @return {!grpc.web.ClientReadableStream<!proto.notification.MarkNotificationAsUnreadResponse>|undefined}
+ *     The XHR Node Readable Stream
+ */
+proto.notification.NotificationServiceClient.prototype.markNotificationAsUnread =
+    function(request, metadata, callback) {
+  return this.client_.rpcCall(this.hostname_ +
+      '/notification.NotificationService/MarkNotificationAsUnread',
+      request,
+      metadata || {},
+      methodDescriptor_NotificationService_MarkNotificationAsUnread,
+      callback);
+};
+
+
+/**
+ * @param {!proto.notification.MarkNotificationAsUnreadRequest} request The
+ *     request proto
+ * @param {?Object<string, string>=} metadata User defined
+ *     call metadata
+ * @return {!Promise<!proto.notification.MarkNotificationAsUnreadResponse>}
+ *     Promise that resolves to the response
+ */
+proto.notification.NotificationServicePromiseClient.prototype.markNotificationAsUnread =
+    function(request, metadata) {
+  return this.client_.unaryCall(this.hostname_ +
+      '/notification.NotificationService/MarkNotificationAsUnread',
+      request,
+      metadata || {},
+      methodDescriptor_NotificationService_MarkNotificationAsUnread);
+};
+
+
+/**
+ * @const
+ * @type {!grpc.web.MethodDescriptor<
+ *   !proto.notification.MarkAllNotificationsAsReadRequest,
+ *   !proto.notification.MarkAllNotificationsAsReadResponse>}
+ */
+const methodDescriptor_NotificationService_MarkAllNotificationsAsRead = new grpc.web.MethodDescriptor(
+  '/notification.NotificationService/MarkAllNotificationsAsRead',
+  grpc.web.MethodType.UNARY,
+  proto.notification.MarkAllNotificationsAsReadRequest,
+  proto.notification.MarkAllNotificationsAsReadResponse,
+  /**
+   * @param {!proto.notification.MarkAllNotificationsAsReadRequest} request
+   * @return {!Uint8Array}
+   */
+  function(request) {
+    return request.serializeBinary();
+  },
+  proto.notification.MarkAllNotificationsAsReadResponse.deserializeBinary
+);
+
+
+/**
+ * @param {!proto.notification.MarkAllNotificationsAsReadRequest} request The
+ *     request proto
+ * @param {?Object<string, string>} metadata User defined
+ *     call metadata
+ * @param {function(?grpc.web.RpcError, ?proto.notification.MarkAllNotificationsAsReadResponse)}
+ *     callback The callback function(error, response)
+ * @return {!grpc.web.ClientReadableStream<!proto.notification.MarkAllNotificationsAsReadResponse>|undefined}
+ *     The XHR Node Readable Stream
+ */
+proto.notification.NotificationServiceClient.prototype.markAllNotificationsAsRead =
+    function(request, metadata, callback) {
+  return this.client_.rpcCall(this.hostname_ +
+      '/notification.NotificationService/MarkAllNotificationsAsRead',
+      request,
+      metadata || {},
+      methodDescriptor_NotificationService_MarkAllNotificationsAsRead,
+      callback);
+};
+
+
+/**
+ * @param {!proto.notification.MarkAllNotificationsAsReadRequest} request The
+ *     request proto
+ * @param {?Object<string, string>=} metadata User defined
+ *     call metadata
+ * @return {!Promise<!proto.notification.MarkAllNotificationsAsReadResponse>}
+ *     Promise that resolves to the response
+ */
+proto.notification.NotificationServicePromiseClient.prototype.markAllNotificationsAsRead =
+    function(request, metadata) {
+  return this.client_.unaryCall(this.hostname_ +
+      '/notification.NotificationService/MarkAllNotificationsAsRead',
+      request,
+      metadata || {},
+      methodDescriptor_NotificationService_MarkAllNotificationsAsRead);
+};
+
+
+/**
+ * @const
+ * @type {!grpc.web.MethodDescriptor<
+ *   !proto.notification.DeleteReadNotificationsRequest,
+ *   !proto.notification.DeleteReadNotificationsResponse>}
+ */
+const methodDescriptor_NotificationService_DeleteReadNotifications = new grpc.web.MethodDescriptor(
+  '/notification.NotificationService/DeleteReadNotifications',
+  grpc.web.MethodType.UNARY,
+  proto.notification.DeleteReadNotificationsRequest,
+  proto.notification.DeleteReadNotificationsResponse,
+  /**
+   * @param {!proto.notification.DeleteReadNotificationsRequest} request
+   * @return {!Uint8Array}
+   */
+  function(request) {
+    return request.serializeBinary();
+  },
+  proto.notification.DeleteReadNotificationsResponse.deserializeBinary
+);
+
+
+/**
+ * @param {!proto.notification.DeleteReadNotificationsRequest} request The
+ *     request proto
+ * @param {?Object<string, string>} metadata User defined
+ *     call metadata
+ * @param {function(?grpc.web.RpcError, ?proto.notification.DeleteReadNotificationsResponse)}
+ *     callback The callback function(error, response)
+ * @return {!grpc.web.ClientReadableStream<!proto.notification.DeleteReadNotificationsResponse>|undefined}
+ *     The XHR Node Readable Stream
+ */
+proto.notification.NotificationServiceClient.prototype.deleteReadNotifications =
+    function(request, metadata, callback) {
+  return this.client_.rpcCall(this.hostname_ +
+      '/notification.NotificationService/DeleteReadNotifications',
+      request,
+      metadata || {},
+      methodDescriptor_NotificationService_DeleteReadNotifications,
+      callback);
+};
+
+
+/**
+ * @param {!proto.notification.DeleteReadNotificationsRequest} request The
+ *     request proto
+ * @param {?Object<string, string>=} metadata User defined
+ *     call metadata
+ * @return {!Promise<!proto.notification.DeleteReadNotificationsResponse>}
+ *     Promise that resolves to the response
+ */
+proto.notification.NotificationServicePromiseClient.prototype.deleteReadNotifications =
+    function(request, metadata) {
+  return this.client_.unaryCall(this.hostname_ +
+      '/notification.NotificationService/DeleteReadNotifications',
+      request,
+      metadata || {},
+      methodDescriptor_NotificationService_DeleteReadNotifications);
+};
+
+
+/**
+ * @const
+ * @type {!grpc.web.MethodDescriptor<
+ *   !proto.notification.GetNotificationStatsRequest,
+ *   !proto.notification.GetNotificationStatsResponse>}
+ */
+const methodDescriptor_NotificationService_GetNotificationStats = new grpc.web.MethodDescriptor(
+  '/notification.NotificationService/GetNotificationStats',
+  grpc.web.MethodType.UNARY,
+  proto.notification.GetNotificationStatsRequest,
+  proto.notification.GetNotificationStatsResponse,
+  /**
+   * @param {!proto.notification.GetNotificationStatsRequest} request
+   * @return {!Uint8Array}
+   */
+  function(request) {
+    return request.serializeBinary();
+  },
+  proto.notification.GetNotificationStatsResponse.deserializeBinary
+);
+
+
+/**
+ * @param {!proto.notification.GetNotificationStatsRequest} request The
+ *     request proto
+ * @param {?Object<string, string>} metadata User defined
+ *     call metadata
+ * @param {function(?grpc.web.RpcError, ?proto.notification.GetNotificationStatsResponse)}
+ *     callback The callback function(error, response)
+ * @return {!grpc.web.ClientReadableStream<!proto.notification.GetNotificationStatsResponse>|undefined}
+ *     The XHR Node Readable Stream
+ */
+proto.notification.NotificationServiceClient.prototype.getNotificationStats =
+    function(request, metadata, callback) {
+  return this.client_.rpcCall(this.hostname_ +
+      '/notification.NotificationService/GetNotificationStats',
+      request,
+      metadata || {},
+      methodDescriptor_NotificationService_GetNotificationStats,
+      callback);
+};
+
+
+/**
+ * @param {!proto.notification.GetNotificationStatsRequest} request The
+ *     request proto
+ * @param {?Object<string, string>=} metadata User defined
+ *     call metadata
+ * @return {!Promise<!proto.notification.GetNotificationStatsResponse>}
+ *     Promise that resolves to the response
+ */
+proto.notification.NotificationServicePromiseClient.prototype.getNotificationStats =
+    function(request, metadata) {
+  return this.client_.unaryCall(this.hostname_ +
+      '/notification.NotificationService/GetNotificationStats',
+      request,
+      metadata || {},
+      methodDescriptor_NotificationService_GetNotificationStats);
+};
+
+
+/**
+ * @const
+ * @type {!grpc.web.MethodDescriptor<
+ *   !proto.notification.SendRealtimeNotificationRequest,
+ *   !proto.notification.SendRealtimeNotificationResponse>}
+ */
+const methodDescriptor_NotificationService_SendRealtimeNotification = new grpc.web.MethodDescriptor(
+  '/notification.NotificationService/SendRealtimeNotification',
+  grpc.web.MethodType.UNARY,
+  proto.notification.SendRealtimeNotificationRequest,
+  proto.notification.SendRealtimeNotificationResponse,
+  /**
+   * @param {!proto.notification.SendRealtimeNotificationRequest} request
+   * @return {!Uint8Array}
+   */
+  function(request) {
+    return request.serializeBinary();
+  },
+  proto.notification.SendRealtimeNotificationResponse.deserializeBinary
+);
+
+
+/**
+ * @param {!proto.notification.SendRealtimeNotificationRequest} request The
+ *     request proto
+ * @param {?Object<string, string>} metadata User defined
+ *     call metadata
+ * @param {function(?grpc.web.RpcError, ?proto.notification.SendRealtimeNotificationResponse)}
+ *     callback The callback function(error, response)
+ * @return {!grpc.web.ClientReadableStream<!proto.notification.SendRealtimeNotificationResponse>|undefined}
+ *     The XHR Node Readable Stream
+ */
+proto.notification.NotificationServiceClient.prototype.sendRealtimeNotification =
+    function(request, metadata, callback) {
+  return this.client_.rpcCall(this.hostname_ +
+      '/notification.NotificationService/SendRealtimeNotification',
+      request,
+      metadata || {},
+      methodDescriptor_NotificationService_SendRealtimeNotification,
+      callback);
+};
+
+
+/**
+ * @param {!proto.notification.SendRealtimeNotificationRequest} request The
+ *     request proto
+ * @param {?Object<string, string>=} metadata User defined
+ *     call metadata
+ * @return {!Promise<!proto.notification.SendRealtimeNotificationResponse>}
+ *     Promise that resolves to the response
+ */
+proto.notification.NotificationServicePromiseClient.prototype.sendRealtimeNotification =
+    function(request, metadata) {
+  return this.client_.unaryCall(this.hostname_ +
+      '/notification.NotificationService/SendRealtimeNotification',
+      request,
+      metadata || {},
+      methodDescriptor_NotificationService_SendRealtimeNotification);
 };
 
 

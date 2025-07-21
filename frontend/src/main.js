@@ -16,6 +16,7 @@ import Button from './components/base/Button.vue'
 import Section from './components/base/Section.vue'
 import Form from './components/base/Form.vue'
 import FormField from './components/base/FormField.vue'
+import Dialog from './components/base/Dialog.vue'
 
 const app = createApp(App)
 
@@ -28,26 +29,18 @@ app.component('base-card', Card)
 app.component('base-section', Section)
 app.component('base-form', Form)
 app.component('base-form-field', FormField)
+app.component('base-dialog', Dialog)
 
 app.use(router)
 app.use(store)
 
-// Initialize app before mounting
 async function initializeAndMount() {
-	console.log('🚀 Starting Vue app with initialization...')
-
 	try {
-		// Initialize the app
 		await store.dispatch('initializeApp')
-		console.log('✅ App initialization completed')
 	} catch (error) {
-		console.dispatchError('❌ App initialization failed:', error)
-		// Don't prevent mounting - let error be handled in components
+		console.error('App initialization failed:', error)
 	}
-
-	// Mount the app
 	app.mount('#app')
-	console.log('🎯 Vue app mounted successfully')
 }
 
 // Start the initialization process

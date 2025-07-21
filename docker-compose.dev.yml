@@ -8,6 +8,7 @@ services:
       dockerfile: ./Dockerfile.dev
     image: ${APP_NAME}-dev-environment
     ports:
+      - "${WS_PORT}:${WS_PORT}"
       - "${BACKEND_PORT}:${BACKEND_PORT}"
       - "${GRPC_WEB_PORT}:${GRPC_WEB_PORT}"
       - "${FRONTEND_PORT}:${FRONTEND_PORT}"
@@ -15,6 +16,7 @@ services:
     networks:
       - app-network-dev
     environment:
+      - WS_PORT=${WS_PORT:-8082}
       - PORT=${BACKEND_PORT:-50051}
       - WEB_PORT=${GRPC_WEB_PORT:-8081}
       - BACKEND_PORT=${BACKEND_PORT:-50051}
@@ -46,14 +48,16 @@ services:
       - NODE_OPTIONS=--max-old-space-size=4096
 
     volumes:
-      - ./server:/app/server:cached
+      # Mount backend directory correctly
+      - ./backend:/app/backend:cached
       - ./frontend:/app/frontend:cached
       - ./proto:/app/proto:cached
       - ./dev-start.sh:/app/dev-start.sh:ro
       - dev-go-cache:/go/pkg/mod
       - dev-node-cache:/app/frontend/node_modules
       - dev-webpack-cache:/app/frontend/node_modules/.cache
-      - /app/server/tmp
+      # Exclude tmp directories
+      - /app/backend/tmp
       - /app/frontend/dist
       - /app/frontend/node_modules/.cache/webpack
 
@@ -68,8 +72,8 @@ services:
         # Check proto files exist
         test -f /app/frontend/src/proto/user_grpc_web_pb.js &&
         test -f /app/frontend/src/proto/user_pb.js &&
-        test -f /app/server/pb/user.pb.go &&
-        test -f /app/server/pb/user_grpc.pb.go &&
+        test -f /app/backend/pb/user.pb.go &&
+        test -f /app/backend/pb/user_grpc.pb.go &&
         # Check services are responding
         curl -f http://localhost:${FRONTEND_PORT:-3000} &&
         curl -f http://localhost:${GRPC_WEB_PORT:-8081} || exit 1
@@ -105,7 +109,6 @@ services:
       - app-network-dev
     volumes:
       - postgres-dev-data:/var/lib/postgresql/data
-      - ./init-db.sql:/docker-entrypoint-initdb.d/init-db.sql:ro
     container_name: ${APP_NAME}-postgres-dev
     restart: unless-stopped
 

@@ -4,14 +4,16 @@ services:
   backend-grpc-server:
     build:
       context: .
-      dockerfile: ./server/Dockerfile
+      dockerfile: ./backend/Dockerfile
     image: ${APP_NAME}-backend-grpc-server
     ports:
+      - "${WS_PORT}:${WS_PORT}"
       - "${BACKEND_PORT}:${BACKEND_PORT}"
       - "${GRPC_WEB_PORT}:${GRPC_WEB_PORT}"
     networks:
       - app-network
     environment:
+      - WS_PORT=${WS_PORT:-8082}
       - PORT=${BACKEND_PORT}
       - WEB_PORT=${GRPC_WEB_PORT}
       - BACKEND_HOST=${BACKEND_HOST}
@@ -34,6 +36,7 @@ services:
     networks:
       - app-network
     environment:
+      - WS_PORT=${WS_PORT:-8082}
       - PORT=${FRONTEND_PORT}
       - FRONTEND_PORT=${FRONTEND_PORT}
       - FRONTEND_HOST=${FRONTEND_HOST}

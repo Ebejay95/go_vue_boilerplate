@@ -4,6 +4,7 @@ echo "🚀 Starting Enhanced Hot-Reload Development Environment..."
 
 # Set default values for missing environment variables
 export BACKEND_PORT=${BACKEND_PORT:-50051}
+export WS_PORT=${WS_PORT:-8082}
 export GRPC_WEB_PORT=${GRPC_WEB_PORT:-8081}
 export FRONTEND_PORT=${FRONTEND_PORT:-3000}
 export PORT=${BACKEND_PORT}
@@ -12,6 +13,7 @@ export WEB_PORT=${GRPC_WEB_PORT}
 # Debug: Show environment
 echo "📍 Current directory: $(pwd)"
 echo "📍 Environment Variables:"
+echo "  - WS_PORT: ${WS_PORT}"
 echo "  - BACKEND_PORT: ${BACKEND_PORT}"
 echo "  - GRPC_WEB_PORT: ${GRPC_WEB_PORT}"
 echo "  - FRONTEND_PORT: ${FRONTEND_PORT}"
@@ -128,7 +130,20 @@ fi
 kill_all_processes
 
 # Create necessary directories
-mkdir -p server/pb server/tmp frontend/src/proto
+mkdir -p backend/pb backend/tmp frontend/src/proto
+
+# Check directory structure
+log_info "📂 Checking directory structure..."
+echo "  - /app/backend exists: $(test -d /app/backend && echo 'YES' || echo 'NO')"
+echo "  - /app/frontend exists: $(test -d /app/frontend && echo 'YES' || echo 'NO')"
+echo "  - /app/proto exists: $(test -d /app/proto && echo 'YES' || echo 'NO')"
+
+if [ ! -d "/app/backend" ]; then
+    log_error "Backend directory not found at /app/backend"
+    log_info "Available directories in /app:"
+    ls -la /app/
+    exit 1
+fi
 
 # PID tracking for cleanup
 PIDS=()
@@ -148,8 +163,8 @@ generate_proto() {
     log_info "🔨 Generating proto files..."
 
     # Generate Go files
-    if protoc --go_out=server/pb --go_opt=paths=source_relative \
-             --go-grpc_out=server/pb --go-grpc_opt=paths=source_relative \
+    if protoc --go_out=backend/pb --go_opt=paths=source_relative \
+             --go-grpc_out=backend/pb --go-grpc_opt=paths=source_relative \
              --proto_path=proto proto/*.proto; then
         log_success "Go proto files generated"
     else
@@ -181,7 +196,7 @@ generate_proto() {
     fi
 
     cd ..
-    log_success "✅ All proto files generated successfully"
+    log_success "All proto files generated successfully"
 }
 
 # Start a simple Go file watcher that restarts Air completely
@@ -193,13 +208,13 @@ start_simple_go_watcher() {
         return 1
     fi
 
-    if [ ! -d "server/" ]; then
-        log_error "server/ directory not found - Go file watcher disabled"
+    if [ ! -d "backend/" ]; then
+        log_error "backend/ directory not found - Go file watcher disabled"
         return 1
     fi
 
     (
-        while inotifywait -e modify,create,delete,move -r server/ --exclude '(tmp|pb|node_modules|dist|\.log)' 2>/dev/null; do
+        while inotifywait -e modify,create,delete,move -r backend/ --exclude '(tmp|pb|node_modules|dist|\.log)' 2>/dev/null; do
             log_warning "🐹 Go file changed - Restarting backend..."
 
             # Kill backend process
@@ -215,7 +230,7 @@ start_simple_go_watcher() {
 
             # Wait and restart
             sleep 2
-            cd server
+            cd backend
             $AIR_COMMAND -c .air.toml > ../backend.log 2>&1 &
             BACKEND_PID=$!
             cd ..
@@ -241,12 +256,13 @@ start_simple_go_watcher
 
 # Prepare Go environment
 log_info "🔧 Preparing Go environment..."
-cd server
+cd backend
 if [ -f "go.mod" ]; then
     go mod tidy
     log_success "Go modules prepared"
 else
-    log_error "go.mod not found"
+    log_error "go.mod not found in backend directory"
+    ls -la
     exit 1
 fi
 
@@ -271,12 +287,66 @@ if ! npm list grpc-tools >/dev/null 2>&1; then
 fi
 cd ..
 
+# Create Air config that points to the correct directory
+log_info "🔧 Creating Air configuration..."
+cat > backend/.air.toml << 'EOF'
+root = "."
+testdata_dir = "testdata"
+tmp_dir = "tmp"
+
+[build]
+  args_bin = []
+  bin = "./tmp/main"
+  cmd = "go build -o ./tmp/main ./"
+  delay = 1000
+  exclude_dir = ["assets", "tmp", "vendor", "testdata", "node_modules", "dist", ".git", "pb"]
+  exclude_file = []
+  exclude_regex = ["_test.go", ".*\\.log$", ".*\\.tmp$", ".*\\.pb\\.go$"]
+  exclude_unchanged = false
+  follow_symlink = false
+  full_bin = ""
+  include_dir = ["cmd", "internal", "handler", "service", "pkg"]
+  include_ext = ["go", "tpl", "tmpl", "html"]
+  include_file = []
+  kill_delay = "3s"
+  log = "build-errors.log"
+  poll = true
+  poll_interval = 1000
+  pre_cmd = ["echo '🔨 Building Go application...'"]
+  post_cmd = ["echo 'Go server started successfully!'"]
+  rerun = false
+  rerun_delay = 500
+  send_interrupt = false
+  stop_on_error = false
+
+[color]
+  app = "blue"
+  build = "yellow"
+  main = "magenta"
+  runner = "green"
+  watcher = "cyan"
+
+[log]
+  main_only = false
+  time = true
+
+[misc]
+  clean_on_exit = true
+
+[screen]
+  clear_on_rebuild = true
+  keep_scroll = false
+EOF
+
 # Start Go backend with Air
 log_info "🔥 Starting Go backend with Air hot-reload..."
-cd server
+cd backend
 
 log_info "Using Air command: $AIR_COMMAND"
 log_info "Environment check - PORT: $PORT, WEB_PORT: $WEB_PORT"
+log_info "Working directory: $(pwd)"
+log_info "Go files in directory:"
+find . -name "*.go" -type f | head -5
 
 # Start Air in background
 $AIR_COMMAND -c .air.toml > ../backend.log 2>&1 &
@@ -298,7 +368,7 @@ for i in {1..60}; do
 
     # Check if services are responding
     if curl -s http://localhost:${GRPC_WEB_PORT} >/dev/null 2>&1; then
-        log_success "✅ Backend is responding on port ${GRPC_WEB_PORT}"
+        log_success "Backend is responding on port ${GRPC_WEB_PORT}"
         break
     fi
 
@@ -334,7 +404,7 @@ log_success "Frontend started with hot-reload (PID: $FRONTEND_PID)"
 log_info "⏳ Waiting for frontend to start..."
 for i in {1..60}; do
     if curl -s http://localhost:${FRONTEND_PORT} >/dev/null 2>&1; then
-        log_success "✅ Frontend is responding on port ${FRONTEND_PORT}"
+        log_success "Frontend is responding on port ${FRONTEND_PORT}"
         break
     fi
     if [ $i -eq 60 ]; then
@@ -357,6 +427,7 @@ log_success "🎉 Enhanced Hot-Reload Development Environment is ready!"
 echo ""
 echo -e "${PURPLE}📋 Services:${NC}"
 echo -e "   🔗 Backend (gRPC): http://localhost:${BACKEND_PORT}"
+echo -e "   🔗 Sockets (ws): http://localhost:${WS_PORT}"
 echo -e "   🌐 gRPC-Web: http://localhost:${GRPC_WEB_PORT}"
 echo -e "   🎨 Frontend: http://localhost:${FRONTEND_PORT}"
 echo ""

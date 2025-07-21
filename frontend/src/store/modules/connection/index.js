@@ -58,8 +58,6 @@ export default {
 
 	actions: {
 		initializeClient({ commit, state }) {
-			console.log(`🔧 Initializing gRPC-Web clients for ${state.grpcWebUrl}`)
-
 			try {
 				// Initialize user client
 				const userClient = new UserServiceClient(state.grpcWebUrl, null, null)
@@ -70,11 +68,10 @@ export default {
 				commit('SET_NOTIFICATION_CLIENT', notificationClient)
 
 				commit('SET_STATUS', 'initialized')
-				console.log('✅ gRPC-Web clients initialized (User + Notification)')
 
 				return { userClient, notificationClient }
 			} catch (error) {
-				console.error('❌ Failed to initialize gRPC-Web clients:', error)
+				console.error('Failed to initialize gRPC-Web clients:', error)
 				commit('SET_STATUS', 'error')
 				commit('SET_ERROR', `Client initialization failed: ${error.message}`)
 				throw error
@@ -82,7 +79,6 @@ export default {
 		},
 
 		async checkHealth({ commit, state, dispatch }) {
-			console.log('🏥 Checking gRPC-Web connection health...')
 
 			commit('SET_STATUS', 'connecting')
 			commit('CLEAR_ERROR')
@@ -104,10 +100,8 @@ export default {
 
 				commit('SET_STATUS', 'connected')
 				commit('SET_HEALTHY', true)
-				commit('SET_MESSAGE', `✅ Connected via gRPC-Web with ${userCount} users`)
+				commit('SET_MESSAGE', `Connected via gRPC-Web with ${userCount} users`)
 				commit('SET_LAST_CHECKED', new Date().toISOString())
-
-				console.log(`✅ gRPC-Web health check successful - ${userCount} users found`)
 
 				return {
 					status: 'healthy',
@@ -117,7 +111,7 @@ export default {
 				}
 
 			} catch (error) {
-				console.error('❌ gRPC-Web health check failed:', error)
+				console.error('gRPC-Web health check failed:', error)
 
 				commit('SET_STATUS', 'error')
 				commit('SET_HEALTHY', false)
@@ -141,11 +135,9 @@ export default {
 					client = state.notificationClient
 				}
 
-				console.log('📡 Making gRPC call:', method.name || 'unknown method')
-
 				const call = method.call(client, request, {}, (err, response) => {
 					if (err) {
-						console.error('❌ gRPC-Web Error Details:', {
+						console.error('gRPC-Web Error Details:', {
 							code: err.code,
 							message: err.message,
 							details: err.details,
@@ -164,7 +156,6 @@ export default {
 
 						reject(new Error(userFriendlyMessage))
 					} else {
-						console.log('✅ gRPC call successful:', method.name || 'unknown method')
 						resolve(response)
 					}
 				})
@@ -180,7 +171,6 @@ export default {
 		},
 
 		async reconnect({ dispatch }) {
-			console.log('🔄 Attempting to reconnect...')
 			return await dispatch('checkHealth')
 		}
 	},

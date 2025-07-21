@@ -68,7 +68,6 @@ export default {
   },
 
   props: {
-    // Proto message class (z.B. CreateUserRequest)
     protoMessage: {
       type: Function,
       required: true
@@ -294,7 +293,7 @@ export default {
         emit('submit', message, formData)
 
       } catch (error) {
-        console.dispatchError('Form submission error:', error)
+        console.error('Form submission error:', error)
         emit('error', error)
       } finally {
         isSubmitting.value = false

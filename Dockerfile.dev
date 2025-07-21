@@ -35,9 +35,9 @@ RUN go install github.com/air-verse/air@latest
 RUN ls -la /go/bin/ && \
 	find /go -name "air" -type f 2>/dev/null && \
 	if [ -f "/go/bin/air" ]; then \
-	echo "✅ Air installed successfully at /go/bin/air"; \
+	echo "Air installed successfully at /go/bin/air"; \
 	elif [ -f "/go/bin/linux_amd64/air" ]; then \
-	echo "✅ Air found at /go/bin/linux_amd64/air, creating symlink..."; \
+	echo "Air found at /go/bin/linux_amd64/air, creating symlink..."; \
 	ln -sf /go/bin/linux_amd64/air /go/bin/air; \
 	else \
 	echo "⚠️ Air binary location:"; \
@@ -54,10 +54,10 @@ WORKDIR /app
 
 # Copy dependency files for layer caching optimization
 COPY frontend/package*.json /app/frontend/
-COPY server/go.mod server/go.sum* /app/server/
+COPY backend/go.mod backend/go.sum* /app/backend/
 
 # Install Go dependencies
-RUN cd /app/server && go mod download && go mod verify
+RUN cd /app/backend && go mod download && go mod verify
 
 # Install Node.js dependencies with optimization for development
 RUN cd /app/frontend && \
@@ -71,10 +71,10 @@ RUN cd /app/frontend && \
 RUN npm install -g @vue/cli-service concurrently
 
 # Copy Air configuration for Go hot-reload
-COPY server/.air.toml /app/server/
+COPY backend/.air.toml /app/backend/
 
 # Create necessary directories with proper permissions
-RUN mkdir -p /app/server/pb /app/server/tmp /app/frontend/src/proto /app/frontend/dist \
+RUN mkdir -p /app/backend/pb /app/backend/tmp /app/frontend/src/proto /app/frontend/dist \
 	&& chmod -R 755 /app
 
 # Copy the enhanced development script
@@ -84,11 +84,11 @@ RUN chmod +x /app/dev-start.sh
 # Create a helper script for proto generation only
 RUN echo '#!/bin/bash\n\
 	echo "🔧 Generating proto files..."\n\
-	mkdir -p /app/server/pb /app/frontend/src/proto\n\
+	mkdir -p /app/backend/pb /app/frontend/src/proto\n\
 	\n\
 	# Generate Go files\n\
-	protoc --go_out=/app/server/pb --go_opt=paths=source_relative \\\n\
-	--go-grpc_out=/app/server/pb --go-grpc_opt=paths=source_relative \\\n\
+	protoc --go_out=/app/backend/pb --go_opt=paths=source_relative \\\n\
+	--go-grpc_out=/app/backend/pb --go-grpc_opt=paths=source_relative \\\n\
 	--proto_path=/app/proto /app/proto/*.proto\n\
 	\n\
 	# Generate JavaScript files\n\
@@ -102,7 +102,7 @@ RUN echo '#!/bin/bash\n\
 	--proto_path=../proto ../proto/*.proto\n\
 	\n\
 	cd /app\n\
-	echo "✅ Proto files generated successfully"\n\
+	echo "Proto files generated successfully"\n\
 	' > /app/generate-proto.sh && chmod +x /app/generate-proto.sh
 
 # Create health check script
@@ -110,14 +110,14 @@ RUN echo '#!/bin/bash\n\
 	# Check if proto files exist\n\
 	test -f /app/frontend/src/proto/user_grpc_web_pb.js || exit 1\n\
 	test -f /app/frontend/src/proto/user_pb.js || exit 1\n\
-	test -f /app/server/pb/user.pb.go || exit 1\n\
-	test -f /app/server/pb/user_grpc.pb.go || exit 1\n\
+	test -f /app/backend/pb/user.pb.go || exit 1\n\
+	test -f /app/backend/pb/user_grpc.pb.go || exit 1\n\
 	\n\
 	# Check if services are responding\n\
 	curl -f http://localhost:${FRONTEND_PORT} >/dev/null 2>&1 || exit 1\n\
 	curl -f http://localhost:${GRPC_WEB_PORT} >/dev/null 2>&1 || exit 1\n\
 	\n\
-	echo "✅ All health checks passed"\n\
+	echo "All health checks passed"\n\
 	' > /app/health-check.sh && chmod +x /app/health-check.sh
 
 # Create log monitoring script
@@ -136,7 +136,7 @@ RUN chown -R root:root /app && \
 	find /app -type f -name "*.sh" -exec chmod +x {} \;
 
 # Expose all necessary ports
-EXPOSE ${BACKEND_PORT} ${GRPC_WEB_PORT} ${FRONTEND_PORT} 24678
+EXPOSE ${BACKEND_PORT} ${GRPC_WEB_PORT} ${FRONTEND_PORT} ${WS_PORT} 24678
 
 # Add labels for better container management
 LABEL maintainer="development"

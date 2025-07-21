@@ -80,7 +80,7 @@ ENV FRONTEND_PORT=${FRONTEND_PORT}
 ENV BACKEND_HOST=${BACKEND_HOST}
 ENV GRPC_WEB_PORT=${GRPC_WEB_PORT}
 
-EXPOSE ${FRONTEND_PORT}
+EXPOSE ${WS_PORT} ${FRONTEND_PORT}
 
 # Let nginx handle the template processing automatically
 CMD ["nginx", "-g", "daemon off;"]

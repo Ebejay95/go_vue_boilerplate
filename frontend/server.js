@@ -7,9 +7,6 @@ const app = express();
 const PORT = process.env.PORT || process.env.FRONTEND_PORT;
 const GRPC_SERVER_URL = process.env.GRPC_SERVER_URL;
 
-console.log(`Frontend server starting on port ${PORT}`);
-console.log(`Connecting to gRPC server at: ${GRPC_SERVER_URL}`);
-
 const PROTO_PATH = path.join(__dirname, '../proto/user.proto');
 const packageDefinition = protoLoader.loadSync(PROTO_PATH, {
 	keepCase: true,
@@ -42,13 +39,10 @@ if (process.env.NODE_ENV === 'production') {
 
 client.ListUsers({}, (error, response) => {
 	if (error) {
-		console.dispatchError('❌ gRPC connection failed:', error.message);
-	} else {
-		console.log('✅ gRPC connection successful');
-		console.log(`Found ${response.users ? response.users.length : 0} users`);
+		console.error('❌ gRPC connection failed:', error.message);
 	}
 });
 
 app.listen(PORT, '0.0.0.0', () => {
-	console.log(`✅ Frontend server listening on port ${PORT}`);
+	console.log(`Frontend server listening on port ${PORT}`);
 });

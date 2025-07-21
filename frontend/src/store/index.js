@@ -1,16 +1,15 @@
-// src/store/index.js
-// Updated to load notifications on app initialization
-
 import { createStore } from 'vuex'
-import users from './modules/users/index.js'
+import users from './modules/user/index.js'
 import connection from './modules/connection/index.js'
-import notifications from './modules/notifications/index.js'
+import notifications from './modules/notification/index.js'
+import socket from './modules/socket/index.js' // Renamed from websocket to socket
 
 export const store = createStore({
 	modules: {
 		users,
 		connection,
-		notifications
+		notifications,
+		socket // General socket system
 	},
 
 	state() {
@@ -37,58 +36,52 @@ export const store = createStore({
 
 	actions: {
 		async initializeApp({ commit, dispatch, state }) {
-			// Verhindere mehrfache Initialisierung
 			if (state.appInitialized || state.appInitializing) {
-				console.log('🔄 App already initialized or initializing')
 				return state.appInitialized
 			}
 
-			console.log('🚀 Starting application initialization...')
 			commit('SET_APP_INITIALIZING', true)
 			commit('SET_APP_INITIALIZATION_ERROR', null)
 
 			try {
 				// 1. Initialize gRPC connection
-				console.log('📡 Initializing gRPC connection...')
 				await dispatch('connection/initializeClient')
-
-				// 2. Check health
-				console.log('🏥 Checking connection health...')
 				const healthResult = await dispatch('connection/checkHealth')
 
 				if (healthResult.status === 'healthy') {
-					console.log('✅ Connection healthy - loading initial data...')
+					// 2. Connect to socket system
+					await dispatch('socket/connect')
+
+					// 3. Initialize notification system (sets up socket listeners)
+					await dispatch('notifications/initialize')
+
 					commit('SET_APP_INITIALIZED', true)
 
-					// 3. Load initial data concurrently
+					// Load initial data
 					const loadingPromises = []
 
-					// Load users
 					loadingPromises.push(
 						dispatch('users/fetchUsers').catch(error => {
-							console.warn('⚠️ Could not load initial users:', error.message)
+							console.warn('Could not load initial users:', error.message)
 						})
 					)
 
-					// NEW: Load persistent notifications
 					loadingPromises.push(
 						dispatch('notifications/loadPersistentNotifications').catch(error => {
-							console.warn('⚠️ Could not load persistent notifications:', error.message)
+							console.warn('Could not load persistent notifications:', error.message)
 						})
 					)
 
 					// Wait for all initial data to load
 					await Promise.allSettled(loadingPromises)
 
-					console.log('✅ App initialization completed successfully')
 					return true
 				} else {
-					console.warn('⚠️ App initialized with connection issues')
 					commit('SET_APP_INITIALIZATION_ERROR', 'Connection health check failed')
 					return false
 				}
 			} catch (error) {
-				console.error('❌ App initialization failed:', error)
+				console.error('App initialization failed:', error)
 				commit('SET_APP_INITIALIZATION_ERROR', error.message)
 				throw error
 			} finally {
@@ -97,8 +90,12 @@ export const store = createStore({
 		},
 
 		async retryInitialization({ dispatch }) {
-			console.log('🔄 Retrying app initialization...')
 			return await dispatch('initializeApp')
+		},
+
+		// Cleanup when app is closed
+		async cleanupApp({ dispatch }) {
+			await dispatch('socket/disconnect')
 		}
 	},
 

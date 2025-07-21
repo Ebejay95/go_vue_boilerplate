@@ -202,6 +202,8 @@
 </template>
 
 <script>
+import { getCurrentInstance } from 'vue'
+
 export default {
   name: 'FormField',
 
@@ -226,9 +228,18 @@ export default {
 
   emits: ['update:modelValue', 'blur'],
 
+  setup(props) {
+    const instance = getCurrentInstance()
+    const uid = instance.uid
+
+    return {
+      uid
+    }
+  },
+
   computed: {
     fieldId() {
-      return `field-${this.field.key}-${this._uid}`
+      return `field-${this.field.key}-${this.uid}`
     },
 
     displayLabel() {

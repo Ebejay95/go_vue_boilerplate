@@ -4,23 +4,39 @@ package notification;
 
 option go_package = "./pb";
 
-service NotificationService {
-  rpc GetNotification(GetNotificationRequest) returns (GetNotificationResponse);
-  rpc CreateNotification(CreateNotificationRequest) returns (CreateNotificationResponse);
-  rpc ListNotifications(ListNotificationsRequest) returns (ListNotificationsResponse);
-  rpc DeleteNotification(DeleteNotificationRequest) returns (DeleteNotificationResponse);
-}
-
-// Notification message
+// Notification message with enhanced fields
 message Notification {
   int32 id = 1;
   string message = 2;
   string type = 3;
-  string created_at = 4;
-  string updated_at = 5;
+  int32 user_id = 4;          // 0 means global notification
+  bool read = 5;
+  bool persistent = 6;        // true = stored in DB, false = WebSocket only
+  string created_at = 7;
+  string updated_at = 8;
 }
 
-// Get Notification request/response
+// Notification Statistics
+message NotificationStats {
+  int32 total = 1;
+  int32 unread = 2;
+  int32 read = 3;
+  map<string, int32> by_type = 4;
+}
+
+// === CREATE REQUESTS ===
+message CreateNotificationRequest {
+  string message = 1;
+  string type = 2;
+  int32 user_id = 3;          // 0 for global notifications
+  bool persistent = 4;        // true = save to DB, false = WebSocket only
+}
+
+message CreateNotificationResponse {
+  Notification notification = 1;
+}
+
+// === READ REQUESTS ===
 message GetNotificationRequest {
   int32 id = 1;
 }
@@ -29,28 +45,125 @@ message GetNotificationResponse {
   Notification notification = 1;
 }
 
-// Create Notification request/response
-message CreateNotificationRequest {
-  string message = 1;
-  string type = 2;
+message ListNotificationsRequest {
+  int32 limit = 1;
+  int32 offset = 2;
+  int32 user_id = 3;          // 0 for all users
+  bool read = 4;              // filter by read status
+  bool has_read_filter = 5;   // whether to apply read filter
 }
-
-message CreateNotificationResponse {
-  Notification notification = 1;
-}
-
-// List Notifications request/response
-message ListNotificationsRequest {}
 
 message ListNotificationsResponse {
   repeated Notification notifications = 1;
+  int32 total = 2;
 }
 
-// Delete Notification request/response
+message GetNotificationStatsRequest {
+  int32 user_id = 1;
+}
+
+message GetNotificationStatsResponse {
+  int32 total = 1;
+  int32 unread = 2;
+  int32 read = 3;
+  map<string, int32> by_type = 4;
+}
+
+// === UPDATE REQUESTS ===
+message UpdateNotificationRequest {
+  int32 id = 1;
+  string message = 2;
+  string type = 3;
+  bool read = 4;
+}
+
+message UpdateNotificationResponse {
+  Notification notification = 1;
+}
+
+message MarkNotificationAsReadRequest {
+  int32 id = 1;
+  int32 user_id = 2;
+}
+
+message MarkNotificationAsReadResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+message MarkNotificationAsUnreadRequest {
+  int32 id = 1;
+  int32 user_id = 2;
+}
+
+message MarkNotificationAsUnreadResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+message MarkAllNotificationsAsReadRequest {
+  int32 user_id = 1;
+}
+
+message MarkAllNotificationsAsReadResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+// === DELETE REQUESTS ===
 message DeleteNotificationRequest {
   int32 id = 1;
 }
 
 message DeleteNotificationResponse {
   bool success = 1;
+  string message = 2;
+}
+
+message DeleteReadNotificationsRequest {
+  int32 user_id = 1;
+}
+
+message DeleteReadNotificationsResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+// === REAL-TIME NOTIFICATION REQUESTS ===
+message SendRealtimeNotificationRequest {
+  string message = 1;
+  string type = 2;
+  int32 user_id = 3;                    // 0 for broadcast to all
+  map<string, string> data = 4;         // Additional data payload
+}
+
+message SendRealtimeNotificationResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+// === SERVICE DEFINITION ===
+service NotificationService {
+  // Basic CRUD operations
+  rpc CreateNotification(CreateNotificationRequest) returns (CreateNotificationResponse);
+  rpc GetNotification(GetNotificationRequest) returns (GetNotificationResponse);
+  rpc UpdateNotification(UpdateNotificationRequest) returns (UpdateNotificationResponse);
+  rpc DeleteNotification(DeleteNotificationRequest) returns (DeleteNotificationResponse);
+
+  // List operations
+  rpc ListNotifications(ListNotificationsRequest) returns (ListNotificationsResponse);
+
+  // Read/Unread operations
+  rpc MarkNotificationAsRead(MarkNotificationAsReadRequest) returns (MarkNotificationAsReadResponse);
+  rpc MarkNotificationAsUnread(MarkNotificationAsUnreadRequest) returns (MarkNotificationAsUnreadResponse);
+  rpc MarkAllNotificationsAsRead(MarkAllNotificationsAsReadRequest) returns (MarkAllNotificationsAsReadResponse);
+
+  // Batch operations
+  rpc DeleteReadNotifications(DeleteReadNotificationsRequest) returns (DeleteReadNotificationsResponse);
+
+  // Statistics
+  rpc GetNotificationStats(GetNotificationStatsRequest) returns (GetNotificationStatsResponse);
+
+  // Real-time notifications (WebSocket only)
+  rpc SendRealtimeNotification(SendRealtimeNotificationRequest) returns (SendRealtimeNotificationResponse);
 }
