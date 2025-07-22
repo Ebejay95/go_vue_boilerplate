@@ -1,10 +1,14 @@
+// src/store/modules/notification/index.js
 import {
 	GetNotificationRequest,
 	CreateNotificationRequest,
-	ListNotificationsRequest
+	ListNotificationsRequest,
+	DeleteNotificationRequest,
+	MarkNotificationAsReadRequest
 } from '../../../proto/notification_pb'
 
 const mutations = {
+	// Toast mutations
 	ADD_TOAST(state, toast) {
 		const newToast = {
 			id: Date.now() + Math.random(),
@@ -22,33 +26,27 @@ const mutations = {
 		state.toasts = []
 	},
 
-	// Persistent notifications mutations
+	// Persistent notifications (Bell) mutations
 	SET_PERSISTENT_NOTIFICATIONS(state, notifications) {
+		console.log('=== SET_PERSISTENT_NOTIFICATIONS ===')
+		console.log('Setting notifications count:', notifications.length)
 		state.persistentNotifications = notifications || []
 	},
 
 	ADD_PERSISTENT_NOTIFICATION(state, notification) {
-		console.log('=== MUTATION: ADD_PERSISTENT_NOTIFICATION ===')
-		console.log('Adding notification:', notification)
+		console.log('=== ADD_PERSISTENT_NOTIFICATION ===')
+		console.log('Adding to bell:', notification)
 
 		const exists = state.persistentNotifications.find(n => n.id === notification.id)
 		if (!exists) {
 			state.persistentNotifications.unshift(notification)
-			console.log('✅ Notification added, new count:', state.persistentNotifications.length)
-		} else {
-			console.log('⚠️ Notification already exists, skipping')
+			console.log('✅ Added to bell, total:', state.persistentNotifications.length)
 		}
 	},
 
-	REMOVE_PERSISTENT(state, id) {
+	REMOVE_PERSISTENT_NOTIFICATION(state, id) {
 		state.persistentNotifications = state.persistentNotifications.filter(n => n.id !== id)
-	},
-
-	UPDATE_PERSISTENT_NOTIFICATION(state, updatedNotification) {
-		const index = state.persistentNotifications.findIndex(n => n.id === updatedNotification.id)
-		if (index !== -1) {
-			state.persistentNotifications.splice(index, 1, updatedNotification)
-		}
+		console.log('🗑️ Removed from bell, remaining:', state.persistentNotifications.length)
 	},
 
 	MARK_AS_READ(state, id) {
@@ -62,6 +60,10 @@ const mutations = {
 		state.persistentNotifications.forEach(n => n.read = true)
 	},
 
+	CLEAR_ALL_PERSISTENT(state) {
+		state.persistentNotifications = []
+	},
+
 	// Loading states
 	SET_LOADING(state, loading) {
 		state.loading = loading
@@ -73,60 +75,196 @@ const mutations = {
 }
 
 const actions = {
-	// Initialize notification system
+	// Core toast action
+	showToast({ commit }, { message, type = 'info', duration = 3000, actions = [] }) {
+		const toast = {
+			id: Date.now() + Math.random(),
+			message,
+			type,
+			duration,
+			actions,
+			createdAt: new Date().toISOString()
+		}
+
+		commit('ADD_TOAST', toast)
+		return toast.id
+	},
+
+	// Remove toast action (called by component)
+	dismissToast({ commit }, toastId) {
+		commit('REMOVE_TOAST', toastId)
+	},
+
+	// Main notification creation method
+	async createNotification({ commit, dispatch, rootGetters }, {
+		message,
+		type = 'info',
+		persistent = false,
+		duration = null,
+		actions = [],
+		userId = null
+	}) {
+		console.log('📨 Creating notification:', { message, type, persistent })
+
+		// 1. Always show toast (for both persistent and non-persistent)
+		if (!persistent) {
+				const toastDuration = duration || (type === 'error' ? 4000 : type === 'warning' ? 3000 : 2000)
+				dispatch('showToast', {
+				message,
+				type,
+				duration: toastDuration,
+				actions
+			})
+		}
+
+		// 2. If persistent, save to backend (but DON'T add to bell manually)
+		if (persistent) {
+			try {
+				if (!rootGetters['connection/isConnected']) {
+					console.warn('No gRPC connection - adding to bell only')
+					// Add to bell even without backend connection
+					commit('ADD_PERSISTENT_NOTIFICATION', {
+						id: Date.now() + Math.random(),
+						message,
+						type,
+						read: false,
+						persistent: false, // Couldn't save to backend
+						createdAt: new Date().toISOString(),
+						userId
+					})
+					return
+				}
+
+				const notificationClient = rootGetters['connection/notificationClient']
+				if (!notificationClient) {
+					throw new Error('Notification client not initialized')
+				}
+
+				const request = new CreateNotificationRequest()
+				request.setMessage(message)
+				request.setType(type)
+				request.setPersistent(true)
+				if (userId) {
+					request.setUserId(userId)
+				}
+
+				const response = await dispatch('connection/promisifyGrpcCall', {
+					method: notificationClient.createNotification,
+					request: request
+				}, { root: true })
+
+				console.log('💾 Notification saved to backend')
+
+				// ❌ ENTFERNT: Nicht mehr manuell zur Bell hinzufügen!
+				// Die Socket-Listener werden das automatisch machen
+
+				return response
+
+			} catch (error) {
+				console.error('❌ Error saving notification:', error)
+				// Fallback: add to bell only
+				commit('ADD_PERSISTENT_NOTIFICATION', {
+					id: Date.now() + Math.random(),
+					message,
+					type,
+					read: false,
+					persistent: false,
+					createdAt: new Date().toISOString(),
+					userId
+				})
+			}
+		}
+		// If not persistent, only the toast was shown - no further action needed
+	},
+
+	// Convenience methods with your desired API
+	async info({ dispatch }, { message, ...options }) {
+		return dispatch('createNotification', {
+			message,
+			type: 'info',
+			duration: 3000,
+			...options
+		})
+	},
+
+	async success({ dispatch }, { message, ...options }) {
+		return dispatch('createNotification', {
+			message,
+			type: 'success',
+			duration: 2000,
+			...options
+		})
+	},
+
+	async error({ dispatch }, { message, ...options }) {
+		return dispatch('createNotification', {
+			message,
+			type: 'error',
+			duration: 6000,
+			...options
+		})
+	},
+
+	async warning({ dispatch }, { message, ...options }) {
+		return dispatch('createNotification', {
+			message,
+			type: 'warning',
+			duration: 4000,
+			...options
+		})
+	},
+
+	// Initialization
 	async initialize({ dispatch }) {
+		console.log('🚀 Initializing notification system...')
+
 		try {
-			// Setup socket event listeners for notifications
 			await dispatch('setupSocketListeners')
-
-			// Socket connection is handled by main app initialization
-			// Load existing persistent notifications via gRPC
 			await dispatch('loadPersistentNotifications')
-
+			console.log('✅ Notification system initialized')
 		} catch (error) {
 			console.error('❌ Failed to initialize notification system:', error)
 			throw error
 		}
 	},
 
-	// Setup socket event listeners for notifications
+	// Socket listeners
 	setupSocketListeners({ dispatch }) {
-		// Listen for notification events from backend
+		console.log('📋 Setting up notification socket listeners...')
+
 		dispatch('socket/on', {
 			event: 'notification',
 			callback: (data) => dispatch('handleSocketNotification', data)
 		}, { root: true })
 
-		// Listen for notification updates
 		dispatch('socket/on', {
 			event: 'notification_updated',
 			callback: (data) => dispatch('handleNotificationUpdate', data)
 		}, { root: true })
 
-		// Listen for notification deletions
 		dispatch('socket/on', {
 			event: 'notification_deleted',
 			callback: (data) => dispatch('handleNotificationDeleted', data)
 		}, { root: true })
 
-		// Listen for connection status
 		dispatch('socket/on', {
 			event: 'connected',
 			callback: () => dispatch('onSocketConnected')
 		}, { root: true })
 	},
 
-	// Handle socket notifications from backend
+	// Socket event handlers
 	handleSocketNotification({ commit, dispatch }, notificationData) {
+		console.log('🔔 Socket notification received:', notificationData)
 
-		// Always show as toast for immediate visibility
+		// Always show as toast
 		dispatch('showToast', {
 			message: notificationData.message,
 			type: notificationData.type || 'info',
 			duration: notificationData.type === 'error' ? 6000 : 4000
 		})
 
-		// If persistent, add to persistent store
+		// Add to bell if persistent
 		if (notificationData.persistent) {
 			commit('ADD_PERSISTENT_NOTIFICATION', {
 				...notificationData,
@@ -136,31 +274,33 @@ const actions = {
 		}
 	},
 
-	// Handle notification updates
 	handleNotificationUpdate({ commit }, notificationData) {
-		commit('UPDATE_PERSISTENT_NOTIFICATION', notificationData)
+		console.log('🔄 Notification updated:', notificationData)
+		// Handle updates if needed
 	},
 
-	// Handle notification deletions
 	handleNotificationDeleted({ commit }, { id }) {
-		commit('REMOVE_PERSISTENT', id)
+		console.log('🗑️ Notification deleted:', id)
+		commit('REMOVE_PERSISTENT_NOTIFICATION', id)
 	},
 
-	// Handle socket reconnection
 	onSocketConnected({ dispatch }) {
+		console.log('🔌 Socket reconnected, reloading notifications...')
 		dispatch('loadPersistentNotifications')
 	},
 
-	// Load persistent notifications via gRPC
+	// Load persistent notifications from backend
 	async loadPersistentNotifications({ commit, dispatch, rootGetters }) {
 		commit('SET_LOADING', true)
 		commit('SET_ERROR', null)
 
 		try {
 			if (!rootGetters['connection/isConnected']) {
-				console.warn('No gRPC connection available for notifications')
-				return
+				console.warn('No gRPC connection available')
+				return { notifications: [], count: 0 }
 			}
+
+			console.log('📋 Loading persistent notifications from backend...')
 
 			const notificationClient = rootGetters['connection/notificationClient']
 			if (!notificationClient) {
@@ -179,218 +319,114 @@ const actions = {
 				type: notification.getType(),
 				read: notification.getRead(),
 				createdAt: notification.getCreatedAt(),
-				userId: notification.getUserId() || null
+				userId: notification.getUserId() || null,
+				persistent: true
 			}))
 
 			commit('SET_PERSISTENT_NOTIFICATIONS', notifications)
+			console.log(`✅ Loaded ${notifications.length} persistent notifications`)
 
 			return { notifications, count: notifications.length }
 
 		} catch (error) {
 			console.error('❌ Error loading persistent notifications:', error)
 			commit('SET_ERROR', error.message)
+			return { notifications: [], count: 0 }
 		} finally {
 			commit('SET_LOADING', false)
 		}
 	},
 
-	// Create notification via gRPC
-	async createNotification({ dispatch, rootGetters }, { message, type = 'info', persistent = false, userId = null }) {
+	// Management actions
+	async markAllAsRead({ commit, dispatch, state, rootGetters }) {
 		try {
-			if (!rootGetters['connection/isConnected']) {
-				console.warn('No gRPC connection - showing local toast only')
-				return dispatch('showToast', { message, type })
-			}
-
 			const notificationClient = rootGetters['connection/notificationClient']
-			if (!notificationClient) {
-				throw new Error('Notification client not initialized')
+			if (notificationClient) {
+				const unreadNotifications = state.persistentNotifications.filter(n => !n.read)
+				for (const notification of unreadNotifications) {
+					const request = new MarkNotificationAsReadRequest()
+					request.setId(notification.id)
+					request.setUserId(1)
+
+					await dispatch('connection/promisifyGrpcCall', {
+						method: notificationClient.markNotificationAsRead,
+						request: request
+					}, { root: true })
+				}
 			}
 
-			const request = new CreateNotificationRequest()
-			request.setMessage(message)
-			request.setType(type)
-			request.setPersistent(persistent)
-			if (userId) {
-				request.setUserId(userId)
-			}
-
-			const response = await dispatch('connection/promisifyGrpcCall', {
-				method: notificationClient.createNotification,
-				request: request
-			}, { root: true })
-
-			console.log('✅ Notification created via gRPC')
-			return response
+			commit('MARK_ALL_AS_READ')
 
 		} catch (error) {
-			console.error('❌ Error creating notification:', error)
-			// Fallback: show local toast
-			return dispatch('showToast', { message, type, duration: 4000 })
+			console.error('❌ Failed to mark all as read:', error)
 		}
 	},
 
-	// Show toast notification
-	showToast({ commit }, { message, type = 'info', duration = 2000, actions = [] }) {
-		const toast = {
-			message,
-			type,
-			duration,
-			actions,
-			createdAt: new Date().toISOString()
+	async clearAllPersistent({ commit, dispatch, state, rootGetters }) {
+		try {
+			const notificationClient = rootGetters['connection/notificationClient']
+			if (notificationClient) {
+				for (const notification of state.persistentNotifications) {
+					const request = new DeleteNotificationRequest()
+					request.setId(notification.id)
+
+					await dispatch('connection/promisifyGrpcCall', {
+						method: notificationClient.deleteNotification,
+						request: request
+					}, { root: true })
+				}
+			}
+
+			commit('SET_PERSISTENT_NOTIFICATIONS', [])
+
+		} catch (error) {
+			console.error('❌ Failed to clear all persistent notifications:', error)
 		}
+	},
 
-		commit('ADD_TOAST', toast)
+	async removePersistentNotification({ commit, dispatch, rootGetters }, notificationId) {
+		try {
+			const notificationClient = rootGetters['connection/notificationClient']
+			if (notificationClient) {
+				const request = new DeleteNotificationRequest()
+				request.setId(notificationId)
 
-		if (duration > 0) {
-			setTimeout(() => {
-				commit('REMOVE_TOAST', toast.id)
-			}, duration)
+				await dispatch('connection/promisifyGrpcCall', {
+					method: notificationClient.deleteNotification,
+					request: request
+				}, { root: true })
+			}
+
+			commit('REMOVE_PERSISTENT_NOTIFICATION', notificationId)
+
+		} catch (error) {
+			console.error('❌ Failed to remove persistent notification:', error)
 		}
-
-		return toast.id
 	},
 
-	// Toast management
-	dismissToast({ commit }, id) {
-		commit('REMOVE_TOAST', id)
-	},
-
-	clearAllToasts({ commit }) {
-		commit('CLEAR_ALL_TOASTS')
-	},
-
-	// Mark notification as read via gRPC
 	async markAsRead({ commit, dispatch, rootGetters }, notificationId) {
 		try {
 			const notificationClient = rootGetters['connection/notificationClient']
-			if (!notificationClient) {
-				throw new Error('Notification client not available')
+			if (notificationClient) {
+				const request = new MarkNotificationAsReadRequest()
+				request.setId(notificationId)
+				request.setUserId(1)
+
+				await dispatch('connection/promisifyGrpcCall', {
+					method: notificationClient.markNotificationAsRead,
+					request: request
+				}, { root: true })
 			}
 
-			await dispatch('connection/promisifyGrpcCall', {
-				method: notificationClient.markNotificationAsRead,
-				request: { id: notificationId, userId: 1 } // TODO: get from auth
-			}, { root: true })
-
-			// Update local state immediately (optimistic update)
 			commit('MARK_AS_READ', notificationId)
 
 		} catch (error) {
-			console.error('❌ Failed to mark notification as read:', error)
+			console.error('❌ Failed to mark as read:', error)
 		}
-	},
-
-	// Remove persistent notification via gRPC
-	async removePersistentNotification({ commit, dispatch, rootGetters }, id) {
-		try {
-			const notificationClient = rootGetters['connection/notificationClient']
-			if (!notificationClient) {
-				throw new Error('Notification client not available')
-			}
-
-			await dispatch('connection/promisifyGrpcCall', {
-				method: notificationClient.deleteNotification,
-				request: { id }
-			}, { root: true })
-
-		} catch (error) {
-			console.error('❌ Failed to delete notification:', error)
-		}
-	},
-
-	// Convenience methods for different notification types
-
-	// Success notifications
-	async success({ dispatch }, message, options = {}) {
-		const toast = await dispatch('showToast', {
-			message,
-			type: 'success',
-			duration: options.duration || 4000,
-			actions: options.actions || []
-		})
-
-		if (options.persistent) {
-			try {
-				await dispatch('createNotification', {
-					message,
-					type: 'success',
-					persistent: true,
-					userId: options.userId
-				})
-			} catch (error) {
-				console.error('❌ Failed to create persistent notification:', error)
-			}
-		}
-
-		return toast
-	},
-
-	// Error notifications
-	async error({ dispatch }, message, options = {}) {
-		if (options.persistent) {
-			return dispatch('createNotification', {
-				message,
-				type: 'error',
-				persistent: true,
-				...options
-			})
-		} else {
-			return dispatch('showToast', {
-				message,
-				type: 'error',
-				duration: options.duration || 5000,
-				...options
-			})
-		}
-	},
-
-	// Warning notifications
-	async warning({ dispatch }, message, options = {}) {
-		if (options.persistent) {
-			return dispatch('createNotification', {
-				message,
-				type: 'warning',
-				persistent: true,
-				...options
-			})
-		} else {
-			return dispatch('showToast', {
-				message,
-				type: 'warning',
-				duration: options.duration || 4000,
-				...options
-			})
-		}
-	},
-
-	// Info notifications
-	async info({ dispatch }, message, options = {}) {
-		if (options.persistent) {
-			return dispatch('createNotification', {
-				message,
-				type: 'info',
-				persistent: true,
-				...options
-			})
-		} else {
-			return dispatch('showToast', {
-				message,
-				type: 'info',
-				duration: options.duration || 3000,
-				...options
-			})
-		}
-	},
-
-	// Send custom event via socket
-	async sendSocketEvent({ dispatch }, { event, data }) {
-		return dispatch('socket/emit', { event, data }, { root: true })
 	}
 }
 
 const getters = {
-	// Toast getters
 	toasts(state) {
 		return state.toasts
 	},
@@ -399,14 +435,10 @@ const getters = {
 		return state.toasts.length > 0
 	},
 
-	// Persistent notification getters
+	// Bell notifications (persistent)
 	persistentNotifications(state) {
 		return state.persistentNotifications.sort((a, b) => {
-			// Unread first
-			if (a.read !== b.read) {
-				return a.read - b.read
-			}
-			// Then by creation time (newest first)
+			if (a.read !== b.read) return a.read - b.read
 			return new Date(b.createdAt) - new Date(a.createdAt)
 		})
 	},
@@ -427,7 +459,6 @@ const getters = {
 		return state.persistentNotifications.length > 0
 	},
 
-	// System status getters
 	isLoading(state) {
 		return state.loading
 	},

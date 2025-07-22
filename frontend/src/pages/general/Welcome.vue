@@ -113,97 +113,6 @@
 		</base-card>
 	  </div>
 
-	  <!-- Socket Status and Test Controls -->
-	  <div class="mt-8 bg-gray-50 rounded-lg p-4">
-		<h3 class="text-lg font-medium text-gray-900 mb-4">Socket System & Notifications</h3>
-
-		<!-- Socket Status -->
-		<div class="mb-4 p-3 bg-white rounded-lg border">
-		  <div class="flex items-center space-x-3">
-			<div class="flex items-center space-x-2">
-			  <span
-				:class="[
-				  'inline-block w-3 h-3 rounded-full',
-				  socketStatus === 'connected' ? 'bg-green-500' :
-				  socketStatus === 'connecting' ? 'bg-yellow-500 animate-pulse' : 'bg-red-500'
-				]"
-			  ></span>
-			  <span class="text-sm font-medium text-gray-700">
-				Socket: {{ socketStatusText }}
-			  </span>
-			</div>
-
-			<div class="flex items-center space-x-2">
-			  <span class="text-sm text-gray-500">
-				Persistent Notifications: {{ unreadCount }}
-			  </span>
-			  <span v-if="hasUnreadPersistent" class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-red-100 text-red-800">
-				{{ unreadCount }} ungelesen
-			  </span>
-			</div>
-		  </div>
-		</div>
-
-		<!-- Test Buttons -->
-		<div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-2">
-		  <button
-			@click="testSuccessNotification"
-			class="px-3 py-2 bg-green-100 text-green-800 rounded text-sm hover:bg-green-200 transition-colors"
-		  >
-			✅ Success
-		  </button>
-
-		  <button
-			@click="testErrorNotification"
-			class="px-3 py-2 bg-red-100 text-red-800 rounded text-sm hover:bg-red-200 transition-colors"
-		  >
-			❌ Error
-		  </button>
-
-		  <button
-			@click="testWarningNotification"
-			class="px-3 py-2 bg-yellow-100 text-yellow-800 rounded text-sm hover:bg-yellow-200 transition-colors"
-		  >
-			⚠️ Warning
-		  </button>
-
-		  <button
-			@click="testInfoNotification"
-			class="px-3 py-2 bg-blue-100 text-blue-800 rounded text-sm hover:bg-blue-200 transition-colors"
-		  >
-			ℹ️ Info
-		  </button>
-
-		  <button
-			@click="testPersistentNotification"
-			class="px-3 py-2 bg-purple-100 text-purple-800 rounded text-sm hover:bg-purple-200 transition-colors"
-		  >
-			💾 Persistent
-		  </button>
-
-		  <button
-			@click="testCustomSocketEvent"
-			class="px-3 py-2 bg-indigo-100 text-indigo-800 rounded text-sm hover:bg-indigo-200 transition-colors"
-		  >
-			🔌 Socket Event
-		  </button>
-
-		  <button
-			@click="simulateBackendNotification"
-			class="px-3 py-2 bg-orange-100 text-orange-800 rounded text-sm hover:bg-orange-200 transition-colors"
-		  >
-			📨 Backend Sim
-		  </button>
-
-		  <button
-			@click="clearAllToasts"
-			class="px-3 py-2 bg-gray-100 text-gray-800 rounded text-sm hover:bg-gray-200 transition-colors"
-		  >
-			🧹 Clear
-		  </button>
-		</div>
-	  </div>
-
 	  <!-- Delete Confirmation Dialog -->
 	  <base-dialog
 		mode="dialog"
@@ -387,19 +296,29 @@ export default {
 		// Notification methods using the new system
 		async loadUsers() {
 			try {
-				await this.$store.dispatch('notifications/info', 'Lade Benutzer...')
+				await this.$store.dispatch('notifications/info', {
+					message: 'Lade Benutzer...',
+					persistent: false
+				})
 				const result = await this.fetchUsers()
 				this.lastUpdated = new Date().toLocaleTimeString()
 
 				if (!this.hasUsers) {
-					await this.$store.dispatch('notifications/info', '📋 Keine Benutzer in der Datenbank gefunden')
+					await this.$store.dispatch('notifications/info', {
+						message: 'Keine Benutzer in der Datenbank gefunden',
+						persistent: false
+					})
 				} else {
-					await this.$store.dispatch('notifications/success', `📋 ${result.count} Benutzer erfolgreich geladen`)
+					await this.$store.dispatch('notifications/success', {
+						message: result.count + ' Benutzer erfolgreich geladen',
+						persistent: false
+					})
 				}
 			} catch (error) {
 				console.error('Error loading users:', error)
-				await this.$store.dispatch('notifications/error', `❌ Fehler beim Laden: ${error.message}`, {
-					persistent: true
+				await this.$store.dispatch('notifications/error', {
+					message: `❌ Fehler beim Laden: ${error.message}`,
+					persistent: false
 				})
 			}
 		},
@@ -421,15 +340,17 @@ export default {
 
 			} catch (error) {
 				console.error('Error creating user:', error)
-				await this.$store.dispatch('notifications/error', `❌ Fehler beim Erstellen: ${error.message}`, {
-					persistent: true
+				await this.$store.dispatch('notifications/error', {
+					message: 'Fehler beim Erstellen:' + error.message
 				})
 			}
 		},
 
 		async handleFormError(error) {
 			console.error('Form error:', error)
-			await this.$store.dispatch('notifications/error', `❌ Formular-Fehler: ${error.message}`)
+			await this.$store.dispatch('notifications/error', {
+				message: 'Formular-Fehler:' + error.message
+			})
 		},
 
 		// Dialog Methods
@@ -470,23 +391,32 @@ export default {
 
 		// Test Methods for Notifications
 		async testSuccessNotification() {
-			await this.$store.dispatch('notifications/success', '✅ Das ist eine Erfolgs-Nachricht!')
+			await this.$store.dispatch('notifications/success', {
+				message:  'Das ist eine Erfolgs-Nachricht!'
+			})
 		},
 
 		async testErrorNotification() {
-			await this.$store.dispatch('notifications/error', '❌ Das ist eine Fehler-Nachricht!')
+			await this.$store.dispatch('notifications/error', {
+				message:  'Das ist eine Fehler-Nachricht!'
+			})
 		},
 
 		async testWarningNotification() {
-			await this.$store.dispatch('notifications/warning', '⚠️ Das ist eine Warnung!')
+			await this.$store.dispatch('notifications/warning', {
+				message:  'Das ist eine Warnung-Nachricht!'
+			})
 		},
 
 		async testInfoNotification() {
-			await this.$store.dispatch('notifications/info', 'ℹ️ Das ist eine Info-Nachricht!')
+			await this.$store.dispatch('notifications/info', {
+				message:  'Das ist eine Info-Nachricht!'
+			})
 		},
 
 		async testPersistentNotification() {
-			await this.$store.dispatch('notifications/info', '💾 Das ist eine persistente Nachricht!', {
+			await this.$store.dispatch('notifications/info', {
+				message:  'Das ist eine persistente Nachricht!',
 				persistent: true
 			})
 		},
