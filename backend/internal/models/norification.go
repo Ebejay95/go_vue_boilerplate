@@ -1,17 +1,20 @@
 package models
 
-import "time"
+import (
+	"github.com/go-playground/validator/v10"
+	"time"
+)
 
 // Persistent Notification - stored in database
 type Notification struct {
-	ID        int32     `json:"id" db:"id"`
-	Message   string    `json:"message" db:"message"`
-	Type      string    `json:"type" db:"type"`
-	UserID    *int32    `json:"user_id" db:"user_id"` // Optional: for user-specific notifications
-	Read      bool      `json:"read" db:"read"`
-	Persistent bool     `json:"persistent" db:"persistent"` // Flag to distinguish persistent vs real-time
-	CreatedAt time.Time `json:"created_at" db:"created_at"`
-	UpdatedAt time.Time `json:"updated_at" db:"updated_at"`
+	ID         int32     `json:"id" db:"id"`
+	Message    string    `json:"message" db:"message" validate:"required,min=1,max=1000"`
+	Type       string    `json:"type" db:"type" validate:"required,oneof=info warning error success"`
+	UserID     *int32    `json:"user_id" db:"user_id" validate:"omitempty,min=1"`
+	Read       bool      `json:"read" db:"read"`
+	Persistent bool      `json:"persistent" db:"persistent"`
+	CreatedAt  time.Time `json:"created_at" db:"created_at"`
+	UpdatedAt  time.Time `json:"updated_at" db:"updated_at"`
 }
 
 // Real-time Notification - only sent via WebSocket, not stored
@@ -26,10 +29,10 @@ type RealtimeNotification struct {
 
 // CRUD Parameters for persistent notifications
 type CreateNotificationParams struct {
-	Message    string `json:"message"`
-	Type       string `json:"type"`
-	UserID     *int32 `json:"user_id,omitempty"`
-	Persistent bool   `json:"persistent"` // true = save to DB, false = WebSocket only
+	Message    string `json:"message" validate:"required,min=1,max=1000"`
+	Type       string `json:"type" validate:"required,oneof=info warning error success"`
+	UserID     *int32 `json:"user_id,omitempty" validate:"omitempty,min=1"`
+	Persistent bool   `json:"persistent"`
 }
 
 type UpdateNotificationParams struct {
@@ -57,4 +60,9 @@ type CreateRealtimeNotificationParams struct {
 	Type    string                 `json:"type"`
 	UserID  *int32                 `json:"user_id,omitempty"`
 	Data    map[string]interface{} `json:"data,omitempty"`
+}
+
+func (n *CreateNotificationParams) Validate() error {
+	validate := validator.New()
+	return validate.Struct(n)
 }

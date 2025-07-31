@@ -1,4 +1,16 @@
-.PHONY: dev-up dev-down dev-shell prod-up prod-down prod-shell fclean help migrate-up migrate-down migrate-status build-migrate migrate-clean
+.PHONY: dev-up dev-down dev-shell prod-up prod-down prod-shell fclean help migrate-up migrate-down migrate-status build-migrate migrate-clean test test-unit test-integration test-coverage test-race test-docker test-ci
+
+GOCMD=go
+GOBUILD=$(GOCMD) build
+GOCLEAN=$(GOCMD) clean
+GOTEST=$(GOCMD) test
+GOGET=$(GOCMD) get
+GOMOD=$(GOCMD) mod
+
+TEST_TIMEOUT=30s
+COVERAGE_OUT=coverage.out
+
+# Test configuration
 
 # Colors
 GREEN := \033[0;32m
@@ -64,6 +76,47 @@ prod-logs:
 	docker-compose logs -f
 
 # ===========================================
+# TESTING (using existing containers)
+# ===========================================
+
+# Main test target - runs all tests
+test: test-dev
+
+# Run tests in dev container
+test-dev:
+	$(call print_status,"Running tests in dev container...")
+	docker-compose -f docker-compose.dev.yml exec -T dev-environment sh -c "cd /app/backend && go test -v -timeout $(TEST_TIMEOUT) ./..."
+	$(call print_success,"Tests completed!")
+
+# Run tests with coverage in dev container
+test-coverage:
+	$(call print_status,"Running coverage tests...")
+	docker-compose -f docker-compose.dev.yml exec -T dev-environment sh -c "cd /app && go test -v -coverprofile=coverage.out -covermode=atomic ./... && go tool cover -html=coverage.out -o coverage.html"
+	$(call print_success,"Coverage report generated!")
+
+# Run race condition tests
+test-race:
+	$(call print_status,"Running race condition tests...")
+	docker-compose -f docker-compose.dev.yml exec -T dev-environment sh -c "cd /app && go test -race -short ./..."
+	$(call print_success,"Race condition tests completed!")
+
+# One-shot test container (if dev environment not running)
+test-standalone:
+	$(call print_status,"Running tests in standalone container...")
+	docker run --rm \
+		-v $(PWD)/backend:/app \
+		-w /app \
+		golang:1.21-alpine \
+		sh -c "go mod download && go test -v -timeout $(TEST_TIMEOUT) ./..."
+	$(call print_success,"Standalone tests completed!")
+
+# CI-friendly test command
+test-ci: test-standalone
+
+test-unit: test-dev
+test-integration: test-dev
+
+# ===========================================
 # CLEANUP
 # ===========================================
 
@@ -72,34 +125,12 @@ fclean:
 	docker-compose down -v --rmi all --remove-orphans 2>/dev/null || true
 	docker-compose -f docker-compose.dev.yml down -v --rmi all --remove-orphans 2>/dev/null || true
 	docker system prune -f
-	@rm -rf backend/pb/ backend/go.sum
+	@rm -rf backend/pb/ backend/go.sum $(COVERAGE_OUT) coverage.html
 	$(call print_success,"Complete cleanup finished!")
 
 # ===========================================
-# HELP
+# DATABASE MIGRATIONS
 # ===========================================
-
-help:
-	@echo "$(BOLD)Available commands:$(RESET)"
-	@echo ""
-	@echo "$(YELLOW)Development:$(RESET)"
-	@echo "  make dev-up    Start development environment"
-	@echo "  make dev-down  Stop development environment"
-	@echo "  make dev-shell Open development container shell"
-	@echo ""
-	@echo "$(YELLOW)Production:$(RESET)"
-	@echo "  make prod-up   Start production environment"
-	@echo "  make prod-down Stop production environment"
-	@echo "  make prod-shell Open production container shell"
-	@echo ""
-	@echo "$(YELLOW)Cleanup:$(RESET)"
-	@echo "  make fclean    Complete cleanup (containers, images, volumes)"
-	@echo ""
-	@echo "$(CYAN)Default: make help$(RESET)"
-
-# Default target
-.DEFAULT_GOAL := help
-
 
 # Database Migration Commands
 migrate-up:
@@ -148,3 +179,40 @@ fix-db:
 migrate-clean:
 	@echo "🧹 Cleaning up..."
 	@cd backend && rm -f bin/migrate
+
+# ===========================================
+# HELP
+# ===========================================
+
+help:
+	@echo "$(BOLD)Available commands:$(RESET)"
+	@echo ""
+	@echo "$(YELLOW)Development:$(RESET)"
+	@echo "  make dev-up    Start development environment"
+	@echo "  make dev-down  Stop development environment"
+	@echo "  make dev-shell Open development container shell"
+	@echo ""
+	@echo "$(YELLOW)Production:$(RESET)"
+	@echo "  make prod-up   Start production environment"
+	@echo "  make prod-down Stop production environment"
+	@echo "  make prod-shell Open production container shell"
+	@echo ""
+	@echo "$(YELLOW)Testing:$(RESET)"
+	@echo "  make test              Run all tests in dev container"
+	@echo "  make test-coverage     Run coverage tests"
+	@echo "  make test-race         Run race condition tests"
+	@echo "  make test-standalone   Run tests in standalone container"
+	@echo "  make test-ci           CI-friendly test pipeline"
+	@echo ""
+	@echo "$(YELLOW)Database:$(RESET)"
+	@echo "  make migrate-up    Run database migrations"
+	@echo "  make migrate-down  Rollback migrations"
+	@echo "  make migrate-status Check migration status"
+	@echo ""
+	@echo "$(YELLOW)Cleanup:$(RESET)"
+	@echo "  make fclean    Complete cleanup (containers, images, volumes)"
+	@echo ""
+	@echo "$(CYAN)Default: make help$(RESET)"
+
+# Default target
+.DEFAULT_GOAL := help

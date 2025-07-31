@@ -7,10 +7,13 @@ import (
 
 	"backend-grpc-server/internal/models"
 	"backend-grpc-server/internal/storage"
+	"backend-grpc-server/internal/validation"
 	pb "backend-grpc-server/pb"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 )
 
-// NotificationHandler with socket integration
+// NotificationHandler with socket integration and validation
 type NotificationHandler struct {
 	pb.UnimplementedNotificationServiceServer
 	store         storage.NotificationStore
@@ -48,10 +51,9 @@ func (h *NotificationHandler) setupSocketHandlers() {
 	})
 }
 
-// Socket Event Handlers
+// Socket Event Handlers with validation
 
 func (h *NotificationHandler) handleCreateNotificationEvent(client *SocketClient, data interface{}) {
-	// Parse the notification data
 	dataMap, ok := data.(map[string]interface{})
 	if !ok {
 		h.socketHandler.EmitToClient(client.ID, "error", map[string]interface{}{
@@ -64,9 +66,16 @@ func (h *NotificationHandler) handleCreateNotificationEvent(client *SocketClient
 	notificationType, _ := dataMap["type"].(string)
 	persistent, _ := dataMap["persistent"].(bool)
 
-	if message == "" {
+	// Validate input
+	params := &models.CreateNotificationParams{
+		Message:    message,
+		Type:       notificationType,
+		Persistent: persistent,
+	}
+
+	if err := validation.ValidateStruct(params); err != nil {
 		h.socketHandler.EmitToClient(client.ID, "error", map[string]interface{}{
-			"message": "Message is required",
+			"message": fmt.Sprintf("Validation failed: %v", err),
 		})
 		return
 	}
@@ -89,11 +98,17 @@ func (h *NotificationHandler) handleCreateNotificationEvent(client *SocketClient
 func (h *NotificationHandler) handleMarkAsReadEvent(client *SocketClient, data interface{}) {
 	dataMap, ok := data.(map[string]interface{})
 	if !ok {
+		h.socketHandler.EmitToClient(client.ID, "error", map[string]interface{}{
+			"message": "Invalid data format",
+		})
 		return
 	}
 
 	notificationID, ok := dataMap["id"].(float64)
-	if !ok {
+	if !ok || notificationID <= 0 {
+		h.socketHandler.EmitToClient(client.ID, "error", map[string]interface{}{
+			"message": "Invalid notification ID",
+		})
 		return
 	}
 
@@ -105,7 +120,7 @@ func (h *NotificationHandler) handleMarkAsReadEvent(client *SocketClient, data i
 	err := h.store.MarkAsRead(int32(notificationID), userID)
 	if err != nil {
 		h.socketHandler.EmitToClient(client.ID, "error", map[string]interface{}{
-			"message": "Failed to mark as read",
+			"message": "Failed to mark as read: " + err.Error(),
 		})
 		return
 	}
@@ -120,18 +135,24 @@ func (h *NotificationHandler) handleMarkAsReadEvent(client *SocketClient, data i
 func (h *NotificationHandler) handleDeleteNotificationEvent(client *SocketClient, data interface{}) {
 	dataMap, ok := data.(map[string]interface{})
 	if !ok {
+		h.socketHandler.EmitToClient(client.ID, "error", map[string]interface{}{
+			"message": "Invalid data format",
+		})
 		return
 	}
 
 	notificationID, ok := dataMap["id"].(float64)
-	if !ok {
+	if !ok || notificationID <= 0 {
+		h.socketHandler.EmitToClient(client.ID, "error", map[string]interface{}{
+			"message": "Invalid notification ID",
+		})
 		return
 	}
 
 	err := h.store.DeleteNotification(int32(notificationID))
 	if err != nil {
 		h.socketHandler.EmitToClient(client.ID, "error", map[string]interface{}{
-			"message": "Failed to delete notification",
+			"message": "Failed to delete notification: " + err.Error(),
 		})
 		return
 	}
@@ -153,6 +174,18 @@ func (h *NotificationHandler) SendNotification(
 	persistent bool, // true = save to DB, false = real-time only
 	data map[string]interface{}, // optional extra data
 ) error {
+	// Validate input
+	params := &models.CreateNotificationParams{
+		Message:    message,
+		Type:       notificationType,
+		UserID:     targetID,
+		Persistent: persistent,
+	}
+
+	if err := validation.ValidateStruct(params); err != nil {
+		return fmt.Errorf("validation failed: %v", err)
+	}
+
 	// Create notification data
 	notificationData := map[string]interface{}{
 		"id":         fmt.Sprintf("notif_%d", time.Now().UnixNano()),
@@ -165,13 +198,6 @@ func (h *NotificationHandler) SendNotification(
 
 	// If persistent, save to database first
 	if persistent {
-		params := &models.CreateNotificationParams{
-			Message:    message,
-			Type:       notificationType,
-			UserID:     targetID,
-			Persistent: true,
-		}
-
 		dbNotification, err := h.store.CreateNotification(params)
 		if err != nil {
 			return fmt.Errorf("failed to save notification to database: %w", err)
@@ -211,10 +237,9 @@ func (h *NotificationHandler) NotifyUserWithData(userID int32, message, notifica
 	return h.SendNotification(message, notificationType, "user", &userID, persistent, data)
 }
 
-// gRPC Methods (existing, but enhanced with socket integration)
+// gRPC Methods with validation
 
 func (h *NotificationHandler) CreateNotification(ctx context.Context, req *pb.CreateNotificationRequest) (*pb.CreateNotificationResponse, error) {
-	// Create via gRPC as before, but also send via socket
 	params := &models.CreateNotificationParams{
 		Message:    req.Message,
 		Type:       req.Type,
@@ -222,9 +247,14 @@ func (h *NotificationHandler) CreateNotification(ctx context.Context, req *pb.Cr
 		Persistent: req.Persistent,
 	}
 
+	// Validate input
+	if err := validation.ValidateStruct(params); err != nil {
+		return nil, status.Errorf(codes.InvalidArgument, "validation failed: %v", err)
+	}
+
 	notification, err := h.store.CreateNotification(params)
 	if err != nil {
-		return nil, fmt.Errorf("failed to create notification: %w", err)
+		return nil, status.Errorf(codes.Internal, "failed to create notification: %v", err)
 	}
 
 	// Send via socket
@@ -244,9 +274,13 @@ func (h *NotificationHandler) CreateNotification(ctx context.Context, req *pb.Cr
 
 // GetNotification retrieves a notification by ID
 func (h *NotificationHandler) GetNotification(ctx context.Context, req *pb.GetNotificationRequest) (*pb.GetNotificationResponse, error) {
+	if req.Id <= 0 {
+		return nil, status.Errorf(codes.InvalidArgument, "notification ID must be greater than 0")
+	}
+
 	notification, exists := h.store.GetNotification(req.Id)
 	if !exists {
-		return nil, fmt.Errorf("notification with ID %d not found", req.Id)
+		return nil, status.Errorf(codes.NotFound, "notification with ID %d not found", req.Id)
 	}
 
 	return &pb.GetNotificationResponse{
@@ -254,8 +288,19 @@ func (h *NotificationHandler) GetNotification(ctx context.Context, req *pb.GetNo
 	}, nil
 }
 
-// ListNotifications returns notifications with filtering
+// ListNotifications returns notifications with filtering and validation
 func (h *NotificationHandler) ListNotifications(ctx context.Context, req *pb.ListNotificationsRequest) (*pb.ListNotificationsResponse, error) {
+	// Validate pagination parameters
+	if req.Limit < 0 {
+		return nil, status.Errorf(codes.InvalidArgument, "limit cannot be negative")
+	}
+	if req.Offset < 0 {
+		return nil, status.Errorf(codes.InvalidArgument, "offset cannot be negative")
+	}
+	if req.Limit > 1000 {
+		return nil, status.Errorf(codes.InvalidArgument, "limit cannot exceed 1000")
+	}
+
 	params := &models.ListNotificationsParams{
 		Limit:  req.Limit,
 		Offset: req.Offset,
@@ -265,7 +310,7 @@ func (h *NotificationHandler) ListNotifications(ctx context.Context, req *pb.Lis
 
 	notifications, total, err := h.store.ListNotifications(params)
 	if err != nil {
-		return nil, fmt.Errorf("failed to list notifications: %w", err)
+		return nil, status.Errorf(codes.Internal, "failed to list notifications: %v", err)
 	}
 
 	var pbNotifications []*pb.Notification
@@ -281,6 +326,20 @@ func (h *NotificationHandler) ListNotifications(ctx context.Context, req *pb.Lis
 
 // MarkNotificationAsRead marks a notification as read and sends socket update
 func (h *NotificationHandler) MarkNotificationAsRead(ctx context.Context, req *pb.MarkNotificationAsReadRequest) (*pb.MarkNotificationAsReadResponse, error) {
+	if req.Id <= 0 {
+		return &pb.MarkNotificationAsReadResponse{
+			Success: false,
+			Message: "notification ID must be greater than 0",
+		}, nil
+	}
+
+	if req.UserId <= 0 {
+		return &pb.MarkNotificationAsReadResponse{
+			Success: false,
+			Message: "user ID must be greater than 0",
+		}, nil
+	}
+
 	err := h.store.MarkAsRead(req.Id, req.UserId)
 	if err != nil {
 		return &pb.MarkNotificationAsReadResponse{
@@ -301,8 +360,121 @@ func (h *NotificationHandler) MarkNotificationAsRead(ctx context.Context, req *p
 	}, nil
 }
 
+// MarkNotificationAsUnread marks a notification as unread
+func (h *NotificationHandler) MarkNotificationAsUnread(ctx context.Context, req *pb.MarkNotificationAsUnreadRequest) (*pb.MarkNotificationAsUnreadResponse, error) {
+	if req.Id <= 0 {
+		return &pb.MarkNotificationAsUnreadResponse{
+			Success: false,
+			Message: "notification ID must be greater than 0",
+		}, nil
+	}
+
+	if req.UserId <= 0 {
+		return &pb.MarkNotificationAsUnreadResponse{
+			Success: false,
+			Message: "user ID must be greater than 0",
+		}, nil
+	}
+
+	err := h.store.MarkAsUnread(req.Id, req.UserId)
+	if err != nil {
+		return &pb.MarkNotificationAsUnreadResponse{
+			Success: false,
+			Message: err.Error(),
+		}, nil
+	}
+
+	// Send socket update
+	h.socketHandler.EmitToUser(req.UserId, "notification_updated", map[string]interface{}{
+		"id":   req.Id,
+		"read": false,
+	})
+
+	return &pb.MarkNotificationAsUnreadResponse{
+		Success: true,
+		Message: "Notification marked as unread",
+	}, nil
+}
+
+// MarkAllNotificationsAsRead marks all notifications as read for a user
+func (h *NotificationHandler) MarkAllNotificationsAsRead(ctx context.Context, req *pb.MarkAllNotificationsAsReadRequest) (*pb.MarkAllNotificationsAsReadResponse, error) {
+	if req.UserId <= 0 {
+		return &pb.MarkAllNotificationsAsReadResponse{
+			Success: false,
+			Message: "user ID must be greater than 0",
+		}, nil
+	}
+
+	err := h.store.MarkAllAsRead(req.UserId)
+	if err != nil {
+		return &pb.MarkAllNotificationsAsReadResponse{
+			Success: false,
+			Message: err.Error(),
+		}, nil
+	}
+
+	// Send socket update
+	h.socketHandler.EmitToUser(req.UserId, "all_notifications_read", map[string]interface{}{
+		"user_id": req.UserId,
+	})
+
+	return &pb.MarkAllNotificationsAsReadResponse{
+		Success: true,
+		Message: "All notifications marked as read",
+	}, nil
+}
+
+// UpdateNotification updates a notification
+func (h *NotificationHandler) UpdateNotification(ctx context.Context, req *pb.UpdateNotificationRequest) (*pb.UpdateNotificationResponse, error) {
+	if req.Id <= 0 {
+		return nil, status.Errorf(codes.InvalidArgument, "notification ID must be greater than 0")
+	}
+
+	params := &models.UpdateNotificationParams{
+		ID:      req.Id,
+		Message: req.Message,
+		Type:    req.Type,
+		Read:    req.Read,
+	}
+
+	// Validate the update parameters
+	if req.Message != "" {
+		testParams := &models.CreateNotificationParams{
+			Message: req.Message,
+			Type:    req.Type,
+		}
+		if err := validation.ValidateStruct(testParams); err != nil {
+			return nil, status.Errorf(codes.InvalidArgument, "validation failed: %v", err)
+		}
+	}
+
+	notification, err := h.store.UpdateNotification(params)
+	if err != nil {
+		return nil, status.Errorf(codes.Internal, "failed to update notification: %v", err)
+	}
+
+	// Send socket update
+	h.socketHandler.EmitToAll("notification_updated", map[string]interface{}{
+		"id":      notification.ID,
+		"message": notification.Message,
+		"type":    notification.Type,
+		"read":    notification.Read,
+	})
+
+	return &pb.UpdateNotificationResponse{
+		Notification: h.convertToProtoNotification(notification),
+	}, nil
+}
+
 // DeleteNotification deletes a notification and sends socket update
 func (h *NotificationHandler) DeleteNotification(ctx context.Context, req *pb.DeleteNotificationRequest) (*pb.DeleteNotificationResponse, error) {
+	if req.Id <= 0 {
+		return &pb.DeleteNotificationResponse{
+			Success: false,
+			Message: "notification ID must be greater than 0",
+		}, nil
+	}
+
 	err := h.store.DeleteNotification(req.Id)
 	if err != nil {
 		return &pb.DeleteNotificationResponse{
@@ -319,6 +491,98 @@ func (h *NotificationHandler) DeleteNotification(ctx context.Context, req *pb.De
 	return &pb.DeleteNotificationResponse{
 		Success: true,
 		Message: fmt.Sprintf("Notification with ID %d successfully deleted", req.Id),
+	}, nil
+}
+
+// DeleteReadNotifications deletes all read notifications for a user
+func (h *NotificationHandler) DeleteReadNotifications(ctx context.Context, req *pb.DeleteReadNotificationsRequest) (*pb.DeleteReadNotificationsResponse, error) {
+	if req.UserId <= 0 {
+		return &pb.DeleteReadNotificationsResponse{
+			Success: false,
+			Message: "user ID must be greater than 0",
+		}, nil
+	}
+
+	err := h.store.DeleteReadNotifications(req.UserId)
+	if err != nil {
+		return &pb.DeleteReadNotificationsResponse{
+			Success: false,
+			Message: err.Error(),
+		}, nil
+	}
+
+	// Send socket update
+	h.socketHandler.EmitToUser(req.UserId, "read_notifications_deleted", map[string]interface{}{
+		"user_id": req.UserId,
+	})
+
+	return &pb.DeleteReadNotificationsResponse{
+		Success: true,
+		Message: "Read notifications deleted successfully",
+	}, nil
+}
+
+// GetNotificationStats returns notification statistics
+func (h *NotificationHandler) GetNotificationStats(ctx context.Context, req *pb.GetNotificationStatsRequest) (*pb.GetNotificationStatsResponse, error) {
+	if req.UserId <= 0 {
+		return nil, status.Errorf(codes.InvalidArgument, "user ID must be greater than 0")
+	}
+
+	stats, err := h.store.GetNotificationStats(req.UserId)
+	if err != nil {
+		return nil, status.Errorf(codes.Internal, "failed to get notification stats: %v", err)
+	}
+
+	return &pb.GetNotificationStatsResponse{
+		Total:  stats.Total,
+		Unread: stats.Unread,
+		Read:   stats.Read,
+		ByType: stats.ByType,
+	}, nil
+}
+
+// SendRealtimeNotification sends a real-time only notification
+func (h *NotificationHandler) SendRealtimeNotification(ctx context.Context, req *pb.SendRealtimeNotificationRequest) (*pb.SendRealtimeNotificationResponse, error) {
+	// Validate input
+	params := &models.CreateNotificationParams{
+		Message:    req.Message,
+		Type:       req.Type,
+		UserID:     convertToInt32Pointer(req.UserId),
+		Persistent: false, // Real-time notifications are never persistent
+	}
+
+	if err := validation.ValidateStruct(params); err != nil {
+		return &pb.SendRealtimeNotificationResponse{
+			Success: false,
+			Message: fmt.Sprintf("Validation failed: %v", err),
+		}, nil
+	}
+
+	// Convert data map
+	data := make(map[string]interface{})
+	for k, v := range req.Data {
+		data[k] = v
+	}
+
+	// Send the notification
+	targetType := "all"
+	var targetID *int32
+	if req.UserId != 0 {
+		targetType = "user"
+		targetID = &req.UserId
+	}
+
+	err := h.SendNotification(req.Message, req.Type, targetType, targetID, false, data)
+	if err != nil {
+		return &pb.SendRealtimeNotificationResponse{
+			Success: false,
+			Message: err.Error(),
+		}, nil
+	}
+
+	return &pb.SendRealtimeNotificationResponse{
+		Success: true,
+		Message: "Realtime notification sent successfully",
 	}, nil
 }
 

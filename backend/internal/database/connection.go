@@ -61,32 +61,6 @@ func NewConnection() (*DB, error) {
 	return dbWrapper, nil
 }
 
-func getEnv(key, defaultValue string) string {
-	if value := os.Getenv(key); value != "" {
-		return value
-	}
-	return defaultValue
-}
-
-func (db *DB) Close() error {
-	return db.DB.Close()
-}
-
-// Health check method
-func (db *DB) HealthCheck() error {
-	return db.Ping()
-}
-
-// Migration helper methods
-func (db *DB) RunMigrations() error {
-	migrationManager := NewMigrationManager(db)
-	return migrationManager.RunMigrations()
-}
-
-func (db *DB) RollbackLastMigration() error {
-	migrationManager := NewMigrationManager(db)
-	return migrationManager.Rollback()
-}
 func NewConnectionWithoutMigrations() (*DB, error) {
 	// Get database configuration from environment variables
 	host := getEnv("DB_HOST", "localhost")
@@ -119,4 +93,51 @@ func NewConnectionWithoutMigrations() (*DB, error) {
 	log.Printf("Successfully connected to PostgreSQL database: %s", dbname)
 
 	return &DB{db}, nil
+}
+
+func getEnv(key, defaultValue string) string {
+	if value := os.Getenv(key); value != "" {
+		return value
+	}
+	return defaultValue
+}
+
+func (db *DB) Close() error {
+	return db.DB.Close()
+}
+
+// Health check method
+func (db *DB) HealthCheck() error {
+	return db.Ping()
+}
+
+// Migration helper methods
+func (db *DB) RunMigrations() error {
+	migrationManager := NewMigrationManager(db)
+	return migrationManager.RunMigrations()
+}
+
+// Add the missing method for tests
+func (db *DB) RunMigrationsFromPath(migrationsPath string) error {
+	// Create a temporary migration manager with custom path
+	migrationManager := &MigrationManager{db: db}
+
+	// Load migrations from the specified path
+	migrations, err := migrationManager.loadMigrationsFromPath(migrationsPath)
+	if err != nil {
+		return fmt.Errorf("failed to load migrations from %s: %w", migrationsPath, err)
+	}
+
+	// Create migrations table if it doesn't exist
+	if err := migrationManager.createMigrationsTable(); err != nil {
+		return fmt.Errorf("failed to create migrations table: %w", err)
+	}
+
+	// Run migrations
+	return migrationManager.runMigrationsFromList(migrations)
+}
+
+func (db *DB) RollbackLastMigration() error {
+	migrationManager := NewMigrationManager(db)
+	return migrationManager.Rollback()
 }

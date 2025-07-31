@@ -1,4 +1,3 @@
-// internal/handlers/user_handler.go
 package handlers
 
 import (
@@ -7,7 +6,10 @@ import (
 
 	"backend-grpc-server/internal/models"
 	"backend-grpc-server/internal/storage"
+	"backend-grpc-server/internal/validation"
 	pb "backend-grpc-server/pb"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 )
 
 // UserHandler handles user-related gRPC requests with Socket broadcasting
@@ -27,21 +29,17 @@ func NewUserHandler(store storage.UserStore, socketHandler *SocketHandler) *User
 
 // GetUser retrieves a user by ID
 func (h *UserHandler) GetUser(ctx context.Context, req *pb.GetUserRequest) (*pb.GetUserResponse, error) {
+	if req.Id <= 0 {
+		return nil, status.Errorf(codes.InvalidArgument, "user ID must be greater than 0")
+	}
+
 	user, exists := h.store.GetUser(req.Id)
 	if !exists {
-		return nil, fmt.Errorf("user with ID %d not found", req.Id)
+		return nil, status.Errorf(codes.NotFound, "user with ID %d not found", req.Id)
 	}
 
 	return &pb.GetUserResponse{
-		User: &pb.User{
-			Id:        user.ID,
-			Name:      user.Name,
-			Email:     user.Email,
-			Age:       user.Age,
-			Role:      user.Role,
-			CreatedAt: user.CreatedAt.Format("2006-01-02T15:04:05Z07:00"),
-			UpdatedAt: user.UpdatedAt.Format("2006-01-02T15:04:05Z07:00"),
-		},
+		User: h.convertToProtoUser(user),
 	}, nil
 }
 
@@ -54,9 +52,14 @@ func (h *UserHandler) CreateUser(ctx context.Context, req *pb.CreateUserRequest)
 		Role:  req.Role,
 	}
 
+	// Validate input
+	if err := validation.ValidateStruct(params); err != nil {
+		return nil, status.Errorf(codes.InvalidArgument, "validation failed: %v", err)
+	}
+
 	user, err := h.store.CreateUser(params)
 	if err != nil {
-		return nil, fmt.Errorf("failed to create user: %w", err)
+		return nil, status.Errorf(codes.Internal, "failed to create user: %v", err)
 	}
 
 	// Send socket event about user creation
@@ -71,7 +74,7 @@ func (h *UserHandler) CreateUser(ctx context.Context, req *pb.CreateUserRequest)
 	// Send notification about the new user
 	h.socketHandler.EmitToAll("notification", map[string]interface{}{
 		"id":         fmt.Sprintf("user_create_%d", user.ID),
-		"message":    fmt.Sprintf("Neuer Benutzer %s wurde erstellt", user.Name),
+		"message":    fmt.Sprintf("New user %s was created", user.Name),
 		"type":       "info",
 		"persistent": false,
 		"createdAt":  user.CreatedAt.Format("2006-01-02T15:04:05Z07:00"),
@@ -83,15 +86,7 @@ func (h *UserHandler) CreateUser(ctx context.Context, req *pb.CreateUserRequest)
 	})
 
 	return &pb.CreateUserResponse{
-		User: &pb.User{
-			Id:        user.ID,
-			Name:      user.Name,
-			Email:     user.Email,
-			Age:       user.Age,
-			Role:      user.Role,
-			CreatedAt: user.CreatedAt.Format("2006-01-02T15:04:05Z07:00"),
-			UpdatedAt: user.UpdatedAt.Format("2006-01-02T15:04:05Z07:00"),
-		},
+		User: h.convertToProtoUser(user),
 	}, nil
 }
 
@@ -105,9 +100,14 @@ func (h *UserHandler) UpdateUser(ctx context.Context, req *pb.UpdateUserRequest)
 		Role:  req.Role,
 	}
 
+	// Validate input
+	if err := validation.ValidateStruct(params); err != nil {
+		return nil, status.Errorf(codes.InvalidArgument, "validation failed: %v", err)
+	}
+
 	user, err := h.store.UpdateUser(params)
 	if err != nil {
-		return nil, fmt.Errorf("failed to update user: %w", err)
+		return nil, status.Errorf(codes.Internal, "failed to update user: %v", err)
 	}
 
 	// Send socket event about user update
@@ -119,10 +119,10 @@ func (h *UserHandler) UpdateUser(ctx context.Context, req *pb.UpdateUserRequest)
 		"role":  user.Role,
 	})
 
-	// Send notification about the user update (to specific user and admins)
+	// Send notification to specific user and admins
 	h.socketHandler.EmitToUser(user.ID, "notification", map[string]interface{}{
 		"id":         fmt.Sprintf("user_update_%d", user.ID),
-		"message":    fmt.Sprintf("Ihr Profil wurde aktualisiert"),
+		"message":    "Your profile has been updated",
 		"type":       "success",
 		"persistent": true,
 		"createdAt":  user.UpdatedAt.Format("2006-01-02T15:04:05Z07:00"),
@@ -132,35 +132,20 @@ func (h *UserHandler) UpdateUser(ctx context.Context, req *pb.UpdateUserRequest)
 		},
 	})
 
-	// Also notify admins about the update
-	h.socketHandler.EmitToGroup("admins", "notification", map[string]interface{}{
-		"id":         fmt.Sprintf("admin_user_update_%d", user.ID),
-		"message":    fmt.Sprintf("Benutzer %s wurde aktualisiert", user.Name),
-		"type":       "info",
-		"persistent": false,
-		"createdAt":  user.UpdatedAt.Format("2006-01-02T15:04:05Z07:00"),
-		"data": map[string]interface{}{
-			"action":  "user_updated",
-			"user_id": user.ID,
-			"name":    user.Name,
-		},
-	})
-
 	return &pb.UpdateUserResponse{
-		User: &pb.User{
-			Id:        user.ID,
-			Name:      user.Name,
-			Email:     user.Email,
-			Age:       user.Age,
-			Role:      user.Role,
-			CreatedAt: user.CreatedAt.Format("2006-01-02T15:04:05Z07:00"),
-			UpdatedAt: user.UpdatedAt.Format("2006-01-02T15:04:05Z07:00"),
-		},
+		User: h.convertToProtoUser(user),
 	}, nil
 }
 
 // DeleteUser deletes a user by ID and broadcasts the update via socket
 func (h *UserHandler) DeleteUser(ctx context.Context, req *pb.DeleteUserRequest) (*pb.DeleteUserResponse, error) {
+	if req.Id <= 0 {
+		return &pb.DeleteUserResponse{
+			Success: false,
+			Message: "user ID must be greater than 0",
+		}, nil
+	}
+
 	// Get user info before deletion for notification
 	user, exists := h.store.GetUser(req.Id)
 	var userName string
@@ -186,7 +171,7 @@ func (h *UserHandler) DeleteUser(ctx context.Context, req *pb.DeleteUserRequest)
 	if userName != "" {
 		h.socketHandler.EmitToAll("notification", map[string]interface{}{
 			"id":         fmt.Sprintf("user_delete_%d", req.Id),
-			"message":    fmt.Sprintf("Benutzer %s wurde gelöscht", userName),
+			"message":    fmt.Sprintf("User %s was deleted", userName),
 			"type":       "warning",
 			"persistent": false,
 			"createdAt":  "time.Now().Format(\"2006-01-02T15:04:05Z07:00\")",
@@ -211,22 +196,25 @@ func (h *UserHandler) ListUsers(ctx context.Context, req *pb.ListUsersRequest) (
 		Offset: req.Offset,
 	}
 
+	// Validate pagination params
+	if params.Limit < 0 {
+		return nil, status.Errorf(codes.InvalidArgument, "limit cannot be negative")
+	}
+	if params.Offset < 0 {
+		return nil, status.Errorf(codes.InvalidArgument, "offset cannot be negative")
+	}
+	if params.Limit > 1000 {
+		return nil, status.Errorf(codes.InvalidArgument, "limit cannot exceed 1000")
+	}
+
 	users, total, err := h.store.ListUsers(params)
 	if err != nil {
-		return nil, fmt.Errorf("failed to list users: %w", err)
+		return nil, status.Errorf(codes.Internal, "failed to list users: %v", err)
 	}
 
 	var pbUsers []*pb.User
 	for _, user := range users {
-		pbUsers = append(pbUsers, &pb.User{
-			Id:        user.ID,
-			Name:      user.Name,
-			Email:     user.Email,
-			Age:       user.Age,
-			Role:      user.Role,
-			CreatedAt: user.CreatedAt.Format("2006-01-02T15:04:05Z07:00"),
-			UpdatedAt: user.UpdatedAt.Format("2006-01-02T15:04:05Z07:00"),
-		})
+		pbUsers = append(pbUsers, h.convertToProtoUser(user))
 	}
 
 	return &pb.ListUsersResponse{
@@ -235,116 +223,15 @@ func (h *UserHandler) ListUsers(ctx context.Context, req *pb.ListUsersRequest) (
 	}, nil
 }
 
-// Additional helper methods for the socket system
-
-// BulkDeleteUsers deletes multiple users and sends appropriate notifications
-func (h *UserHandler) BulkDeleteUsers(ctx context.Context, userIDs []int32) error {
-	var deletedUsers []string
-
-	for _, userID := range userIDs {
-		user, exists := h.store.GetUser(userID)
-		if !exists {
-			continue
-		}
-
-		err := h.store.DeleteUser(userID)
-		if err != nil {
-			// Send error notification for this specific user
-			h.socketHandler.EmitToAll("notification", map[string]interface{}{
-				"id":         fmt.Sprintf("bulk_delete_error_%d", userID),
-				"message":    fmt.Sprintf("Fehler beim Löschen von Benutzer %s", user.Name),
-				"type":       "error",
-				"persistent": true,
-				"createdAt":  "time.Now().Format(\"2006-01-02T15:04:05Z07:00\")",
-			})
-			continue
-		}
-
-		deletedUsers = append(deletedUsers, user.Name)
-
-		// Send individual delete event
-		h.socketHandler.EmitToAll("user_deleted", map[string]interface{}{
-			"id":   userID,
-			"name": user.Name,
-		})
+// Helper method to convert model user to proto user
+func (h *UserHandler) convertToProtoUser(user *models.User) *pb.User {
+	return &pb.User{
+		Id:        user.ID,
+		Name:      user.Name,
+		Email:     user.Email,
+		Age:       user.Age,
+		Role:      user.Role,
+		CreatedAt: user.CreatedAt.Format("2006-01-02T15:04:05Z07:00"),
+		UpdatedAt: user.UpdatedAt.Format("2006-01-02T15:04:05Z07:00"),
 	}
-
-	// Send summary notification
-	if len(deletedUsers) > 0 {
-		h.socketHandler.EmitToAll("notification", map[string]interface{}{
-			"id":         fmt.Sprintf("bulk_delete_success_%d", len(deletedUsers)),
-			"message":    fmt.Sprintf("%d Benutzer erfolgreich gelöscht", len(deletedUsers)),
-			"type":       "success",
-			"persistent": false,
-			"createdAt":  "time.Now().Format(\"2006-01-02T15:04:05Z07:00\")",
-			"data": map[string]interface{}{
-				"action":        "bulk_delete",
-				"deleted_count": len(deletedUsers),
-				"deleted_users": deletedUsers,
-			},
-		})
-	}
-
-	return nil
-}
-
-// NotifyUserWelcome sends a welcome notification to a newly created user
-func (h *UserHandler) NotifyUserWelcome(userID int32, userName string) {
-	h.socketHandler.EmitToUser(userID, "notification", map[string]interface{}{
-		"id":         fmt.Sprintf("welcome_%d", userID),
-		"message":    fmt.Sprintf("Willkommen %s! Ihr Account wurde erfolgreich erstellt.", userName),
-		"type":       "success",
-		"persistent": true,
-		"createdAt":  "time.Now().Format(\"2006-01-02T15:04:05Z07:00\")",
-		"data": map[string]interface{}{
-			"action":      "welcome",
-			"user_id":     userID,
-			"first_login": true,
-		},
-	})
-}
-
-// NotifySystemMaintenance sends maintenance notifications to all users
-func (h *UserHandler) NotifySystemMaintenance(message string, maintenanceTime string) {
-	h.socketHandler.EmitToAll("notification", map[string]interface{}{
-		"id":         fmt.Sprintf("maintenance_%s", maintenanceTime),
-		"message":    message,
-		"type":       "warning",
-		"persistent": true,
-		"createdAt":  "time.Now().Format(\"2006-01-02T15:04:05Z07:00\")",
-		"data": map[string]interface{}{
-			"action":           "maintenance_notice",
-			"maintenance_time": maintenanceTime,
-			"priority":         "high",
-		},
-	})
-}
-
-// NotifyAdmins sends notifications specifically to admin users
-func (h *UserHandler) NotifyAdmins(message string, notificationType string, persistent bool, data map[string]interface{}) {
-	h.socketHandler.EmitToGroup("admins", "notification", map[string]interface{}{
-		"id":         fmt.Sprintf("admin_%s", "time.Now().Unix()"),
-		"message":    message,
-		"type":       notificationType,
-		"persistent": persistent,
-		"createdAt":  "time.Now().Format(\"2006-01-02T15:04:05Z07:00\")",
-		"data":       data,
-	})
-}
-
-// SendCustomUserEvent sends custom events for specific user actions
-func (h *UserHandler) SendCustomUserEvent(eventType string, userID int32, data map[string]interface{}) {
-	// Send to all clients
-	h.socketHandler.EmitToAll(eventType, map[string]interface{}{
-		"user_id":   userID,
-		"timestamp": "time.Now().Format(\"2006-01-02T15:04:05Z07:00\")",
-		"data":      data,
-	})
-
-	// Also send to the specific user
-	h.socketHandler.EmitToUser(userID, eventType, map[string]interface{}{
-		"user_id":   userID,
-		"timestamp": "time.Now().Format(\"2006-01-02T15:04:05Z07:00\")",
-		"data":      data,
-	})
 }

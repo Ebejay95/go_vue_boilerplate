@@ -6,3 +6,25 @@ language
 loading animations on components and buttons
 
 (find . -type f -not -path "./.git/*" -not -path "./node_modules/*" -not -name "package-lock.json" -exec ls -la {} \; && echo "=== FILE CONTENTS ===" && find . -type f -not -path "./.git/*" -not -path "./node_modules/*" -not -name "package-lock.json" -exec sh -c 'echo "=== {} ==="; cat "{}"' \;) > ./../out
+
+mehrere DBs
+	Zentrale App DB
+	Befragungsdatenanken je befragung je Kunde
+subdamains
+
+
+Vue 3, Nuxt 3, NestJS, Vite, TypeScript, Pinia, PiniaORM
+Tools: ESLint, Stylelint, SpeedCurve, Lerna, Storyblok
+Tests: Vitest, Cypress, Percy
+A/B Tests: Split.io
+Logging/Monitoring: Datadog
+Versionierung: GitHub
+Continuous Integration: GitHub Actions
+Hosting: AWS
+Dokumentation: Confluence
+Ticketing: Jira
+
+
+csss queriers video für theme und
+
+animations für modale

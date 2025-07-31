@@ -61,13 +61,16 @@ func (m *MigrationManager) markUnapplied(version string) error {
 	return err
 }
 
-// loadMigrationsFromFiles loads migrations from .sql files in the filesystem
+// loadMigrationsFromFiles loads migrations from .sql files in the default filesystem
 func (m *MigrationManager) loadMigrationsFromFiles() ([]Migration, error) {
-	migrationsDir := "./internal/database/migrations"
+	return m.loadMigrationsFromPath("./internal/database/migrations")
+}
 
+// loadMigrationsFromPath loads migrations from .sql files in a specific path
+func (m *MigrationManager) loadMigrationsFromPath(migrationsDir string) ([]Migration, error) {
 	files, err := ioutil.ReadDir(migrationsDir)
 	if err != nil {
-		return nil, fmt.Errorf("failed to read migrations directory: %w", err)
+		return nil, fmt.Errorf("failed to read migrations directory %s: %w", migrationsDir, err)
 	}
 
 	var migrations []Migration
@@ -125,8 +128,13 @@ func (m *MigrationManager) RunMigrations() error {
 		return fmt.Errorf("failed to load migrations: %w", err)
 	}
 
+	return m.runMigrationsFromList(migrations)
+}
+
+// runMigrationsFromList runs migrations from a provided list
+func (m *MigrationManager) runMigrationsFromList(migrations []Migration) error {
 	if len(migrations) == 0 {
-		log.Println("No migration files found in ./internal/database/migrations/")
+		log.Println("No migration files found")
 		return nil
 	}
 
@@ -176,7 +184,7 @@ func (m *MigrationManager) RunMigrations() error {
 		log.Printf("Successfully applied migration %s", migration.Version)
 	}
 
-	log.Println("All file-based migrations completed successfully")
+	log.Println("All migrations completed successfully")
 	return nil
 }
 
