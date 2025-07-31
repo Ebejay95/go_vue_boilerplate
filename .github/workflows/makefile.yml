@@ -8,6 +8,47 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      # Project Configuration
+      APP_NAME: myapp
+
+      # Database Configuration
+      DB_HOST: postgres-dev
+      DB_PORT: 5432
+      DB_USER: postgres
+      DB_PASSWORD: postgres
+      DB_NAME: grpc_server_db
+      DB_SSLMODE: disable
+
+      # WebSocket Configuration
+      WS_PORT: 8082
+
+      # Server Configuration (Backend)
+      BACKEND_PORT: 50051
+      BACKEND_HOST: backend-grpc-server
+      BACKEND_BASE_URL: http://localhost:50051
+
+      # gRPC-Web Configuration
+      GRPC_WEB_PORT: 8081
+      GRPC_WEB_URL: http://localhost:8081
+
+      # Frontend Configuration
+      FRONTEND_PORT: 3000
+      FRONTEND_PROTOCOL: http
+      FRONTEND_HOST: localhost
+      BASE_URL: http://localhost:3000/
+
+      # API Keys & Secrets (empty for CI)
+      DEEPL_API_KEY: ""
+
+      # Environment
+      NODE_ENV: production
+
+      # Additional vars that might be needed
+      PORT: 50051
+      WEB_PORT: 8081
+      DATABASE_URL: postgres://postgres:postgres@postgres-dev:5432/grpc_server_db?sslmode=disable
+
     steps:
       - uses: actions/checkout@v4
 
@@ -19,15 +60,76 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
-      - name: Install Docker Compose
+      - name: Start services
         run: |
-          sudo curl -L "https://github.com/docker/compose/releases/download/v2.29.1/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
-          sudo chmod +x /usr/local/bin/docker-compose
-          docker-compose --version
+          rm -rf backend/pb/ backend/go.sum
+          docker compose -f docker-compose.dev.yml up --build -d
 
-      - name: Run CI Tests
-        run: make test-ci
+      - name: Wait for services
+        run: |
+          echo "Waiting for services to be ready..."
+          timeout=120
+          while [ $timeout -gt 0 ]; do
+            if docker compose -f docker-compose.dev.yml ps | grep -q "Up"; then
+              echo "Containers are up, checking database..."
+              break
+            fi
+            echo "Waiting for containers to start... ($timeout seconds left)"
+            sleep 2
+            timeout=$((timeout-2))
+          done
 
-      - name: Cleanup on failure
-        if: failure()
-        run: make dev-down || true
+          if [ $timeout -le 0 ]; then
+            echo "Timeout waiting for containers to start"
+            exit 1
+          fi
+
+          echo "Waiting for PostgreSQL to be ready..."
+          timeout=60
+          while [ $timeout -gt 0 ]; do
+            if docker compose -f docker-compose.dev.yml exec -T postgres-dev pg_isready -h localhost -p 5432 -U postgres >/dev/null 2>&1; then
+              echo "✅ PostgreSQL is ready!"
+              break
+            fi
+            echo "Waiting for PostgreSQL... ($timeout seconds left)"
+            sleep 2
+            timeout=$((timeout-2))
+          done
+
+          if [ $timeout -le 0 ]; then
+            echo "❌ Timeout waiting for PostgreSQL"
+            exit 1
+          fi
+
+          echo "Waiting for development environment to be fully ready..."
+          timeout=120
+          while [ $timeout -gt 0 ]; do
+            if docker compose -f docker-compose.dev.yml logs myapp-dev-environment 2>/dev/null | grep -q "Enhanced Hot-Reload Development Environment is ready"; then
+              echo "✅ Development environment is ready!"
+              sleep 3
+              break
+            fi
+            echo "Waiting for full startup... ($timeout seconds left)"
+            sleep 5
+            timeout=$((timeout-5))
+          done
+
+          if [ $timeout -le 0 ]; then
+            echo "❌ Timeout waiting for development environment"
+            exit 1
+          fi
+
+      - name: Clean test database
+        run: |
+          echo "Cleaning test database..."
+          docker compose -f docker-compose.dev.yml exec -T postgres-dev psql -U postgres -d grpc_server_db -c "TRUNCATE TABLE notifications, users RESTART IDENTITY CASCADE;"
+
+      - name: Run tests
+        run: |
+          echo "Running tests..."
+          docker compose -f docker-compose.dev.yml exec -T dev-environment sh -c "cd /app/backend && go test -v -timeout 30s -p 1 ./..."
+
+      - name: Cleanup
+        if: always()
+        run: |
+          docker compose -f docker-compose.dev.yml down || true
