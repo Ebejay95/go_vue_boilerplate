@@ -1,135 +1,125 @@
 name: Go_Vue_Boilerplate_CI
 on:
-  push:
-    branches: ["master"]
-  pull_request:
-    branches: ["master"]
+    push:
+        branches: [ "master" ]
+    pull_request:
+        branches: [ "master" ]
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
-    env:
-      # Project Configuration
-      APP_NAME: myapp
+    build:
+        runs-on: ubuntu-latest
+        env:
+            # Project Configuration
+            APP_NAME: myapp
 
-      # Database Configuration
-      DB_HOST: postgres-dev
-      DB_PORT: 5432
-      DB_USER: postgres
-      DB_PASSWORD: postgres
-      DB_NAME: grpc_server_db
-      DB_SSLMODE: disable
+            # Database Configuration
+            DB_HOST: postgres-dev
+            DB_PORT: 5432
+            DB_USER: postgres
+            DB_PASSWORD: postgres
+            DB_NAME: grpc_server_db
+            DB_SSLMODE: disable
 
-      # WebSocket Configuration
-      WS_PORT: 8082
+            # WebSocket Configuration
+            WS_PORT: 8082
 
-      # Server Configuration (Backend)
-      BACKEND_PORT: 50051
-      BACKEND_HOST: backend-grpc-server
-      BACKEND_BASE_URL: http://localhost:50051
+            # Server Configuration (Backend)
+            BACKEND_PORT: 50051
+            BACKEND_HOST: backend-grpc-server
+            BACKEND_BASE_URL: http://localhost:50051
 
-      # gRPC-Web Configuration
-      GRPC_WEB_PORT: 8081
-      GRPC_WEB_URL: http://localhost:8081
+            # gRPC-Web Configuration
+            GRPC_WEB_PORT: 8081
+            GRPC_WEB_URL: http://localhost:8081
 
-      # Frontend Configuration
-      FRONTEND_PORT: 3000
-      FRONTEND_PROTOCOL: http
-      FRONTEND_HOST: localhost
-      BASE_URL: http://localhost:3000/
+            # Frontend Configuration
+            FRONTEND_PORT: 3000
+            FRONTEND_PROTOCOL: http
+            FRONTEND_HOST: localhost
+            BASE_URL: http://localhost:3000/
 
-      # API Keys & Secrets (empty for CI)
-      DEEPL_API_KEY: ""
+            # API Keys & Secrets (empty for CI)
+            DEEPL_API_KEY: ""
 
-      # Environment
-      NODE_ENV: production
+            # Environment
+            NODE_ENV: production
 
-      # Additional vars that might be needed
-      PORT: 50051
-      WEB_PORT: 8081
-      DATABASE_URL: postgres://postgres:postgres@postgres-dev:5432/grpc_server_db?sslmode=disable
+            # Additional vars that might be needed
+            PORT: 50051
+            WEB_PORT: 8081
+            DATABASE_URL: postgres://postgres:postgres@postgres-dev:5432/grpc_server_db?sslmode=disable
 
-    steps:
-      - uses: actions/checkout@v4
+        steps:
+            - uses: actions/checkout@v4
 
-      - name: Set up Go
-        uses: actions/setup-go@v5
-        with:
-          go-version: "1.21"
+            - name: Set up Go
+              uses: actions/setup-go@v5
+              with:
+                  go-version: '1.21'
 
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
+            - name: Set up Docker Buildx
+              uses: docker/setup-buildx-action@v3
 
-      - name: Start services
-        run: |
-          rm -rf backend/pb/ backend/go.sum
-          docker compose -f docker-compose.dev.yml up --build -d
+            - name: Start services
+              run: |
+                  rm -rf backend/pb/ backend/go.sum
+                  docker compose -f docker-compose.dev.yml up --build -d
 
-      - name: Wait for services
-        run: |
-          echo "Waiting for services to be ready..."
-          timeout=120
-          while [ $timeout -gt 0 ]; do
-            if docker compose -f docker-compose.dev.yml ps | grep -q "Up"; then
-              echo "Containers are up, checking database..."
-              break
-            fi
-            echo "Waiting for containers to start... ($timeout seconds left)"
-            sleep 2
-            timeout=$((timeout-2))
-          done
+            - name: Wait for PostgreSQL
+              run: |
+                  echo "Waiting for PostgreSQL to be ready..."
+                  timeout=60
+                  while [ $timeout -gt 0 ]; do
+                    if docker compose -f docker-compose.dev.yml exec -T postgres-dev pg_isready -h localhost -p 5432 -U postgres >/dev/null 2>&1; then
+                      echo "✅ PostgreSQL is ready!"
+                      break
+                    fi
+                    echo "Waiting for PostgreSQL... ($timeout seconds left)"
+                    sleep 2
+                    timeout=$((timeout-2))
+                  done
 
-          if [ $timeout -le 0 ]; then
-            echo "Timeout waiting for containers to start"
-            exit 1
-          fi
+                  if [ $timeout -le 0 ]; then
+                    echo "❌ Timeout waiting for PostgreSQL"
+                    exit 1
+                  fi
 
-          echo "Waiting for PostgreSQL to be ready..."
-          timeout=60
-          while [ $timeout -gt 0 ]; do
-            if docker compose -f docker-compose.dev.yml exec -T postgres-dev pg_isready -h localhost -p 5432 -U postgres >/dev/null 2>&1; then
-              echo "✅ PostgreSQL is ready!"
-              break
-            fi
-            echo "Waiting for PostgreSQL... ($timeout seconds left)"
-            sleep 2
-            timeout=$((timeout-2))
-          done
+            - name: Wait for development environment
+              run: |
+                  echo "Giving development environment time to start up..."
+                  echo "Checking container status..."
+                  docker compose -f docker-compose.dev.yml ps
 
-          if [ $timeout -le 0 ]; then
-            echo "❌ Timeout waiting for PostgreSQL"
-            exit 1
-          fi
+                  echo "Checking development environment logs..."
+                  docker compose -f docker-compose.dev.yml logs --tail=50 myapp-dev-environment
 
-          echo "Waiting for development environment to be fully ready..."
-          timeout=120
-          while [ $timeout -gt 0 ]; do
-            if docker compose -f docker-compose.dev.yml logs myapp-dev-environment 2>/dev/null | grep -q "Enhanced Hot-Reload Development Environment is ready"; then
-              echo "✅ Development environment is ready!"
-              sleep 3
-              break
-            fi
-            echo "Waiting for full startup... ($timeout seconds left)"
-            sleep 5
-            timeout=$((timeout-5))
-          done
+                  echo "Waiting 60 seconds for full initialization..."
+                  sleep 60
 
-          if [ $timeout -le 0 ]; then
-            echo "❌ Timeout waiting for development environment"
-            exit 1
-          fi
+                  echo "Final container status check..."
+                  docker compose -f docker-compose.dev.yml ps
 
-      - name: Clean test database
-        run: |
-          echo "Cleaning test database..."
-          docker compose -f docker-compose.dev.yml exec -T postgres-dev psql -U postgres -d grpc_server_db -c "TRUNCATE TABLE notifications, users RESTART IDENTITY CASCADE;"
+            - name: Clean test database
+              run: |
+                  echo "Cleaning test database..."
+                  docker compose -f docker-compose.dev.yml exec -T postgres-dev psql -U postgres -d grpc_server_db -c "TRUNCATE TABLE notifications, users RESTART IDENTITY CASCADE;" || echo "Tables might not exist yet, continuing..."
 
-      - name: Run tests
-        run: |
-          echo "Running tests..."
-          docker compose -f docker-compose.dev.yml exec -T dev-environment sh -c "cd /app/backend && go test -v -timeout 30s -p 1 ./..."
+            - name: Run tests
+              run: |
+                  echo "Running tests..."
+                  docker compose -f docker-compose.dev.yml exec -T dev-environment sh -c "cd /app/backend && go test -v -timeout 30s -p 1 ./..."
 
-      - name: Cleanup
-        if: always()
-        run: |
-          docker compose -f docker-compose.dev.yml down || true
+            - name: Show logs on failure
+              if: failure()
+              run: |
+                  echo "=== Container Status ==="
+                  docker compose -f docker-compose.dev.yml ps
+                  echo "=== Development Environment Logs ==="
+                  docker compose -f docker-compose.dev.yml logs myapp-dev-environment
+                  echo "=== PostgreSQL Logs ==="
+                  docker compose -f docker-compose.dev.yml logs postgres-dev
+
+            - name: Cleanup
+              if: always()
+              run: |
+                  docker compose -f docker-compose.dev.yml down || true
