@@ -91,7 +91,7 @@ jobs:
                   docker compose -f docker-compose.dev.yml ps
 
                   echo "Checking development environment logs..."
-                  docker compose -f docker-compose.dev.yml logs --tail=50 myapp-dev-environment
+                  docker compose -f docker-compose.dev.yml logs --tail=50 dev-environment
 
                   echo "Waiting 60 seconds for full initialization..."
                   sleep 60
@@ -115,7 +115,7 @@ jobs:
                   echo "=== Container Status ==="
                   docker compose -f docker-compose.dev.yml ps
                   echo "=== Development Environment Logs ==="
-                  docker compose -f docker-compose.dev.yml logs myapp-dev-environment
+                  docker compose -f docker-compose.dev.yml logs dev-environment
                   echo "=== PostgreSQL Logs ==="
                   docker compose -f docker-compose.dev.yml logs postgres-dev
 
