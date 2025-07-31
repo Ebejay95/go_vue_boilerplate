@@ -38,6 +38,12 @@ dev-up:
 	docker-compose -f docker-compose.dev.yml up --build
 	$(call print_success,"Development environment started!")
 
+dev-up-detached:
+	$(call print_status,"Starting development environment...")
+	@rm -rf backend/pb/ backend/go.sum
+	docker-compose -f docker-compose.dev.yml up --build -d
+	$(call print_success,"Development environment started!")
+
 dev-down:
 	$(call print_status,"Stopping development environment...")
 	docker-compose -f docker-compose.dev.yml down
@@ -78,6 +84,75 @@ prod-logs:
 # ===========================================
 # TESTING (using existing containers)
 # ===========================================
+clean-test-db:
+	$(call print_status,"Cleaning test database...")
+	docker-compose -f docker-compose.dev.yml exec -T postgres-dev psql -U postgres -d grpc_server_db -c "\
+		TRUNCATE TABLE notifications, users RESTART IDENTITY CASCADE;"
+	$(call print_success,"Test database cleaned!")
+wait-for-services:
+	$(call print_status,"Waiting for services to be ready...")
+	@timeout=120; \
+	echo "Checking if containers are running..."; \
+	while [ $$timeout -gt 0 ]; do \
+		if docker-compose -f docker-compose.dev.yml ps | grep -q "Up"; then \
+			echo "Containers are up, checking database..."; \
+			break; \
+		fi; \
+		echo "Waiting for containers to start... ($$timeout seconds left)"; \
+		sleep 2; \
+		timeout=$$((timeout-2)); \
+	done; \
+	if [ $$timeout -le 0 ]; then \
+		echo "Timeout waiting for containers to start"; \
+		exit 1; \
+	fi; \
+	echo "Waiting for PostgreSQL to be ready..."; \
+	timeout=60; \
+	while [ $$timeout -gt 0 ]; do \
+		if docker-compose -f docker-compose.dev.yml exec -T postgres-dev pg_isready -h localhost -p 5432 -U postgres >/dev/null 2>&1; then \
+			echo "✅ PostgreSQL is ready!"; \
+			break; \
+		fi; \
+		echo "Waiting for PostgreSQL... ($$timeout seconds left)"; \
+		sleep 2; \
+		timeout=$$((timeout-2)); \
+	done; \
+	if [ $$timeout -le 0 ]; then \
+		echo "❌ Timeout waiting for PostgreSQL"; \
+		exit 1; \
+	fi; \
+	echo "Waiting for backend to be ready..."; \
+	timeout=90; \
+	while [ $$timeout -gt 0 ]; do \
+		if curl -s http://localhost:8081 >/dev/null 2>&1; then \
+			echo "✅ Backend is ready!"; \
+			break; \
+		fi; \
+		echo "Waiting for backend... ($$timeout seconds left)"; \
+		sleep 3; \
+		timeout=$$((timeout-3)); \
+	done; \
+	if [ $$timeout -le 0 ]; then \
+		echo "❌ Timeout waiting for backend"; \
+		exit 1; \
+	fi; \
+	echo "Waiting for frontend to be ready..."; \
+	timeout=60; \
+	while [ $$timeout -gt 0 ]; do \
+		if curl -s http://localhost:3000 >/dev/null 2>&1; then \
+			echo "✅ Frontend is ready!"; \
+			break; \
+		fi; \
+		echo "Waiting for frontend... ($$timeout seconds left)"; \
+		sleep 3; \
+		timeout=$$((timeout-3)); \
+	done; \
+	if [ $$timeout -le 0 ]; then \
+		echo "❌ Timeout waiting for frontend"; \
+		exit 1; \
+	fi
+	$(call print_success,"All services are ready!")
+	sleep 60
 
 # Main test target - runs all tests
 test: test-dev
@@ -85,6 +160,7 @@ test: test-dev
 # Run tests in dev container
 test-dev:
 	$(call print_status,"Running tests in dev container...")
+	make clean-test-db
 	docker-compose -f docker-compose.dev.yml exec -T dev-environment sh -c "cd /app/backend && go test -v -timeout $(TEST_TIMEOUT) ./..."
 	$(call print_success,"Tests completed!")
 
@@ -100,18 +176,15 @@ test-race:
 	docker-compose -f docker-compose.dev.yml exec -T dev-environment sh -c "cd /app && go test -race -short ./..."
 	$(call print_success,"Race condition tests completed!")
 
-# One-shot test container (if dev environment not running)
-test-standalone:
-	$(call print_status,"Running tests in standalone container...")
-	docker run --rm \
-		-v $(PWD)/backend:/app \
-		-w /app \
-		golang:1.21-alpine \
-		sh -c "go mod download && go test -v -timeout $(TEST_TIMEOUT) ./..."
-	$(call print_success,"Standalone tests completed!")
-
 # CI-friendly test command
-test-ci: test-standalone
+test-ci:
+	$(call print_status,"Starting CI test pipeline...")
+	@rm -rf backend/pb/ backend/go.sum
+	docker-compose -f docker-compose.dev.yml up --build -d
+	make wait-for-services
+	make clean-test-db
+	make test-dev
+	make dev-down
 
 test-unit: test-dev
 test-integration: test-dev
@@ -201,7 +274,6 @@ help:
 	@echo "  make test              Run all tests in dev container"
 	@echo "  make test-coverage     Run coverage tests"
 	@echo "  make test-race         Run race condition tests"
-	@echo "  make test-standalone   Run tests in standalone container"
 	@echo "  make test-ci           CI-friendly test pipeline"
 	@echo ""
 	@echo "$(YELLOW)Database:$(RESET)"
