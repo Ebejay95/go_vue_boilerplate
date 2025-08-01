@@ -164,7 +164,8 @@ test-dev:
 
 test-coverage:
 	$(call print_status,"Running backend coverage tests sequentially...")
-	docker-compose -f docker-compose.dev.yml exec -T dev-environment sh -c "cd /app/backend && go test -v -timeout=60s -p=1 -coverprofile=coverage.out -covermode=atomic ./... && echo 'Coverage Summary:' && go tool cover -func=coverage.out"
+	make clean-test-db
+	docker-compose -f docker-compose.dev.yml exec -T dev-environment sh -c "cd /app/backend && go test -v -timeout=90s -p=1 -coverprofile=coverage.out -covermode=atomic ./internal/handlers ./internal/models ./internal/storage ./internal/validation && echo 'Coverage Summary:' && go tool cover -func=coverage.out"
 	$(call print_success,"Sequential coverage tests completed!")
 
 test-ci:

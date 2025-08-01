@@ -90,13 +90,54 @@ export const mockRouter = {
 }
 
 // Store Mock Helpers
-export const createMockStore = (initialState = {}) => ({
-  state: initialState,
-  dispatch: vi.fn(),
-  commit: vi.fn(),
-  getters: {},
-  modules: {}
-})
+export const createMockStore = (modules = {}) => {
+  const store = {
+    state: {},
+    dispatch: vi.fn(),
+    commit: vi.fn(),
+    getters: {},
+    modules: {},
+    _actions: {},
+    _mutations: {}
+  }
+
+  // Setup modules with proper action structure
+  Object.keys(modules).forEach(moduleName => {
+    const module = modules[moduleName]
+
+    // Setup state
+    if (module.state) {
+      store.state[moduleName] = typeof module.state === 'function' ? module.state() : module.state
+    }
+
+    // Setup actions with Vuex internal structure
+    if (module.actions) {
+      Object.keys(module.actions).forEach(actionName => {
+        const fullActionName = module.namespaced ? `${moduleName}/${actionName}` : actionName
+        // Vuex stores actions as arrays of functions
+        store._actions[fullActionName] = [module.actions[actionName]]
+      })
+    }
+
+    // Setup mutations
+    if (module.mutations) {
+      Object.keys(module.mutations).forEach(mutationName => {
+        const fullMutationName = module.namespaced ? `${moduleName}/${mutationName}` : mutationName
+        store._mutations[fullMutationName] = [module.mutations[mutationName]]
+      })
+    }
+
+    // Setup getters
+    if (module.getters) {
+      Object.keys(module.getters).forEach(getterName => {
+        const fullGetterName = module.namespaced ? `${moduleName}/${getterName}` : getterName
+        store.getters[fullGetterName] = module.getters[getterName]
+      })
+    }
+  })
+
+  return store
+}
 
 // Test Utilities
 export const flushPromises = () => new Promise(resolve => setTimeout(resolve, 0))
@@ -115,6 +156,14 @@ expect.extend({
     }
   }
 })
+
+// Mock console methods to reduce noise in tests
+global.console = {
+  ...console,
+  log: vi.fn(),
+  warn: vi.fn(),
+  error: vi.fn()
+}
 
 // Cleanup nach jedem Test
 afterEach(() => {
