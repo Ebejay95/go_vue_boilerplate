@@ -74,28 +74,29 @@ jobs:
           rm -rf backend/pb/ backend/go.sum
           docker compose -f docker-compose.dev.yml up --build -d
 
-      - name: Wait for services to be ready
-        run: make wait-for-services || {
-          echo "Waiting for PostgreSQL to be ready..."
-          timeout=60
-          while [ $timeout -gt 0 ]; do
-            if docker compose -f docker-compose.dev.yml exec -T myapp-postgres-dev  pg_isready -h localhost -p 5432 -U postgres >/dev/null 2>&1; then
-              echo "✅ PostgreSQL is ready!"
-              break
+      - name: Wait for services via Makefile
+        run: |
+          if ! make wait-for-services; then
+            echo "⚠️ make wait-for-services failed, falling back to manual check..."
+            timeout=60
+            while [ $timeout -gt 0 ]; do
+              if docker compose -f docker-compose.dev.yml exec -T myapp-postgres-dev pg_isready -h localhost -p 5432 -U postgres >/dev/null 2>&1; then
+                echo "✅ PostgreSQL is ready!"
+                break
+              fi
+              echo "Waiting for PostgreSQL... ($timeout seconds left)"
+              sleep 2
+              timeout=$((timeout-2))
+            done
+
+            if [ $timeout -le 0 ]; then
+              echo "❌ Timeout waiting for PostgreSQL"
+              exit 1
             fi
-            echo "Waiting for PostgreSQL... ($timeout seconds left)"
-            sleep 2
-            timeout=$((timeout-2))
-          done
 
-          if [ $timeout -le 0 ]; then
-            echo "❌ Timeout waiting for PostgreSQL"
-            exit 1
+            echo "🕐 Giving development environment time to start up..."
+            sleep 60
           fi
-
-          echo "Giving development environment time to start up..."
-          sleep 60
-        }
 
       - name: Clean test database
         run: make clean-test-db || {
