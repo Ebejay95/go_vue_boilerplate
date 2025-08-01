@@ -79,7 +79,7 @@ jobs:
           echo "Waiting for PostgreSQL to be ready..."
           timeout=60
           while [ $timeout -gt 0 ]; do
-            if docker compose -f docker-compose.dev.yml exec -T postgres-dev pg_isready -h localhost -p 5432 -U postgres >/dev/null 2>&1; then
+            if docker compose -f docker-compose.dev.yml exec -T myapp-postgres-dev  pg_isready -h localhost -p 5432 -U postgres >/dev/null 2>&1; then
               echo "✅ PostgreSQL is ready!"
               break
             fi
