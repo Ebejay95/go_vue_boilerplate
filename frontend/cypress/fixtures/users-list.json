@@ -1,0 +1,31 @@
+{
+	"users": [
+	  {
+		"id": 1,
+		"name": "John Doe",
+		"email": "john.doe@example.com",
+		"age": 30,
+		"role": "user",
+		"createdAt": "2024-01-15T10:30:00Z"
+	  },
+	  {
+		"id": 2,
+		"name": "Jane Smith",
+		"email": "jane.smith@example.com",
+		"age": 28,
+		"role": "admin",
+		"createdAt": "2024-01-14T09:15:00Z"
+	  },
+	  {
+		"id": 3,
+		"name": "Bob Johnson",
+		"email": "bob.johnson@example.com",
+		"age": 35,
+		"role": "user",
+		"createdAt": "2024-01-13T14:45:00Z"
+	  }
+	],
+	"total": 3,
+	"page": 1,
+	"limit": 10
+}

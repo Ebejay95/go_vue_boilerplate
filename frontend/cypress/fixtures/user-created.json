@@ -1,0 +1,12 @@
+{
+	"user": {
+	  "id": 4,
+	  "name": "New User",
+	  "email": "new.user@example.com",
+	  "age": 25,
+	  "role": "user",
+	  "createdAt": "2024-01-16T12:00:00Z"
+	},
+	"success": true,
+	"message": "User created successfully"
+}

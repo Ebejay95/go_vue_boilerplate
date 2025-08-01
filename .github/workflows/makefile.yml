@@ -1,125 +1,533 @@
 name: Go_Vue_Boilerplate_CI
 on:
-    push:
-        branches: [ "master" ]
-    pull_request:
-        branches: [ "master" ]
+  push:
+    branches: ["master"]
+  pull_request:
+    branches: ["master"]
+
+env:
+  # Project Configuration
+  APP_NAME: myapp
+
+  # Database Configuration
+  DB_HOST: localhost
+  DB_PORT: 5432
+  DB_USER: postgres
+  DB_PASSWORD: postgres
+  DB_NAME: grpc_server_db
+  DB_SSLMODE: disable
+  DATABASE_URL: postgres://postgres:postgres@localhost:5432/grpc_server_db?sslmode=disable
+
+  # Server Configuration
+  BACKEND_PORT: 50051
+  BACKEND_HOST: localhost
+  BACKEND_BASE_URL: http://localhost:50051
+  GRPC_WEB_PORT: 8081
+  GRPC_WEB_URL: http://localhost:8081
+  WS_PORT: 8082
+
+  # Frontend Configuration
+  FRONTEND_PORT: 3000
+  FRONTEND_PROTOCOL: http
+  FRONTEND_HOST: localhost
+  BASE_URL: http://localhost:3000/
+  VUE_APP_GRPC_WEB_URL: http://localhost:8081
+  VUE_APP_WS_URL: ws://localhost:8082
+  NODE_ENV: production
+
+  # API Keys & Secrets
+  DEEPL_API_KEY: ""
 
 jobs:
-    build:
-        runs-on: ubuntu-latest
+  # Backend Tests
+  backend-tests:
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:15
         env:
-            # Project Configuration
-            APP_NAME: myapp
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_USER: postgres
+          POSTGRES_DB: grpc_server_db
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
 
-            # Database Configuration
-            DB_HOST: postgres-dev
-            DB_PORT: 5432
-            DB_USER: postgres
-            DB_PASSWORD: postgres
-            DB_NAME: grpc_server_db
-            DB_SSLMODE: disable
+    steps:
+      - uses: actions/checkout@v4
 
-            # WebSocket Configuration
-            WS_PORT: 8082
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.21'
 
-            # Server Configuration (Backend)
-            BACKEND_PORT: 50051
-            BACKEND_HOST: backend-grpc-server
-            BACKEND_BASE_URL: http://localhost:50051
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
 
-            # gRPC-Web Configuration
-            GRPC_WEB_PORT: 8081
-            GRPC_WEB_URL: http://localhost:8081
+      - name: Start backend services
+        run: |
+          rm -rf backend/pb/ backend/go.sum
+          docker compose -f docker-compose.dev.yml up --build -d
 
-            # Frontend Configuration
-            FRONTEND_PORT: 3000
-            FRONTEND_PROTOCOL: http
-            FRONTEND_HOST: localhost
-            BASE_URL: http://localhost:3000/
+      - name: Wait for services to be ready
+        run: make wait-for-services || {
+          echo "Waiting for PostgreSQL to be ready..."
+          timeout=60
+          while [ $timeout -gt 0 ]; do
+            if docker compose -f docker-compose.dev.yml exec -T postgres-dev pg_isready -h localhost -p 5432 -U postgres >/dev/null 2>&1; then
+              echo "✅ PostgreSQL is ready!"
+              break
+            fi
+            echo "Waiting for PostgreSQL... ($timeout seconds left)"
+            sleep 2
+            timeout=$((timeout-2))
+          done
 
-            # API Keys & Secrets (empty for CI)
-            DEEPL_API_KEY: ""
+          if [ $timeout -le 0 ]; then
+            echo "❌ Timeout waiting for PostgreSQL"
+            exit 1
+          fi
 
-            # Environment
-            NODE_ENV: production
+          echo "Giving development environment time to start up..."
+          sleep 60
+        }
 
-            # Additional vars that might be needed
-            PORT: 50051
-            WEB_PORT: 8081
-            DATABASE_URL: postgres://postgres:postgres@postgres-dev:5432/grpc_server_db?sslmode=disable
+      - name: Clean test database
+        run: make clean-test-db || {
+          echo "Cleaning test database..."
+          docker compose -f docker-compose.dev.yml exec -T postgres-dev psql -U postgres -d grpc_server_db -c "TRUNCATE TABLE notifications, users RESTART IDENTITY CASCADE;" || echo "Tables might not exist yet, continuing..."
+        }
 
-        steps:
-            - uses: actions/checkout@v4
+      - name: Run backend tests
+        run: |
+          echo "Running backend tests..."
+          docker compose -f docker-compose.dev.yml exec -T dev-environment sh -c "cd /app/backend && go test -v -timeout 30s -p 1 ./..."
 
-            - name: Set up Go
-              uses: actions/setup-go@v5
-              with:
-                  go-version: '1.21'
+      - name: Show logs on failure
+        if: failure()
+        run: |
+          echo "=== Container Status ==="
+          docker compose -f docker-compose.dev.yml ps
+          echo "=== Development Environment Logs ==="
+          docker compose -f docker-compose.dev.yml logs dev-environment
+          echo "=== PostgreSQL Logs ==="
+          docker compose -f docker-compose.dev.yml logs postgres-dev
 
-            - name: Set up Docker Buildx
-              uses: docker/setup-buildx-action@v3
+      - name: Cleanup backend
+        if: always()
+        run: docker compose -f docker-compose.dev.yml down || true
 
-            - name: Start services
-              run: |
-                  rm -rf backend/pb/ backend/go.sum
-                  docker compose -f docker-compose.dev.yml up --build -d
+  # Frontend Unit Tests
+  frontend-unit-tests:
+    runs-on: ubuntu-latest
 
-            - name: Wait for PostgreSQL
-              run: |
-                  echo "Waiting for PostgreSQL to be ready..."
-                  timeout=60
-                  while [ $timeout -gt 0 ]; do
-                    if docker compose -f docker-compose.dev.yml exec -T postgres-dev pg_isready -h localhost -p 5432 -U postgres >/dev/null 2>&1; then
-                      echo "✅ PostgreSQL is ready!"
-                      break
-                    fi
-                    echo "Waiting for PostgreSQL... ($timeout seconds left)"
-                    sleep 2
-                    timeout=$((timeout-2))
-                  done
+    steps:
+      - uses: actions/checkout@v4
 
-                  if [ $timeout -le 0 ]; then
-                    echo "❌ Timeout waiting for PostgreSQL"
-                    exit 1
-                  fi
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+          cache-dependency-path: frontend/package-lock.json
 
-            - name: Wait for development environment
-              run: |
-                  echo "Giving development environment time to start up..."
-                  echo "Checking container status..."
-                  docker compose -f docker-compose.dev.yml ps
+      - name: Install dependencies
+        working-directory: ./frontend
+        run: npm ci
 
-                  echo "Checking development environment logs..."
-                  docker compose -f docker-compose.dev.yml logs --tail=50 dev-environment
+      - name: Generate Proto files
+        working-directory: ./frontend
+        run: npm run proto:generate
 
-                  echo "Waiting 60 seconds for full initialization..."
-                  sleep 60
+      - name: Run unit tests
+        working-directory: ./frontend
+        run: npm run test:unit
 
-                  echo "Final container status check..."
-                  docker compose -f docker-compose.dev.yml ps
+      - name: Generate coverage report
+        working-directory: ./frontend
+        run: npm run test:coverage
 
-            - name: Clean test database
-              run: |
-                  echo "Cleaning test database..."
-                  docker compose -f docker-compose.dev.yml exec -T postgres-dev psql -U postgres -d grpc_server_db -c "TRUNCATE TABLE notifications, users RESTART IDENTITY CASCADE;" || echo "Tables might not exist yet, continuing..."
+      - name: Upload coverage to codecov
+        uses: codecov/codecov-action@v3
+        with:
+          file: ./frontend/coverage/lcov.info
+          flags: frontend-unit
+          name: frontend-unit-coverage
 
-            - name: Run tests
-              run: |
-                  echo "Running tests..."
-                  docker compose -f docker-compose.dev.yml exec -T dev-environment sh -c "cd /app/backend && go test -v -timeout 30s -p 1 ./..."
+      - name: Upload test results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: unit-test-results
+          path: |
+            frontend/test-results/
+            frontend/coverage/
 
-            - name: Show logs on failure
-              if: failure()
-              run: |
-                  echo "=== Container Status ==="
-                  docker compose -f docker-compose.dev.yml ps
-                  echo "=== Development Environment Logs ==="
-                  docker compose -f docker-compose.dev.yml logs dev-environment
-                  echo "=== PostgreSQL Logs ==="
-                  docker compose -f docker-compose.dev.yml logs postgres-dev
+  # Code Quality (Frontend)
+  code-quality:
+    runs-on: ubuntu-latest
 
-            - name: Cleanup
-              if: always()
-              run: |
-                  docker compose -f docker-compose.dev.yml down || true
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Install dependencies
+        working-directory: ./frontend
+        run: npm ci
+
+      - name: Run ESLint
+        working-directory: ./frontend
+        run: npm run lint
+
+      - name: Check Prettier formatting
+        working-directory: ./frontend
+        run: npm run format -- --check
+
+  # Component Tests
+  component-tests:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Install dependencies
+        working-directory: ./frontend
+        run: npm ci
+
+      - name: Generate Proto files
+        working-directory: ./frontend
+        run: npm run proto:generate
+
+      - name: Install Cypress
+        working-directory: ./frontend
+        run: npx cypress install
+
+      - name: Run component tests
+        working-directory: ./frontend
+        run: npm run test:component
+
+      - name: Upload component test results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: component-test-results
+          path: frontend/cypress/screenshots
+
+  # E2E Tests
+  e2e-tests:
+    runs-on: ubuntu-latest
+    needs: [backend-tests]
+
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_USER: postgres
+          POSTGRES_DB: grpc_server_db
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Setup Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.21'
+
+      - name: Setup Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Install frontend dependencies
+        working-directory: ./frontend
+        run: npm ci
+
+      - name: Generate Proto files
+        working-directory: ./frontend
+        run: npm run proto:generate
+
+      - name: Build frontend
+        working-directory: ./frontend
+        run: npm run build
+
+      - name: Start backend services
+        run: |
+          rm -rf backend/pb/ backend/go.sum
+          docker compose -f docker-compose.dev.yml up --build -d
+
+      - name: Wait for services to be ready
+        run: make wait-for-services
+
+      - name: Run database setup
+        run: make clean-test-db
+
+      - name: Install Cypress
+        working-directory: ./frontend
+        run: npx cypress install
+
+      - name: Run E2E tests
+        working-directory: ./frontend
+        run: npm run test:e2e:headless
+        env:
+          CYPRESS_baseUrl: http://localhost:3000
+
+      - name: Upload Cypress screenshots
+        uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: cypress-screenshots
+          path: frontend/cypress/screenshots
+
+      - name: Upload Cypress videos
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: cypress-videos
+          path: frontend/cypress/videos
+
+      - name: Cleanup
+        if: always()
+        run: docker compose -f docker-compose.dev.yml down
+
+  # Accessibility Tests
+  accessibility-tests:
+    runs-on: ubuntu-latest
+    needs: [backend-tests]
+
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_USER: postgres
+          POSTGRES_DB: grpc_server_db
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Install dependencies
+        working-directory: ./frontend
+        run: npm ci
+
+      - name: Generate Proto files
+        working-directory: ./frontend
+        run: npm run proto:generate
+
+      - name: Start services
+        run: |
+          rm -rf backend/pb/ backend/go.sum
+          docker compose -f docker-compose.dev.yml up --build -d
+
+      - name: Wait for services
+        run: make wait-for-services
+
+      - name: Run accessibility tests
+        working-directory: ./frontend
+        run: |
+          npx cypress run --spec "cypress/e2e/accessibility.cy.js"
+
+      - name: Upload accessibility results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: accessibility-results
+          path: frontend/cypress/reports
+
+  # Visual Regression Tests (only on PRs)
+  visual-tests:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+
+    env:
+      PERCY_TOKEN: ${{ secrets.PERCY_TOKEN }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Install dependencies
+        working-directory: ./frontend
+        run: npm ci
+
+      - name: Generate Proto files
+        working-directory: ./frontend
+        run: npm run proto:generate
+
+      - name: Build frontend
+        working-directory: ./frontend
+        run: npm run build
+
+      - name: Start services (lightweight for visual tests)
+        run: |
+          # Start only necessary services for visual tests
+          docker compose -f docker-compose.dev.yml up postgres-dev -d
+          # Mock backend for visual tests
+          cd frontend && npm run server &
+
+      - name: Run visual tests
+        working-directory: ./frontend
+        run: npm run test:visual
+        if: env.PERCY_TOKEN != ''
+
+      - name: Skip visual tests (no Percy token)
+        if: env.PERCY_TOKEN == ''
+        run: echo "Percy token not found, skipping visual regression tests"
+
+  # Performance Tests
+  performance-tests:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Install dependencies
+        working-directory: ./frontend
+        run: npm ci
+
+      - name: Generate Proto files
+        working-directory: ./frontend
+        run: npm run proto:generate
+
+      - name: Build frontend
+        working-directory: ./frontend
+        run: npm run build
+
+      - name: Analyze bundle size
+        working-directory: ./frontend
+        run: |
+          npm install -g webpack-bundle-analyzer
+          npx webpack-bundle-analyzer dist/static/js/*.js --report --mode static --report-filename ../bundle-report.html
+
+      - name: Run Lighthouse CI
+        working-directory: ./frontend
+        run: |
+          npm install -g @lhci/cli
+          # Start server for Lighthouse
+          npm run server &
+          sleep 10
+          lhci autorun
+        env:
+          LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
+
+      - name: Upload performance results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: performance-results
+          path: |
+            frontend/bundle-report.html
+            frontend/.lighthouseci/
+
+  # Test Summary
+  test-summary:
+    runs-on: ubuntu-latest
+    needs: [backend-tests, frontend-unit-tests, code-quality, e2e-tests, component-tests]
+    if: always()
+
+    steps:
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        continue-on-error: true
+
+      - name: Create comprehensive test summary
+        run: |
+          echo "# Complete CI/CD Pipeline Results" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          echo "## Backend Tests" >> $GITHUB_STEP_SUMMARY
+          if [ "${{ needs.backend-tests.result }}" == "success" ]; then
+            echo "✅ Backend Tests: Passed" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "❌ Backend Tests: Failed" >> $GITHUB_STEP_SUMMARY
+          fi
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          echo "## Frontend Tests" >> $GITHUB_STEP_SUMMARY
+          if [ "${{ needs.frontend-unit-tests.result }}" == "success" ]; then
+            echo "✅ Unit Tests: Passed" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "❌ Unit Tests: Failed" >> $GITHUB_STEP_SUMMARY
+          fi
+
+          if [ "${{ needs.code-quality.result }}" == "success" ]; then
+            echo "✅ Code Quality: Passed" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "❌ Code Quality: Failed" >> $GITHUB_STEP_SUMMARY
+          fi
+
+          if [ "${{ needs.component-tests.result }}" == "success" ]; then
+            echo "✅ Component Tests: Passed" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "❌ Component Tests: Failed" >> $GITHUB_STEP_SUMMARY
+          fi
+
+          if [ "${{ needs.e2e-tests.result }}" == "success" ]; then
+            echo "✅ E2E Tests: Passed" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "❌ E2E Tests: Failed" >> $GITHUB_STEP_SUMMARY
+          fi
+
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "## Reports & Artifacts" >> $GITHUB_STEP_SUMMARY
+          echo "- [Unit Test Coverage](./unit-test-results/coverage/index.html)" >> $GITHUB_STEP_SUMMARY
+          echo "- [E2E Test Videos](./cypress-videos/)" >> $GITHUB_STEP_SUMMARY
+          echo "- [Performance Reports](./performance-results/)" >> $GITHUB_STEP_SUMMARY
+          echo "- [Accessibility Results](./accessibility-results/)" >> $GITHUB_STEP_SUMMARY

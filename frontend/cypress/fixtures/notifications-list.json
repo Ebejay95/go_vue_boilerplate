@@ -1,0 +1,33 @@
+{
+	"notifications": [
+	  {
+		"id": 1,
+		"message": "Welcome to the application!",
+		"type": "info",
+		"read": false,
+		"persistent": true,
+		"createdAt": "2024-01-16T10:00:00Z",
+		"userId": 1
+	  },
+	  {
+		"id": 2,
+		"message": "Your profile has been updated",
+		"type": "success",
+		"read": false,
+		"persistent": true,
+		"createdAt": "2024-01-16T09:30:00Z",
+		"userId": 1
+	  },
+	  {
+		"id": 3,
+		"message": "System maintenance scheduled for tonight",
+		"type": "warning",
+		"read": true,
+		"persistent": true,
+		"createdAt": "2024-01-15T16:00:00Z",
+		"userId": null
+	  }
+	],
+	"total": 3,
+	"unreadCount": 2
+}

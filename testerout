@@ -1,0 +1,734 @@
+[0;36m[1m[INFO][0m Running backend tests in dev container...
+make clean-test-db
+[0;36m[1m[INFO][0m Cleaning test database...
+docker-compose -f docker-compose.dev.yml exec -T postgres-dev psql -U postgres -d grpc_server_db -c "\
+		TRUNCATE TABLE notifications, users RESTART IDENTITY CASCADE;"
+TRUNCATE TABLE
+[0;32m[1m[SUCCESS][0m Test database cleaned!
+docker-compose -f docker-compose.dev.yml exec -T dev-environment sh -c "cd /app/backend && go test -v -timeout 30s ./..."
+?   	backend-grpc-server	[no test files]
+?   	backend-grpc-server/cmd/migrate	[no test files]
+?   	backend-grpc-server/internal/database	[no test files]
+=== RUN   TestNotificationHandler_CreateNotification
+2025/08/01 09:03:09 Successfully connected to PostgreSQL database: grpc_server_db
+2025/08/01 09:03:09 Found migrations directory at: /app/backend/internal/database/migrations
+2025/08/01 09:03:09 Using migrations path: ../database/migrations
+2025/08/01 09:03:09 Loaded migration: 2507211130 (setup)
+2025/08/01 09:03:09 Loaded migration: 2507211524 (notification update)
+2025/08/01 09:03:09 Found 2 migration files
+2025/08/01 09:03:09 Migration 2507211130 (setup) already applied, skipping
+2025/08/01 09:03:09 Migration 2507211524 (notification update) already applied, skipping
+2025/08/01 09:03:09 All migrations completed successfully
+2025/08/01 09:03:09 Event handler registered for: create_notification
+2025/08/01 09:03:09 Event handler registered for: mark_as_read
+2025/08/01 09:03:09 Event handler registered for: delete_notification
+--- PASS: TestNotificationHandler_CreateNotification (0.43s)
+=== RUN   TestNotificationHandler_CreateNotification_ValidationError
+2025/08/01 09:03:09 Successfully connected to PostgreSQL database: grpc_server_db
+2025/08/01 09:03:09 Found migrations directory at: /app/backend/internal/database/migrations
+2025/08/01 09:03:09 Using migrations path: ../database/migrations
+2025/08/01 09:03:09 Loaded migration: 2507211130 (setup)
+2025/08/01 09:03:09 Loaded migration: 2507211524 (notification update)
+2025/08/01 09:03:09 Found 2 migration files
+2025/08/01 09:03:09 Migration 2507211130 (setup) already applied, skipping
+2025/08/01 09:03:09 Migration 2507211524 (notification update) already applied, skipping
+2025/08/01 09:03:09 All migrations completed successfully
+2025/08/01 09:03:09 Event handler registered for: create_notification
+2025/08/01 09:03:09 Event handler registered for: mark_as_read
+2025/08/01 09:03:09 Event handler registered for: delete_notification
+=== RUN   TestNotificationHandler_CreateNotification_ValidationError/empty_message
+=== RUN   TestNotificationHandler_CreateNotification_ValidationError/invalid_type
+=== RUN   TestNotificationHandler_CreateNotification_ValidationError/message_too_long
+--- PASS: TestNotificationHandler_CreateNotification_ValidationError (0.18s)
+    --- PASS: TestNotificationHandler_CreateNotification_ValidationError/empty_message (0.00s)
+    --- PASS: TestNotificationHandler_CreateNotification_ValidationError/invalid_type (0.00s)
+    --- PASS: TestNotificationHandler_CreateNotification_ValidationError/message_too_long (0.00s)
+=== RUN   TestNotificationHandler_GetNotification
+2025/08/01 09:03:09 Successfully connected to PostgreSQL database: grpc_server_db
+2025/08/01 09:03:09 Found migrations directory at: /app/backend/internal/database/migrations
+2025/08/01 09:03:09 Using migrations path: ../database/migrations
+2025/08/01 09:03:09 Loaded migration: 2507211130 (setup)
+2025/08/01 09:03:09 Loaded migration: 2507211524 (notification update)
+2025/08/01 09:03:09 Found 2 migration files
+2025/08/01 09:03:09 Migration 2507211130 (setup) already applied, skipping
+2025/08/01 09:03:09 Migration 2507211524 (notification update) already applied, skipping
+2025/08/01 09:03:09 All migrations completed successfully
+2025/08/01 09:03:09 Event handler registered for: create_notification
+2025/08/01 09:03:09 Event handler registered for: mark_as_read
+2025/08/01 09:03:09 Event handler registered for: delete_notification
+--- PASS: TestNotificationHandler_GetNotification (1.14s)
+=== RUN   TestNotificationHandler_GetNotification_InvalidID
+2025/08/01 09:03:10 Successfully connected to PostgreSQL database: grpc_server_db
+2025/08/01 09:03:10 Found migrations directory at: /app/backend/internal/database/migrations
+2025/08/01 09:03:10 Using migrations path: ../database/migrations
+2025/08/01 09:03:10 Loaded migration: 2507211130 (setup)
+2025/08/01 09:03:10 Loaded migration: 2507211524 (notification update)
+2025/08/01 09:03:10 Found 2 migration files
+2025/08/01 09:03:10 Migration 2507211130 (setup) already applied, skipping
+2025/08/01 09:03:10 Migration 2507211524 (notification update) already applied, skipping
+2025/08/01 09:03:10 All migrations completed successfully
+2025/08/01 09:03:10 Event handler registered for: create_notification
+2025/08/01 09:03:10 Event handler registered for: mark_as_read
+2025/08/01 09:03:10 Event handler registered for: delete_notification
+--- PASS: TestNotificationHandler_GetNotification_InvalidID (0.19s)
+=== RUN   TestNotificationHandler_ListNotifications_ValidationError
+2025/08/01 09:03:10 Successfully connected to PostgreSQL database: grpc_server_db
+2025/08/01 09:03:10 Found migrations directory at: /app/backend/internal/database/migrations
+2025/08/01 09:03:10 Using migrations path: ../database/migrations
+2025/08/01 09:03:10 Loaded migration: 2507211130 (setup)
+2025/08/01 09:03:10 Loaded migration: 2507211524 (notification update)
+2025/08/01 09:03:10 Found 2 migration files
+2025/08/01 09:03:11 Migration 2507211130 (setup) already applied, skipping
+2025/08/01 09:03:11 Migration 2507211524 (notification update) already applied, skipping
+2025/08/01 09:03:11 All migrations completed successfully
+2025/08/01 09:03:11 Event handler registered for: create_notification
+2025/08/01 09:03:11 Event handler registered for: mark_as_read
+2025/08/01 09:03:11 Event handler registered for: delete_notification
+=== RUN   TestNotificationHandler_ListNotifications_ValidationError/negative_limit
+=== RUN   TestNotificationHandler_ListNotifications_ValidationError/negative_offset
+=== RUN   TestNotificationHandler_ListNotifications_ValidationError/limit_too_large
+--- PASS: TestNotificationHandler_ListNotifications_ValidationError (0.21s)
+    --- PASS: TestNotificationHandler_ListNotifications_ValidationError/negative_limit (0.00s)
+    --- PASS: TestNotificationHandler_ListNotifications_ValidationError/negative_offset (0.00s)
+    --- PASS: TestNotificationHandler_ListNotifications_ValidationError/limit_too_large (0.00s)
+=== RUN   TestNotificationHandler_SendNotification
+2025/08/01 09:03:11 Successfully connected to PostgreSQL database: grpc_server_db
+2025/08/01 09:03:11 Found migrations directory at: /app/backend/internal/database/migrations
+2025/08/01 09:03:11 Using migrations path: ../database/migrations
+2025/08/01 09:03:11 Loaded migration: 2507211130 (setup)
+2025/08/01 09:03:11 Loaded migration: 2507211524 (notification update)
+2025/08/01 09:03:11 Found 2 migration files
+2025/08/01 09:03:11 Migration 2507211130 (setup) already applied, skipping
+2025/08/01 09:03:11 Migration 2507211524 (notification update) already applied, skipping
+2025/08/01 09:03:11 All migrations completed successfully
+2025/08/01 09:03:11 Event handler registered for: create_notification
+2025/08/01 09:03:11 Event handler registered for: mark_as_read
+2025/08/01 09:03:11 Event handler registered for: delete_notification
+=== RUN   TestNotificationHandler_SendNotification/valid_global_notification
+=== RUN   TestNotificationHandler_SendNotification/valid_user_notification
+=== RUN   TestNotificationHandler_SendNotification/invalid_message
+=== RUN   TestNotificationHandler_SendNotification/invalid_type
+=== RUN   TestNotificationHandler_SendNotification/invalid_target_type
+--- PASS: TestNotificationHandler_SendNotification (1.17s)
+    --- PASS: TestNotificationHandler_SendNotification/valid_global_notification (1.03s)
+    --- PASS: TestNotificationHandler_SendNotification/valid_user_notification (0.00s)
+    --- PASS: TestNotificationHandler_SendNotification/invalid_message (0.00s)
+    --- PASS: TestNotificationHandler_SendNotification/invalid_type (0.00s)
+    --- PASS: TestNotificationHandler_SendNotification/invalid_target_type (0.00s)
+=== RUN   TestUserHandler_CreateUser
+2025/08/01 09:03:12 Successfully connected to PostgreSQL database: grpc_server_db
+2025/08/01 09:03:12 Found migrations directory at: /app/backend/internal/database/migrations
+2025/08/01 09:03:12 Using migrations path: ../database/migrations
+2025/08/01 09:03:12 Loaded migration: 2507211130 (setup)
+2025/08/01 09:03:12 Loaded migration: 2507211524 (notification update)
+2025/08/01 09:03:12 Found 2 migration files
+2025/08/01 09:03:12 Migration 2507211130 (setup) already applied, skipping
+2025/08/01 09:03:12 Migration 2507211524 (notification update) already applied, skipping
+2025/08/01 09:03:12 All migrations completed successfully
+--- PASS: TestUserHandler_CreateUser (1.17s)
+=== RUN   TestUserHandler_GetUser
+2025/08/01 09:03:13 Successfully connected to PostgreSQL database: grpc_server_db
+2025/08/01 09:03:13 Found migrations directory at: /app/backend/internal/database/migrations
+2025/08/01 09:03:13 Using migrations path: ../database/migrations
+2025/08/01 09:03:13 Loaded migration: 2507211130 (setup)
+2025/08/01 09:03:13 Loaded migration: 2507211524 (notification update)
+2025/08/01 09:03:13 Found 2 migration files
+2025/08/01 09:03:13 Migration 2507211130 (setup) already applied, skipping
+2025/08/01 09:03:13 Migration 2507211524 (notification update) already applied, skipping
+2025/08/01 09:03:13 All migrations completed successfully
+--- PASS: TestUserHandler_GetUser (0.06s)
+=== RUN   TestUserHandler_GetUser_NotFound
+2025/08/01 09:03:13 Successfully connected to PostgreSQL database: grpc_server_db
+2025/08/01 09:03:13 Found migrations directory at: /app/backend/internal/database/migrations
+2025/08/01 09:03:13 Using migrations path: ../database/migrations
+2025/08/01 09:03:13 Loaded migration: 2507211130 (setup)
+2025/08/01 09:03:13 Loaded migration: 2507211524 (notification update)
+2025/08/01 09:03:13 Found 2 migration files
+2025/08/01 09:03:13 Migration 2507211130 (setup) already applied, skipping
+2025/08/01 09:03:13 Migration 2507211524 (notification update) already applied, skipping
+2025/08/01 09:03:13 All migrations completed successfully
+--- PASS: TestUserHandler_GetUser_NotFound (0.05s)
+PASS
+ok  	backend-grpc-server/internal/handlers	(cached)
+=== RUN   TestCreateUserParams_Validate
+=== RUN   TestCreateUserParams_Validate/valid_user_params
+=== RUN   TestCreateUserParams_Validate/missing_name
+=== RUN   TestCreateUserParams_Validate/invalid_email
+=== RUN   TestCreateUserParams_Validate/invalid_age
+=== RUN   TestCreateUserParams_Validate/invalid_role
+--- PASS: TestCreateUserParams_Validate (0.02s)
+    --- PASS: TestCreateUserParams_Validate/valid_user_params (0.01s)
+    --- PASS: TestCreateUserParams_Validate/missing_name (0.00s)
+    --- PASS: TestCreateUserParams_Validate/invalid_email (0.00s)
+    --- PASS: TestCreateUserParams_Validate/invalid_age (0.00s)
+    --- PASS: TestCreateUserParams_Validate/invalid_role (0.00s)
+=== RUN   TestUpdateUserParams_Validate
+=== RUN   TestUpdateUserParams_Validate/valid_update_params
+=== RUN   TestUpdateUserParams_Validate/missing_ID
+--- PASS: TestUpdateUserParams_Validate (0.00s)
+    --- PASS: TestUpdateUserParams_Validate/valid_update_params (0.00s)
+    --- PASS: TestUpdateUserParams_Validate/missing_ID (0.00s)
+PASS
+ok  	backend-grpc-server/internal/models	(cached)
+?   	backend-grpc-server/internal/server	[no test files]
+=== RUN   TestPostgresNotificationStore_CreateNotification
+2025/08/01 09:03:17 Successfully connected to PostgreSQL database: grpc_server_db
+2025/08/01 09:03:17 Found migrations directory at: /app/backend/internal/database/migrations
+2025/08/01 09:03:17 Using migrations path: ../database/migrations
+2025/08/01 09:03:17 Loaded migration: 2507211130 (setup)
+2025/08/01 09:03:17 Loaded migration: 2507211524 (notification update)
+2025/08/01 09:03:17 Found 2 migration files
+2025/08/01 09:03:17 Migration 2507211130 (setup) already applied, skipping
+2025/08/01 09:03:17 Migration 2507211524 (notification update) already applied, skipping
+2025/08/01 09:03:17 All migrations completed successfully
+--- PASS: TestPostgresNotificationStore_CreateNotification (0.11s)
+=== RUN   TestPostgresNotificationStore_CreateNotification_WithUser
+2025/08/01 09:03:17 Successfully connected to PostgreSQL database: grpc_server_db
+2025/08/01 09:03:17 Found migrations directory at: /app/backend/internal/database/migrations
+2025/08/01 09:03:17 Using migrations path: ../database/migrations
+2025/08/01 09:03:17 Loaded migration: 2507211130 (setup)
+2025/08/01 09:03:17 Loaded migration: 2507211524 (notification update)
+2025/08/01 09:03:17 Found 2 migration files
+2025/08/01 09:03:17 Migration 2507211130 (setup) already applied, skipping
+2025/08/01 09:03:17 Migration 2507211524 (notification update) already applied, skipping
+2025/08/01 09:03:17 All migrations completed successfully
+--- PASS: TestPostgresNotificationStore_CreateNotification_WithUser (0.07s)
+=== RUN   TestPostgresNotificationStore_GetNotification
+2025/08/01 09:03:17 Successfully connected to PostgreSQL database: grpc_server_db
+2025/08/01 09:03:17 Found migrations directory at: /app/backend/internal/database/migrations
+2025/08/01 09:03:17 Using migrations path: ../database/migrations
+2025/08/01 09:03:17 Loaded migration: 2507211130 (setup)
+2025/08/01 09:03:17 Loaded migration: 2507211524 (notification update)
+2025/08/01 09:03:17 Found 2 migration files
+2025/08/01 09:03:17 Migration 2507211130 (setup) already applied, skipping
+2025/08/01 09:03:17 Migration 2507211524 (notification update) already applied, skipping
+2025/08/01 09:03:17 All migrations completed successfully
+--- PASS: TestPostgresNotificationStore_GetNotification (0.05s)
+=== RUN   TestPostgresNotificationStore_GetNotification_NotFound
+2025/08/01 09:03:17 Successfully connected to PostgreSQL database: grpc_server_db
+2025/08/01 09:03:17 Found migrations directory at: /app/backend/internal/database/migrations
+2025/08/01 09:03:17 Using migrations path: ../database/migrations
+2025/08/01 09:03:17 Loaded migration: 2507211130 (setup)
+2025/08/01 09:03:17 Loaded migration: 2507211524 (notification update)
+2025/08/01 09:03:17 Found 2 migration files
+2025/08/01 09:03:17 Migration 2507211130 (setup) already applied, skipping
+2025/08/01 09:03:17 Migration 2507211524 (notification update) already applied, skipping
+2025/08/01 09:03:17 All migrations completed successfully
+--- PASS: TestPostgresNotificationStore_GetNotification_NotFound (0.05s)
+=== RUN   TestPostgresNotificationStore_MarkAsRead
+2025/08/01 09:03:17 Successfully connected to PostgreSQL database: grpc_server_db
+2025/08/01 09:03:17 Found migrations directory at: /app/backend/internal/database/migrations
+2025/08/01 09:03:17 Using migrations path: ../database/migrations
+2025/08/01 09:03:17 Loaded migration: 2507211130 (setup)
+2025/08/01 09:03:17 Loaded migration: 2507211524 (notification update)
+2025/08/01 09:03:17 Found 2 migration files
+2025/08/01 09:03:17 Migration 2507211130 (setup) already applied, skipping
+2025/08/01 09:03:17 Migration 2507211524 (notification update) already applied, skipping
+2025/08/01 09:03:17 All migrations completed successfully
+--- PASS: TestPostgresNotificationStore_MarkAsRead (0.06s)
+=== RUN   TestPostgresNotificationStore_ListNotifications
+2025/08/01 09:03:17 Successfully connected to PostgreSQL database: grpc_server_db
+2025/08/01 09:03:17 Found migrations directory at: /app/backend/internal/database/migrations
+2025/08/01 09:03:17 Using migrations path: ../database/migrations
+2025/08/01 09:03:17 Loaded migration: 2507211130 (setup)
+2025/08/01 09:03:17 Loaded migration: 2507211524 (notification update)
+2025/08/01 09:03:17 Found 2 migration files
+2025/08/01 09:03:17 Migration 2507211130 (setup) already applied, skipping
+2025/08/01 09:03:17 Migration 2507211524 (notification update) already applied, skipping
+2025/08/01 09:03:17 All migrations completed successfully
+--- PASS: TestPostgresNotificationStore_ListNotifications (0.05s)
+=== RUN   TestPostgresNotificationStore_GetNotificationStats
+2025/08/01 09:03:17 Successfully connected to PostgreSQL database: grpc_server_db
+2025/08/01 09:03:17 Found migrations directory at: /app/backend/internal/database/migrations
+2025/08/01 09:03:17 Using migrations path: ../database/migrations
+2025/08/01 09:03:17 Loaded migration: 2507211130 (setup)
+2025/08/01 09:03:17 Loaded migration: 2507211524 (notification update)
+2025/08/01 09:03:17 Found 2 migration files
+2025/08/01 09:03:17 Migration 2507211130 (setup) already applied, skipping
+2025/08/01 09:03:17 Migration 2507211524 (notification update) already applied, skipping
+2025/08/01 09:03:17 All migrations completed successfully
+--- PASS: TestPostgresNotificationStore_GetNotificationStats (0.05s)
+=== RUN   TestPostgresUserStore_CreateUser
+2025/08/01 09:03:17 Successfully connected to PostgreSQL database: grpc_server_db
+2025/08/01 09:03:17 Found migrations directory at: /app/backend/internal/database/migrations
+2025/08/01 09:03:17 Using migrations path: ../database/migrations
+2025/08/01 09:03:17 Loaded migration: 2507211130 (setup)
+2025/08/01 09:03:17 Loaded migration: 2507211524 (notification update)
+2025/08/01 09:03:17 Found 2 migration files
+2025/08/01 09:03:17 Migration 2507211130 (setup) already applied, skipping
+2025/08/01 09:03:17 Migration 2507211524 (notification update) already applied, skipping
+2025/08/01 09:03:17 All migrations completed successfully
+--- PASS: TestPostgresUserStore_CreateUser (0.06s)
+=== RUN   TestPostgresUserStore_GetUser
+2025/08/01 09:03:17 Successfully connected to PostgreSQL database: grpc_server_db
+2025/08/01 09:03:17 Found migrations directory at: /app/backend/internal/database/migrations
+2025/08/01 09:03:17 Using migrations path: ../database/migrations
+2025/08/01 09:03:17 Loaded migration: 2507211130 (setup)
+2025/08/01 09:03:17 Loaded migration: 2507211524 (notification update)
+2025/08/01 09:03:17 Found 2 migration files
+2025/08/01 09:03:17 Migration 2507211130 (setup) already applied, skipping
+2025/08/01 09:03:17 Migration 2507211524 (notification update) already applied, skipping
+2025/08/01 09:03:17 All migrations completed successfully
+--- PASS: TestPostgresUserStore_GetUser (0.05s)
+=== RUN   TestPostgresUserStore_GetUser_NotFound
+2025/08/01 09:03:17 Successfully connected to PostgreSQL database: grpc_server_db
+2025/08/01 09:03:17 Found migrations directory at: /app/backend/internal/database/migrations
+2025/08/01 09:03:17 Using migrations path: ../database/migrations
+2025/08/01 09:03:17 Loaded migration: 2507211130 (setup)
+2025/08/01 09:03:17 Loaded migration: 2507211524 (notification update)
+2025/08/01 09:03:17 Found 2 migration files
+2025/08/01 09:03:17 Migration 2507211130 (setup) already applied, skipping
+2025/08/01 09:03:17 Migration 2507211524 (notification update) already applied, skipping
+2025/08/01 09:03:17 All migrations completed successfully
+--- PASS: TestPostgresUserStore_GetUser_NotFound (0.04s)
+=== RUN   TestPostgresUserStore_UpdateUser
+2025/08/01 09:03:17 Successfully connected to PostgreSQL database: grpc_server_db
+2025/08/01 09:03:17 Found migrations directory at: /app/backend/internal/database/migrations
+2025/08/01 09:03:17 Using migrations path: ../database/migrations
+2025/08/01 09:03:17 Loaded migration: 2507211130 (setup)
+2025/08/01 09:03:17 Loaded migration: 2507211524 (notification update)
+2025/08/01 09:03:17 Found 2 migration files
+2025/08/01 09:03:17 Migration 2507211130 (setup) already applied, skipping
+2025/08/01 09:03:17 Migration 2507211524 (notification update) already applied, skipping
+2025/08/01 09:03:17 All migrations completed successfully
+--- PASS: TestPostgresUserStore_UpdateUser (0.05s)
+=== RUN   TestPostgresUserStore_DeleteUser
+2025/08/01 09:03:17 Successfully connected to PostgreSQL database: grpc_server_db
+2025/08/01 09:03:17 Found migrations directory at: /app/backend/internal/database/migrations
+2025/08/01 09:03:17 Using migrations path: ../database/migrations
+2025/08/01 09:03:17 Loaded migration: 2507211130 (setup)
+2025/08/01 09:03:17 Loaded migration: 2507211524 (notification update)
+2025/08/01 09:03:17 Found 2 migration files
+2025/08/01 09:03:17 Migration 2507211130 (setup) already applied, skipping
+2025/08/01 09:03:17 Migration 2507211524 (notification update) already applied, skipping
+2025/08/01 09:03:17 All migrations completed successfully
+--- PASS: TestPostgresUserStore_DeleteUser (0.06s)
+=== RUN   TestPostgresUserStore_ListUsers
+2025/08/01 09:03:17 Successfully connected to PostgreSQL database: grpc_server_db
+2025/08/01 09:03:17 Found migrations directory at: /app/backend/internal/database/migrations
+2025/08/01 09:03:17 Using migrations path: ../database/migrations
+2025/08/01 09:03:17 Loaded migration: 2507211130 (setup)
+2025/08/01 09:03:17 Loaded migration: 2507211524 (notification update)
+2025/08/01 09:03:17 Found 2 migration files
+2025/08/01 09:03:17 Migration 2507211130 (setup) already applied, skipping
+2025/08/01 09:03:17 Migration 2507211524 (notification update) already applied, skipping
+2025/08/01 09:03:17 All migrations completed successfully
+--- PASS: TestPostgresUserStore_ListUsers (0.05s)
+PASS
+ok  	backend-grpc-server/internal/storage	(cached)
+=== RUN   TestUserService_Integration
+2025/08/01 09:03:01 Successfully connected to PostgreSQL database: grpc_server_db
+2025/08/01 09:03:01 Event handler registered for: create_notification
+2025/08/01 09:03:01 Event handler registered for: mark_as_read
+2025/08/01 09:03:01 Event handler registered for: delete_notification
+--- PASS: TestUserService_Integration (0.89s)
+PASS
+ok  	backend-grpc-server/internal/tests/integration	(cached)
+?   	backend-grpc-server/internal/testutil	[no test files]
+=== RUN   TestValidateStruct
+=== RUN   TestValidateStruct/valid_struct
+=== RUN   TestValidateStruct/invalid_email
+=== RUN   TestValidateStruct/missing_required_field
+=== RUN   TestValidateStruct/invalid_role
+=== RUN   TestValidateStruct/age_too_young
+=== RUN   TestValidateStruct/age_too_old
+=== RUN   TestValidateStruct/name_too_short
+--- PASS: TestValidateStruct (0.01s)
+    --- PASS: TestValidateStruct/valid_struct (0.00s)
+    --- PASS: TestValidateStruct/invalid_email (0.00s)
+    --- PASS: TestValidateStruct/missing_required_field (0.00s)
+    --- PASS: TestValidateStruct/invalid_role (0.00s)
+    --- PASS: TestValidateStruct/age_too_young (0.00s)
+    --- PASS: TestValidateStruct/age_too_old (0.00s)
+    --- PASS: TestValidateStruct/name_too_short (0.00s)
+=== RUN   TestValidateUsername
+=== RUN   TestValidateUsername/valid_username
+=== RUN   TestValidateUsername/valid_short_username
+=== RUN   TestValidateUsername/valid_long_username
+=== RUN   TestValidateUsername/invalid_too_short
+=== RUN   TestValidateUsername/invalid_too_long
+=== RUN   TestValidateUsername/invalid_special_chars
+=== RUN   TestValidateUsername/invalid_spaces
+=== RUN   TestValidateUsername/invalid_symbols
+=== RUN   TestValidateUsername/empty_username
+--- PASS: TestValidateUsername (0.00s)
+    --- PASS: TestValidateUsername/valid_username (0.00s)
+    --- PASS: TestValidateUsername/valid_short_username (0.00s)
+    --- PASS: TestValidateUsername/valid_long_username (0.00s)
+    --- PASS: TestValidateUsername/invalid_too_short (0.00s)
+    --- PASS: TestValidateUsername/invalid_too_long (0.00s)
+    --- PASS: TestValidateUsername/invalid_special_chars (0.00s)
+    --- PASS: TestValidateUsername/invalid_spaces (0.00s)
+    --- PASS: TestValidateUsername/invalid_symbols (0.00s)
+    --- PASS: TestValidateUsername/empty_username (0.00s)
+PASS
+ok  	backend-grpc-server/internal/validation	(cached)
+?   	backend-grpc-server/pb	[no test files]
+[0;32m[1m[SUCCESS][0m Backend tests completed!
+[0;36m[1m[INFO][0m Running backend coverage tests sequentially...
+docker-compose -f docker-compose.dev.yml exec -T dev-environment sh -c "cd /app/backend && go test -v -timeout=60s -p=1 -coverprofile=coverage.out -covermode=atomic ./... && echo 'Coverage Summary:' && go tool cover -func=coverage.out"
+	backend-grpc-server		coverage: 0.0% of statements
+	backend-grpc-server/cmd/migrate		coverage: 0.0% of statements
+	backend-grpc-server/internal/database		coverage: 0.0% of statements
+=== RUN   TestNotificationHandler_CreateNotification
+2025/08/01 09:15:38 Successfully connected to PostgreSQL database: grpc_server_db
+2025/08/01 09:15:38 Found migrations directory at: /app/backend/internal/database/migrations
+2025/08/01 09:15:38 Using migrations path: ../database/migrations
+2025/08/01 09:15:38 Loaded migration: 2507211130 (setup)
+2025/08/01 09:15:38 Loaded migration: 2507211524 (notification update)
+2025/08/01 09:15:38 Found 2 migration files
+2025/08/01 09:15:38 Migration 2507211130 (setup) already applied, skipping
+2025/08/01 09:15:38 Migration 2507211524 (notification update) already applied, skipping
+2025/08/01 09:15:38 All migrations completed successfully
+2025/08/01 09:15:38 Event handler registered for: create_notification
+2025/08/01 09:15:38 Event handler registered for: mark_as_read
+2025/08/01 09:15:38 Event handler registered for: delete_notification
+--- PASS: TestNotificationHandler_CreateNotification (0.11s)
+=== RUN   TestNotificationHandler_CreateNotification_ValidationError
+2025/08/01 09:15:38 Successfully connected to PostgreSQL database: grpc_server_db
+2025/08/01 09:15:38 Found migrations directory at: /app/backend/internal/database/migrations
+2025/08/01 09:15:38 Using migrations path: ../database/migrations
+2025/08/01 09:15:38 Loaded migration: 2507211130 (setup)
+2025/08/01 09:15:38 Loaded migration: 2507211524 (notification update)
+2025/08/01 09:15:38 Found 2 migration files
+2025/08/01 09:15:38 Migration 2507211130 (setup) already applied, skipping
+2025/08/01 09:15:38 Migration 2507211524 (notification update) already applied, skipping
+2025/08/01 09:15:38 All migrations completed successfully
+2025/08/01 09:15:38 Event handler registered for: create_notification
+2025/08/01 09:15:38 Event handler registered for: mark_as_read
+2025/08/01 09:15:38 Event handler registered for: delete_notification
+=== RUN   TestNotificationHandler_CreateNotification_ValidationError/empty_message
+=== RUN   TestNotificationHandler_CreateNotification_ValidationError/invalid_type
+=== RUN   TestNotificationHandler_CreateNotification_ValidationError/message_too_long
+--- PASS: TestNotificationHandler_CreateNotification_ValidationError (0.06s)
+    --- PASS: TestNotificationHandler_CreateNotification_ValidationError/empty_message (0.00s)
+    --- PASS: TestNotificationHandler_CreateNotification_ValidationError/invalid_type (0.00s)
+    --- PASS: TestNotificationHandler_CreateNotification_ValidationError/message_too_long (0.00s)
+=== RUN   TestNotificationHandler_GetNotification
+2025/08/01 09:15:38 Successfully connected to PostgreSQL database: grpc_server_db
+2025/08/01 09:15:38 Found migrations directory at: /app/backend/internal/database/migrations
+2025/08/01 09:15:38 Using migrations path: ../database/migrations
+2025/08/01 09:15:38 Loaded migration: 2507211130 (setup)
+2025/08/01 09:15:38 Loaded migration: 2507211524 (notification update)
+2025/08/01 09:15:38 Found 2 migration files
+2025/08/01 09:15:38 Migration 2507211130 (setup) already applied, skipping
+2025/08/01 09:15:38 Migration 2507211524 (notification update) already applied, skipping
+2025/08/01 09:15:38 All migrations completed successfully
+2025/08/01 09:15:38 Event handler registered for: create_notification
+2025/08/01 09:15:38 Event handler registered for: mark_as_read
+2025/08/01 09:15:38 Event handler registered for: delete_notification
+--- PASS: TestNotificationHandler_GetNotification (0.05s)
+=== RUN   TestNotificationHandler_GetNotification_InvalidID
+2025/08/01 09:15:39 Successfully connected to PostgreSQL database: grpc_server_db
+2025/08/01 09:15:39 Found migrations directory at: /app/backend/internal/database/migrations
+2025/08/01 09:15:39 Using migrations path: ../database/migrations
+2025/08/01 09:15:39 Loaded migration: 2507211130 (setup)
+2025/08/01 09:15:39 Loaded migration: 2507211524 (notification update)
+2025/08/01 09:15:39 Found 2 migration files
+2025/08/01 09:15:39 Migration 2507211130 (setup) already applied, skipping
+2025/08/01 09:15:39 Migration 2507211524 (notification update) already applied, skipping
+2025/08/01 09:15:39 All migrations completed successfully
+2025/08/01 09:15:39 Event handler registered for: create_notification
+2025/08/01 09:15:39 Event handler registered for: mark_as_read
+2025/08/01 09:15:39 Event handler registered for: delete_notification
+--- PASS: TestNotificationHandler_GetNotification_InvalidID (0.05s)
+=== RUN   TestNotificationHandler_ListNotifications_ValidationError
+2025/08/01 09:15:39 Successfully connected to PostgreSQL database: grpc_server_db
+2025/08/01 09:15:39 Found migrations directory at: /app/backend/internal/database/migrations
+2025/08/01 09:15:39 Using migrations path: ../database/migrations
+2025/08/01 09:15:39 Loaded migration: 2507211130 (setup)
+2025/08/01 09:15:39 Loaded migration: 2507211524 (notification update)
+2025/08/01 09:15:39 Found 2 migration files
+2025/08/01 09:15:39 Migration 2507211130 (setup) already applied, skipping
+2025/08/01 09:15:39 Migration 2507211524 (notification update) already applied, skipping
+2025/08/01 09:15:39 All migrations completed successfully
+2025/08/01 09:15:39 Event handler registered for: create_notification
+2025/08/01 09:15:39 Event handler registered for: mark_as_read
+2025/08/01 09:15:39 Event handler registered for: delete_notification
+=== RUN   TestNotificationHandler_ListNotifications_ValidationError/negative_limit
+=== RUN   TestNotificationHandler_ListNotifications_ValidationError/negative_offset
+=== RUN   TestNotificationHandler_ListNotifications_ValidationError/limit_too_large
+--- PASS: TestNotificationHandler_ListNotifications_ValidationError (0.05s)
+    --- PASS: TestNotificationHandler_ListNotifications_ValidationError/negative_limit (0.00s)
+    --- PASS: TestNotificationHandler_ListNotifications_ValidationError/negative_offset (0.00s)
+    --- PASS: TestNotificationHandler_ListNotifications_ValidationError/limit_too_large (0.00s)
+=== RUN   TestNotificationHandler_SendNotification
+2025/08/01 09:15:39 Successfully connected to PostgreSQL database: grpc_server_db
+2025/08/01 09:15:39 Found migrations directory at: /app/backend/internal/database/migrations
+2025/08/01 09:15:39 Using migrations path: ../database/migrations
+2025/08/01 09:15:39 Loaded migration: 2507211130 (setup)
+2025/08/01 09:15:39 Loaded migration: 2507211524 (notification update)
+2025/08/01 09:15:39 Found 2 migration files
+2025/08/01 09:15:39 Migration 2507211130 (setup) already applied, skipping
+2025/08/01 09:15:39 Migration 2507211524 (notification update) already applied, skipping
+2025/08/01 09:15:39 All migrations completed successfully
+2025/08/01 09:15:39 Event handler registered for: create_notification
+2025/08/01 09:15:39 Event handler registered for: mark_as_read
+2025/08/01 09:15:39 Event handler registered for: delete_notification
+=== RUN   TestNotificationHandler_SendNotification/valid_global_notification
+=== RUN   TestNotificationHandler_SendNotification/valid_user_notification
+=== RUN   TestNotificationHandler_SendNotification/invalid_message
+=== RUN   TestNotificationHandler_SendNotification/invalid_type
+=== RUN   TestNotificationHandler_SendNotification/invalid_target_type
+--- PASS: TestNotificationHandler_SendNotification (0.06s)
+    --- PASS: TestNotificationHandler_SendNotification/valid_global_notification (0.00s)
+    --- PASS: TestNotificationHandler_SendNotification/valid_user_notification (0.00s)
+    --- PASS: TestNotificationHandler_SendNotification/invalid_message (0.00s)
+    --- PASS: TestNotificationHandler_SendNotification/invalid_type (0.00s)
+    --- PASS: TestNotificationHandler_SendNotification/invalid_target_type (0.00s)
+=== RUN   TestUserHandler_CreateUser
+2025/08/01 09:15:39 Successfully connected to PostgreSQL database: grpc_server_db
+2025/08/01 09:15:39 Found migrations directory at: /app/backend/internal/database/migrations
+2025/08/01 09:15:39 Using migrations path: ../database/migrations
+2025/08/01 09:15:39 Loaded migration: 2507211130 (setup)
+2025/08/01 09:15:39 Loaded migration: 2507211524 (notification update)
+2025/08/01 09:15:39 Found 2 migration files
+2025/08/01 09:15:39 Migration 2507211130 (setup) already applied, skipping
+2025/08/01 09:15:39 Migration 2507211524 (notification update) already applied, skipping
+2025/08/01 09:15:39 All migrations completed successfully
+--- PASS: TestUserHandler_CreateUser (0.07s)
+=== RUN   TestUserHandler_GetUser
+2025/08/01 09:15:39 Successfully connected to PostgreSQL database: grpc_server_db
+2025/08/01 09:15:39 Found migrations directory at: /app/backend/internal/database/migrations
+2025/08/01 09:15:39 Using migrations path: ../database/migrations
+2025/08/01 09:15:39 Loaded migration: 2507211130 (setup)
+2025/08/01 09:15:39 Loaded migration: 2507211524 (notification update)
+2025/08/01 09:15:39 Found 2 migration files
+2025/08/01 09:15:39 Migration 2507211130 (setup) already applied, skipping
+2025/08/01 09:15:39 Migration 2507211524 (notification update) already applied, skipping
+2025/08/01 09:15:39 All migrations completed successfully
+--- PASS: TestUserHandler_GetUser (0.05s)
+=== RUN   TestUserHandler_GetUser_NotFound
+2025/08/01 09:15:39 Successfully connected to PostgreSQL database: grpc_server_db
+2025/08/01 09:15:39 Found migrations directory at: /app/backend/internal/database/migrations
+2025/08/01 09:15:39 Using migrations path: ../database/migrations
+2025/08/01 09:15:39 Loaded migration: 2507211130 (setup)
+2025/08/01 09:15:39 Loaded migration: 2507211524 (notification update)
+2025/08/01 09:15:39 Found 2 migration files
+2025/08/01 09:15:39 Migration 2507211130 (setup) already applied, skipping
+2025/08/01 09:15:39 Migration 2507211524 (notification update) already applied, skipping
+2025/08/01 09:15:39 All migrations completed successfully
+--- PASS: TestUserHandler_GetUser_NotFound (0.05s)
+PASS
+coverage: 21.0% of statements
+ok  	backend-grpc-server/internal/handlers	0.681s	coverage: 21.0% of statements
+=== RUN   TestCreateUserParams_Validate
+=== RUN   TestCreateUserParams_Validate/valid_user_params
+=== RUN   TestCreateUserParams_Validate/missing_name
+=== RUN   TestCreateUserParams_Validate/invalid_email
+=== RUN   TestCreateUserParams_Validate/invalid_age
+=== RUN   TestCreateUserParams_Validate/invalid_role
+--- PASS: TestCreateUserParams_Validate (0.01s)
+    --- PASS: TestCreateUserParams_Validate/valid_user_params (0.00s)
+    --- PASS: TestCreateUserParams_Validate/missing_name (0.00s)
+    --- PASS: TestCreateUserParams_Validate/invalid_email (0.00s)
+    --- PASS: TestCreateUserParams_Validate/invalid_age (0.00s)
+    --- PASS: TestCreateUserParams_Validate/invalid_role (0.00s)
+=== RUN   TestUpdateUserParams_Validate
+=== RUN   TestUpdateUserParams_Validate/valid_update_params
+=== RUN   TestUpdateUserParams_Validate/missing_ID
+--- PASS: TestUpdateUserParams_Validate (0.00s)
+    --- PASS: TestUpdateUserParams_Validate/valid_update_params (0.00s)
+    --- PASS: TestUpdateUserParams_Validate/missing_ID (0.00s)
+PASS
+coverage: 66.7% of statements
+ok  	backend-grpc-server/internal/models	0.103s	coverage: 66.7% of statements
+	backend-grpc-server/internal/server		coverage: 0.0% of statements
+=== RUN   TestPostgresNotificationStore_CreateNotification
+2025/08/01 09:15:39 Successfully connected to PostgreSQL database: grpc_server_db
+2025/08/01 09:15:39 Found migrations directory at: /app/backend/internal/database/migrations
+2025/08/01 09:15:39 Using migrations path: ../database/migrations
+2025/08/01 09:15:39 Loaded migration: 2507211130 (setup)
+2025/08/01 09:15:39 Loaded migration: 2507211524 (notification update)
+2025/08/01 09:15:39 Found 2 migration files
+2025/08/01 09:15:39 Migration 2507211130 (setup) already applied, skipping
+2025/08/01 09:15:39 Migration 2507211524 (notification update) already applied, skipping
+2025/08/01 09:15:39 All migrations completed successfully
+--- PASS: TestPostgresNotificationStore_CreateNotification (0.13s)
+=== RUN   TestPostgresNotificationStore_CreateNotification_WithUser
+2025/08/01 09:15:40 Successfully connected to PostgreSQL database: grpc_server_db
+2025/08/01 09:15:40 Found migrations directory at: /app/backend/internal/database/migrations
+2025/08/01 09:15:40 Using migrations path: ../database/migrations
+2025/08/01 09:15:40 Loaded migration: 2507211130 (setup)
+2025/08/01 09:15:40 Loaded migration: 2507211524 (notification update)
+2025/08/01 09:15:40 Found 2 migration files
+2025/08/01 09:15:40 Migration 2507211130 (setup) already applied, skipping
+2025/08/01 09:15:40 Migration 2507211524 (notification update) already applied, skipping
+2025/08/01 09:15:40 All migrations completed successfully
+--- PASS: TestPostgresNotificationStore_CreateNotification_WithUser (0.06s)
+=== RUN   TestPostgresNotificationStore_GetNotification
+2025/08/01 09:15:40 Successfully connected to PostgreSQL database: grpc_server_db
+2025/08/01 09:15:40 Found migrations directory at: /app/backend/internal/database/migrations
+2025/08/01 09:15:40 Using migrations path: ../database/migrations
+2025/08/01 09:15:40 Loaded migration: 2507211130 (setup)
+2025/08/01 09:15:40 Loaded migration: 2507211524 (notification update)
+2025/08/01 09:15:40 Found 2 migration files
+2025/08/01 09:15:40 Migration 2507211130 (setup) already applied, skipping
+2025/08/01 09:15:40 Migration 2507211524 (notification update) already applied, skipping
+2025/08/01 09:15:40 All migrations completed successfully
+--- PASS: TestPostgresNotificationStore_GetNotification (0.06s)
+=== RUN   TestPostgresNotificationStore_GetNotification_NotFound
+2025/08/01 09:15:40 Successfully connected to PostgreSQL database: grpc_server_db
+2025/08/01 09:15:40 Found migrations directory at: /app/backend/internal/database/migrations
+2025/08/01 09:15:40 Using migrations path: ../database/migrations
+2025/08/01 09:15:40 Loaded migration: 2507211130 (setup)
+2025/08/01 09:15:40 Loaded migration: 2507211524 (notification update)
+2025/08/01 09:15:40 Found 2 migration files
+2025/08/01 09:15:40 Migration 2507211130 (setup) already applied, skipping
+2025/08/01 09:15:40 Migration 2507211524 (notification update) already applied, skipping
+2025/08/01 09:15:40 All migrations completed successfully
+--- PASS: TestPostgresNotificationStore_GetNotification_NotFound (0.07s)
+=== RUN   TestPostgresNotificationStore_MarkAsRead
+2025/08/01 09:15:40 Successfully connected to PostgreSQL database: grpc_server_db
+2025/08/01 09:15:40 Found migrations directory at: /app/backend/internal/database/migrations
+2025/08/01 09:15:40 Using migrations path: ../database/migrations
+2025/08/01 09:15:40 Loaded migration: 2507211130 (setup)
+2025/08/01 09:15:40 Loaded migration: 2507211524 (notification update)
+2025/08/01 09:15:40 Found 2 migration files
+2025/08/01 09:15:40 Migration 2507211130 (setup) already applied, skipping
+2025/08/01 09:15:40 Migration 2507211524 (notification update) already applied, skipping
+2025/08/01 09:15:40 All migrations completed successfully
+--- PASS: TestPostgresNotificationStore_MarkAsRead (0.07s)
+=== RUN   TestPostgresNotificationStore_ListNotifications
+2025/08/01 09:15:40 Successfully connected to PostgreSQL database: grpc_server_db
+2025/08/01 09:15:40 Found migrations directory at: /app/backend/internal/database/migrations
+2025/08/01 09:15:40 Using migrations path: ../database/migrations
+2025/08/01 09:15:40 Loaded migration: 2507211130 (setup)
+2025/08/01 09:15:40 Loaded migration: 2507211524 (notification update)
+2025/08/01 09:15:40 Found 2 migration files
+2025/08/01 09:15:40 Migration 2507211130 (setup) already applied, skipping
+2025/08/01 09:15:40 Migration 2507211524 (notification update) already applied, skipping
+2025/08/01 09:15:40 All migrations completed successfully
+--- PASS: TestPostgresNotificationStore_ListNotifications (0.07s)
+=== RUN   TestPostgresNotificationStore_GetNotificationStats
+2025/08/01 09:15:40 Successfully connected to PostgreSQL database: grpc_server_db
+2025/08/01 09:15:40 Found migrations directory at: /app/backend/internal/database/migrations
+2025/08/01 09:15:40 Using migrations path: ../database/migrations
+2025/08/01 09:15:40 Loaded migration: 2507211130 (setup)
+2025/08/01 09:15:40 Loaded migration: 2507211524 (notification update)
+2025/08/01 09:15:40 Found 2 migration files
+2025/08/01 09:15:40 Migration 2507211130 (setup) already applied, skipping
+2025/08/01 09:15:40 Migration 2507211524 (notification update) already applied, skipping
+2025/08/01 09:15:40 All migrations completed successfully
+--- PASS: TestPostgresNotificationStore_GetNotificationStats (0.08s)
+=== RUN   TestPostgresUserStore_CreateUser
+2025/08/01 09:15:40 Successfully connected to PostgreSQL database: grpc_server_db
+2025/08/01 09:15:40 Found migrations directory at: /app/backend/internal/database/migrations
+2025/08/01 09:15:40 Using migrations path: ../database/migrations
+2025/08/01 09:15:40 Loaded migration: 2507211130 (setup)
+2025/08/01 09:15:40 Loaded migration: 2507211524 (notification update)
+2025/08/01 09:15:40 Found 2 migration files
+2025/08/01 09:15:40 Migration 2507211130 (setup) already applied, skipping
+2025/08/01 09:15:40 Migration 2507211524 (notification update) already applied, skipping
+2025/08/01 09:15:40 All migrations completed successfully
+--- PASS: TestPostgresUserStore_CreateUser (0.06s)
+=== RUN   TestPostgresUserStore_GetUser
+2025/08/01 09:15:40 Successfully connected to PostgreSQL database: grpc_server_db
+2025/08/01 09:15:40 Found migrations directory at: /app/backend/internal/database/migrations
+2025/08/01 09:15:40 Using migrations path: ../database/migrations
+2025/08/01 09:15:40 Loaded migration: 2507211130 (setup)
+2025/08/01 09:15:40 Loaded migration: 2507211524 (notification update)
+2025/08/01 09:15:40 Found 2 migration files
+2025/08/01 09:15:40 Migration 2507211130 (setup) already applied, skipping
+2025/08/01 09:15:40 Migration 2507211524 (notification update) already applied, skipping
+2025/08/01 09:15:40 All migrations completed successfully
+--- PASS: TestPostgresUserStore_GetUser (0.07s)
+=== RUN   TestPostgresUserStore_GetUser_NotFound
+2025/08/01 09:15:40 Successfully connected to PostgreSQL database: grpc_server_db
+2025/08/01 09:15:40 Found migrations directory at: /app/backend/internal/database/migrations
+2025/08/01 09:15:40 Using migrations path: ../database/migrations
+2025/08/01 09:15:40 Loaded migration: 2507211130 (setup)
+2025/08/01 09:15:40 Loaded migration: 2507211524 (notification update)
+2025/08/01 09:15:40 Found 2 migration files
+2025/08/01 09:15:40 Migration 2507211130 (setup) already applied, skipping
+2025/08/01 09:15:40 Migration 2507211524 (notification update) already applied, skipping
+2025/08/01 09:15:40 All migrations completed successfully
+--- PASS: TestPostgresUserStore_GetUser_NotFound (0.06s)
+=== RUN   TestPostgresUserStore_UpdateUser
+2025/08/01 09:15:40 Successfully connected to PostgreSQL database: grpc_server_db
+2025/08/01 09:15:40 Found migrations directory at: /app/backend/internal/database/migrations
+2025/08/01 09:15:40 Using migrations path: ../database/migrations
+2025/08/01 09:15:40 Loaded migration: 2507211130 (setup)
+2025/08/01 09:15:40 Loaded migration: 2507211524 (notification update)
+2025/08/01 09:15:40 Found 2 migration files
+2025/08/01 09:15:40 Migration 2507211130 (setup) already applied, skipping
+2025/08/01 09:15:40 Migration 2507211524 (notification update) already applied, skipping
+2025/08/01 09:15:40 All migrations completed successfully
+--- PASS: TestPostgresUserStore_UpdateUser (0.06s)
+=== RUN   TestPostgresUserStore_DeleteUser
+2025/08/01 09:15:40 Successfully connected to PostgreSQL database: grpc_server_db
+2025/08/01 09:15:40 Found migrations directory at: /app/backend/internal/database/migrations
+2025/08/01 09:15:40 Using migrations path: ../database/migrations
+2025/08/01 09:15:40 Loaded migration: 2507211130 (setup)
+2025/08/01 09:15:40 Loaded migration: 2507211524 (notification update)
+2025/08/01 09:15:40 Found 2 migration files
+2025/08/01 09:15:40 Migration 2507211130 (setup) already applied, skipping
+2025/08/01 09:15:40 Migration 2507211524 (notification update) already applied, skipping
+2025/08/01 09:15:40 All migrations completed successfully
+--- PASS: TestPostgresUserStore_DeleteUser (0.07s)
+=== RUN   TestPostgresUserStore_ListUsers
+2025/08/01 09:15:40 Successfully connected to PostgreSQL database: grpc_server_db
+2025/08/01 09:15:40 Found migrations directory at: /app/backend/internal/database/migrations
+2025/08/01 09:15:40 Using migrations path: ../database/migrations
+2025/08/01 09:15:40 Loaded migration: 2507211130 (setup)
+2025/08/01 09:15:40 Loaded migration: 2507211524 (notification update)
+2025/08/01 09:15:40 Found 2 migration files
+2025/08/01 09:15:40 Migration 2507211130 (setup) already applied, skipping
+2025/08/01 09:15:40 Migration 2507211524 (notification update) already applied, skipping
+2025/08/01 09:15:40 All migrations completed successfully
+--- PASS: TestPostgresUserStore_ListUsers (0.09s)
+PASS
+coverage: 56.7% of statements
+ok  	backend-grpc-server/internal/storage	1.044s	coverage: 56.7% of statements
+=== RUN   TestUserService_Integration
+2025/08/01 09:15:41 Successfully connected to PostgreSQL database: grpc_server_db
+2025/08/01 09:15:41 Event handler registered for: create_notification
+2025/08/01 09:15:41 Event handler registered for: mark_as_read
+2025/08/01 09:15:41 Event handler registered for: delete_notification
+2025/08/01 09:15:41 gRPC server listening on port 50051
+--- PASS: TestUserService_Integration (0.14s)
+PASS
+coverage: [no statements]
+ok  	backend-grpc-server/internal/tests/integration	0.287s	coverage: [no statements]
+	backend-grpc-server/internal/testutil		coverage: 0.0% of statements
+=== RUN   TestValidateStruct
+=== RUN   TestValidateStruct/valid_struct
+=== RUN   TestValidateStruct/invalid_email
+=== RUN   TestValidateStruct/missing_required_field
+=== RUN   TestValidateStruct/invalid_role
+=== RUN   TestValidateStruct/age_too_young
+=== RUN   TestValidateStruct/age_too_old
+=== RUN   TestValidateStruct/name_too_short
+--- PASS: TestValidateStruct (0.01s)
+    --- PASS: TestValidateStruct/valid_struct (0.00s)
+    --- PASS: TestValidateStruct/invalid_email (0.00s)
+    --- PASS: TestValidateStruct/missing_required_field (0.00s)
+    --- PASS: TestValidateStruct/invalid_role (0.00s)
+    --- PASS: TestValidateStruct/age_too_young (0.00s)
+    --- PASS: TestValidateStruct/age_too_old (0.00s)
+    --- PASS: TestValidateStruct/name_too_short (0.00s)
+=== RUN   TestValidateUsername
+=== RUN   TestValidateUsername/valid_username
+=== RUN   TestValidateUsername/valid_short_username
+=== RUN   TestValidateUsername/valid_long_username
+=== RUN   TestValidateUsername/invalid_too_short
+=== RUN   TestValidateUsername/invalid_too_long
+=== RUN   TestValidateUsername/invalid_special_chars
+=== RUN   TestValidateUsername/invalid_spaces
+=== RUN   TestValidateUsername/invalid_symbols
+=== RUN   TestValidateUsername/empty_username
+--- PASS: TestValidateUsername (0.00s)
+    --- PASS: TestValidateUsername/valid_username (0.00s)
+    --- PASS: TestValidateUsername/valid_short_username (0.00s)
+    --- PASS: TestValidateUsername/valid_long_username (0.00s)
+    --- PASS: TestValidateUsername/invalid_too_short (0.00s)
+    --- PASS: TestValidateUsername/invalid_too_long (0.00s)
+    --- PASS: TestValidateUsername/invalid_special_chars (0.00s)
+    --- PASS: TestValidateUsername/invalid_spaces (0.00s)
+    --- PASS: TestValidateUsername/invalid_symbols (0.00s)
+    --- PASS: TestValidateUsername/empty_username (0.00s)
+PASS
+coverage: 95.7% of statements
+ok  	backend-grpc-server/internal/validation	0.115s	coverage: 95.7% of statements
+	backend-grpc-server/pb		coverage: 0.0% of statements
+Coverage Summary:
