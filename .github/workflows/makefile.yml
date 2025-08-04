@@ -88,21 +88,20 @@ jobs:
               sleep 2
               timeout=$((timeout-2))
             done
-
             if [ $timeout -le 0 ]; then
               echo "❌ Timeout waiting for PostgreSQL"
               exit 1
             fi
-
             echo "🕐 Giving development environment time to start up..."
             sleep 60
           fi
 
       - name: Clean test database
-        run: make clean-test-db || {
-          echo "Cleaning test database..."
-          docker compose -f docker-compose.dev.yml exec -T postgres-dev psql -U postgres -d grpc_server_db -c "TRUNCATE TABLE notifications, users RESTART IDENTITY CASCADE;" || echo "Tables might not exist yet, continuing..."
-        }
+        run: |
+          make clean-test-db || {
+            echo "Cleaning test database..."
+            docker compose -f docker-compose.dev.yml exec -T postgres-dev psql -U postgres -d grpc_server_db -c "TRUNCATE TABLE notifications, users RESTART IDENTITY CASCADE;" || echo "Tables might not exist yet, continuing..."
+          }
 
       - name: Run backend tests
         run: |
@@ -492,7 +491,6 @@ jobs:
         run: |
           echo "# Complete CI/CD Pipeline Results" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-
           echo "## Backend Tests" >> $GITHUB_STEP_SUMMARY
           if [ "${{ needs.backend-tests.result }}" == "success" ]; then
             echo "✅ Backend Tests: Passed" >> $GITHUB_STEP_SUMMARY
@@ -500,32 +498,27 @@ jobs:
             echo "❌ Backend Tests: Failed" >> $GITHUB_STEP_SUMMARY
           fi
           echo "" >> $GITHUB_STEP_SUMMARY
-
           echo "## Frontend Tests" >> $GITHUB_STEP_SUMMARY
           if [ "${{ needs.frontend-unit-tests.result }}" == "success" ]; then
             echo "✅ Unit Tests: Passed" >> $GITHUB_STEP_SUMMARY
           else
             echo "❌ Unit Tests: Failed" >> $GITHUB_STEP_SUMMARY
           fi
-
           if [ "${{ needs.code-quality.result }}" == "success" ]; then
             echo "✅ Code Quality: Passed" >> $GITHUB_STEP_SUMMARY
           else
             echo "❌ Code Quality: Failed" >> $GITHUB_STEP_SUMMARY
           fi
-
           if [ "${{ needs.component-tests.result }}" == "success" ]; then
             echo "✅ Component Tests: Passed" >> $GITHUB_STEP_SUMMARY
           else
             echo "❌ Component Tests: Failed" >> $GITHUB_STEP_SUMMARY
           fi
-
           if [ "${{ needs.e2e-tests.result }}" == "success" ]; then
             echo "✅ E2E Tests: Passed" >> $GITHUB_STEP_SUMMARY
           else
             echo "❌ E2E Tests: Failed" >> $GITHUB_STEP_SUMMARY
           fi
-
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "## Reports & Artifacts" >> $GITHUB_STEP_SUMMARY
           echo "- [Unit Test Coverage](./unit-test-results/coverage/index.html)" >> $GITHUB_STEP_SUMMARY
